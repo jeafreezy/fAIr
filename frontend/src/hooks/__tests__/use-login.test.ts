@@ -1,14 +1,21 @@
-import { act, renderHook } from "@testing-library/react-hooks";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { authService } from "@/services";
+import { act, renderHook } from '@testing-library/react-hooks';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi
+  } from 'vitest';
+import { authService } from '@/services';
+import { showErrorToast } from '@/utils';
+import { useLocation } from 'react-router-dom';
+import { useLogin } from '../use-login';
+import { useSessionStorage } from '../use-storage';
 import {
   HOT_FAIR_SESSION_REDIRECT_KEY,
   TOAST_NOTIFICATIONS,
 } from "@/constants";
-import { showErrorToast } from "@/utils";
-import { useLocation } from "react-router-dom";
-import { useLogin } from "../use-login";
-import { useSessionStorage } from "../use-storage";
 
 vi.mock("react-router-dom", () => ({
   useLocation: vi.fn(),
@@ -34,6 +41,7 @@ describe("useLogin", () => {
 
   beforeEach(() => {
     (useLocation as vi.Mock).mockReturnValue({ pathname });
+
     (useSessionStorage as vi.Mock).mockReturnValue({ setValue: setValueMock });
   });
 

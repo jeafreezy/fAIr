@@ -22,7 +22,7 @@ vi.mock("@/components/map/setups/setup-terra-draw", () => ({
 }));
 
 vi.mock("maplibre-gl", async () => {
-  
+
   const actual = (await vi.importActual<any>("maplibre-gl")) || {};
 
   class MockMap {
@@ -52,7 +52,7 @@ vi.mock("maplibre-gl", async () => {
 
     getZoom = vi.fn().mockReturnValue(0);
 
-    remove = vi.fn(() => {});
+    remove = vi.fn(() => { });
   }
   return {
     ...actual,
@@ -72,7 +72,7 @@ describe("useMapInstance", () => {
     });
     (setupMaplibreMap as vi.Mock).mockReturnValue(mockMap);
 
-    const { result, waitForNextUpdate } = renderHook(() => useMapInstance());
+    const { result } = renderHook(() => useMapInstance());
 
     expect(result.current.map).toBeNull();
 
@@ -95,7 +95,7 @@ describe("useMapInstance", () => {
     });
     (setupMaplibreMap as vi.Mock).mockReturnValue(mockMap);
 
-    const { result, waitForNextUpdate } = renderHook(() => useMapInstance());
+    const { result } = renderHook(() => useMapInstance());
 
     act(() => {
       mockMap.fire("load");
@@ -117,7 +117,7 @@ describe("useMapInstance", () => {
     (setupMaplibreMap as vi.Mock).mockReturnValue(mockMap);
     (setupTerraDraw as vi.Mock).mockReturnValue(mockTerraDraw);
 
-    const { result, waitForNextUpdate } = renderHook(() => useMapInstance());
+    const { result } = renderHook(() => useMapInstance());
 
     act(() => {
       mockMap.fire("load");
@@ -137,16 +137,16 @@ describe("useMapInstance", () => {
     (setupMaplibreMap as vi.Mock).mockReturnValue(mockMap);
     (setupTerraDraw as vi.Mock).mockReturnValue(mockTerraDraw);
 
-    const { result, waitForNextUpdate } = renderHook(() => useMapInstance());
+    const { result } = renderHook(() => useMapInstance());
 
     act(() => {
       mockMap.fire("load");
     });
 
     act(() => {
-      result.current.setDrawingMode(DrawingModes.DRAW);
+      result.current.setDrawingMode(DrawingModes.POLYGON);
     });
 
-    expect(mockTerraDraw.setMode).toHaveBeenCalledWith(DrawingModes.DRAW);
+    expect(mockTerraDraw.setMode).toHaveBeenCalledWith(DrawingModes.POLYGON);
   });
 });

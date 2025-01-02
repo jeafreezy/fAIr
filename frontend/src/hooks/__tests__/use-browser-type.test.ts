@@ -1,6 +1,11 @@
-import { describe, expect, it, vi } from "vitest";
-import { renderHook } from "@testing-library/react-hooks";
-import { useBrowserType } from "../use-browser-type";
+import {
+  describe,
+  expect,
+  it,
+  vi
+  } from 'vitest';
+import { renderHook } from '@testing-library/react-hooks';
+import { useBrowserType } from '../use-browser-type';
 
 describe("useBrowserType (with UA-CH)", () => {
   it("should return true if navigator.userAgentData is available and brand includes Chrome", async () => {
@@ -33,7 +38,7 @@ describe("useBrowserType (with UA-CH)", () => {
       },
       configurable: true,
     });
-    const { result, waitForNextUpdate } = renderHook(() => useBrowserType());
+    const { result } = renderHook(() => useBrowserType());
     expect(result.current.isChrome).toBe(false);
   });
 });

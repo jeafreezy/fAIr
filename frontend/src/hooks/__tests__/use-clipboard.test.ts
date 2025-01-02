@@ -1,7 +1,13 @@
-import useCopyToClipboard from "@/hooks/use-clipboard";
-import { act, renderHook } from "@testing-library/react-hooks";
-import { showErrorToast, showSuccessToast } from "@/utils";
-import { vi, describe, afterEach, it, expect } from "vitest";
+import useCopyToClipboard from '@/hooks/use-clipboard';
+import { act, renderHook } from '@testing-library/react-hooks';
+import {
+  afterEach,
+  describe,
+  expect,
+  it,
+  vi
+  } from 'vitest';
+import { showErrorToast, showSuccessToast } from '@/utils';
 
 vi.mock("@/utils", () => ({
   showErrorToast: vi.fn(),

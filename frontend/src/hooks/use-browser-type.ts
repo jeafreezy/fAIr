@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from "react";
 
 /**
  * Custom hook to detect if the current browser is Google Chrome.
@@ -11,28 +11,28 @@ export const useBrowserType = (): { isChrome: boolean } => {
 
   useEffect(() => {
     const uaData = (navigator as any).userAgentData;
-    if (uaData && typeof uaData.getHighEntropyValues === "function") { 
+    if (uaData && typeof uaData.getHighEntropyValues === "function") {
       uaData
         .getHighEntropyValues(["brands"])
         .then((data: { brands: Array<{ brand: string; version: string }> }) => {
           const isChromeBrowser = data.brands.some((b) =>
-            b.brand.toLowerCase().includes("chrome")
+            b.brand.toLowerCase().includes("chrome"),
           );
           setIsChrome(isChromeBrowser);
         })
         .catch((err) => {
           setIsChrome(
             /Chrome/.test(navigator.userAgent) &&
-            /Google Inc/.test(navigator.vendor)
+              /Google Inc/.test(navigator.vendor),
           );
         });
     } else {
       setIsChrome(
-        /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor)
+        /Chrome/.test(navigator.userAgent) &&
+          /Google Inc/.test(navigator.vendor),
       );
     }
   }, []);
 
   return { isChrome };
 };
-

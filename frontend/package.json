@@ -21,9 +21,9 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx}": [
-      "pnpm format:check",
-      "pnpm format"
+    "*.{js,jsx,ts,tsx}": [
+      "pnpm format",
+      "pnpm lint"
     ]
   },
   "dependencies": {

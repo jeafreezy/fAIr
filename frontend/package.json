@@ -11,7 +11,9 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "precommit": "lint-staged",
+    "prepare": "husky install"
   },
   "husky": {
     "hooks": {
@@ -19,8 +21,10 @@
     }
   },
   "lint-staged": {
-    "*.ts": "pnpm run format:check",
-    "*.tsx": "pnpm run format"
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "pnpm format:check",
+      "pnpm format"
+    ]
   },
   "dependencies": {
     "@shoelace-style/shoelace": "^2.16.0",

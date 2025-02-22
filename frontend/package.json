@@ -17,13 +17,15 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "pre-push": "pnpm test"
     }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "pnpm format",
-      "pnpm lint"
+      "pnpm lint",
+      "git add ."
     ]
   },
   "dependencies": {

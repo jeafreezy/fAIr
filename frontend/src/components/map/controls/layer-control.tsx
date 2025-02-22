@@ -1,16 +1,18 @@
-import { BASEMAPS, ToolTipPlacement } from '@/enums';
-import { CheckboxGroup } from '@/components/ui/form';
-import { DropDown } from '@/components/ui/dropdown';
-import { LayerStackIcon } from '@/components/ui/icons';
-import { Map } from 'maplibre-gl';
-import { ToolTip } from '@/components/ui/tooltip';
-import { useDropdownMenu } from '@/hooks/use-dropdown-menu';
-import { useEffect, useMemo, useState } from 'react';
+import { Map } from "maplibre-gl";
+
+import { useEffect, useMemo, useState } from "react";
+
+import { DropDown } from "@/components/ui/dropdown";
+import { CheckboxGroup } from "@/components/ui/form";
+import { LayerStackIcon } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
 import {
   GOOGLE_SATELLITE_BASEMAP_LAYER_ID,
   OSM_BASEMAP_LAYER_ID,
   TMS_LAYER_ID,
 } from "@/config";
+import { BASEMAPS, ToolTipPlacement } from "@/enums";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 
 type TLayers = { id?: string; subLayers: string[]; value: string }[];
 type TBasemaps = { id?: string; subLayer: string; value: string }[];
@@ -38,12 +40,12 @@ export const LayerControl = ({
     ];
     const baseLayers: TBasemaps = basemaps
       ? [
-        { value: BASEMAPS.OSM, subLayer: OSM_BASEMAP_LAYER_ID },
-        {
-          value: BASEMAPS.GOOGLE_SATELLITE,
-          subLayer: GOOGLE_SATELLITE_BASEMAP_LAYER_ID,
-        },
-      ]
+          { value: BASEMAPS.OSM, subLayer: OSM_BASEMAP_LAYER_ID },
+          {
+            value: BASEMAPS.GOOGLE_SATELLITE,
+            subLayer: GOOGLE_SATELLITE_BASEMAP_LAYER_ID,
+          },
+        ]
       : [];
     return { layers_, baseLayers };
   }, [layers, openAerialMap, basemaps]);
@@ -62,7 +64,7 @@ export const LayerControl = ({
           layerVisibility[value] !== undefined ? layerVisibility[value] : true;
         return acc;
       },
-      {} as { [key: string]: boolean },
+      {} as { [key: string]: boolean }
     );
 
     setLayerVisibility(initialVisibility);
@@ -77,7 +79,7 @@ export const LayerControl = ({
             : true;
         return acc;
       },
-      {} as { [key: string]: boolean },
+      {} as { [key: string]: boolean }
     );
 
     setBasemapVisibility(initialVisibility);
@@ -96,7 +98,7 @@ export const LayerControl = ({
             map.setLayoutProperty(
               mapLayerId,
               "visibility",
-              updatedVisibility[value] ? "visible" : "none",
+              updatedVisibility[value] ? "visible" : "none"
             );
           }
         });
@@ -116,7 +118,7 @@ export const LayerControl = ({
           map.setLayoutProperty(
             subLayer,
             "visibility",
-            updatedVisibility[value] ? "visible" : "none",
+            updatedVisibility[value] ? "visible" : "none"
           );
         }
       }
@@ -161,7 +163,7 @@ export const LayerControl = ({
               <p className="text-sm">Layers</p>
               <CheckboxGroup
                 defaultSelectedOption={Object.keys(layerVisibility).filter(
-                  (layer) => layerVisibility[layer],
+                  (layer) => layerVisibility[layer]
                 )}
                 multiple
                 options={layerControlData.layers_}

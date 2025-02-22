@@ -1,6 +1,8 @@
 import { GeoJSON } from "geojson";
 import { LngLatBoundsLike } from "maplibre-gl";
+
 import { SHOELACE_SELECT_SIZES } from "@/enums";
+
 import { TModelPredictionFeature } from "./api";
 
 /* eslint-disable @typescript-eslint/no-empty-object-type */

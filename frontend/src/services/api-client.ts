@@ -1,6 +1,10 @@
-import Axios, { InternalAxiosRequestConfig } from 'axios';
-import { BASE_API_URL, HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY } from '@/config';
-import { showErrorToast } from '@/utils';
+import Axios, { InternalAxiosRequestConfig } from "axios";
+
+import {
+  BASE_API_URL,
+  HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY,
+} from "@/config";
+import { showErrorToast } from "@/utils";
 
 /**
  * The global axios API client.
@@ -34,5 +38,5 @@ apiClient.interceptors.response.use(
       localStorage.removeItem(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     }
     return Promise.reject(error);
-  },
+  }
 );

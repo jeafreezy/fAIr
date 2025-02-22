@@ -1,10 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+
+import {
+  TCreateTrainingDatasetArgs,
+  createTrainingDataset,
+} from "@/features/model-creation/api/create-trainings";
 import { getTrainingDatasetsQueryOptions } from "@/features/model-creation/api/factory";
 import { MutationConfig } from "@/services";
-import {
-  createTrainingDataset,
-  TCreateTrainingDatasetArgs,
-} from "@/features/model-creation/api/create-trainings";
 
 export const useGetTrainingDatasets = (searchQuery: string) => {
   return useQuery({

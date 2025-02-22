@@ -10,4 +10,8 @@ export default {
   useTabs: false,
   endOfLine: "auto",
   bracketSpacing: true,
+  importOrder: ["^[react]", "^@(?!/)", "^@/", "^[./]"],
+  importOrderSeparation: true,
+  importOrderSortSpecifiers: true,
+  plugins: ["@trivago/prettier-plugin-sort-imports"],
 };

@@ -1,7 +1,7 @@
-import { API_ENDPOINTS } from "@/services/api-routes";
 import { apiClient } from "@/services/api-client";
-import { showErrorToast } from "@/utils";
+import { API_ENDPOINTS } from "@/services/api-routes";
 import { TAuthenticate, TLogin, TUser } from "@/types/api";
+import { showErrorToast } from "@/utils";
 
 /**
  * This class encapsulate the various authentication services.
@@ -80,7 +80,7 @@ class AuthService {
   async authenticate(state: string, code: string): Promise<TAuthenticate> {
     try {
       const response = await apiClient.get(
-        `${API_ENDPOINTS.AUTH_CALLBACK}?code=${code}&state=${state}`,
+        `${API_ENDPOINTS.AUTH_CALLBACK}?code=${code}&state=${state}`
       );
       return response.data;
     } catch (error) {

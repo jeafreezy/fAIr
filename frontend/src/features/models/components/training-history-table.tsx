@@ -1,22 +1,24 @@
-import { Badge } from "@/components/ui/badge";
-import { CheckIcon } from "@/components/ui/icons";
+import { useState } from "react";
+
 import { ColumnDef, SortingState } from "@tanstack/react-table";
+
+import { useAuth } from "@/app/providers/auth-provider";
+import { PAGE_LIMIT, Pagination } from "@/components/shared";
+import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table";
 import { DropDown } from "@/components/ui/dropdown";
+import { CheckIcon } from "@/components/ui/icons";
 import { ElipsisIcon, InfoIcon } from "@/components/ui/icons";
 import { MODELS_CONTENT } from "@/constants";
-import { PAGE_LIMIT, Pagination } from "@/components/shared";
-import { SortableHeader } from "@/features/models/components/table-header";
-import { TableSkeleton } from "@/features/models/components/skeletons";
-import { TBadgeVariants, TTrainingDetails } from "@/types";
+import { useUpdateTraining } from "@/features/models/api/update-trainings";
 import { TrainingDetailsDialog } from "@/features/models/components/dialogs";
-import { useAuth } from "@/app/providers/auth-provider";
+import { TableSkeleton } from "@/features/models/components/skeletons";
+import { SortableHeader } from "@/features/models/components/table-header";
+import { useTrainingHistory } from "@/features/models/hooks/use-training";
 import { useDialog } from "@/hooks/use-dialog";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
-import { useState } from "react";
 import { useToastNotification } from "@/hooks/use-toast-notification";
-import { useTrainingHistory } from "@/features/models/hooks/use-training";
-import { useUpdateTraining } from "@/features/models/api/update-trainings";
+import { TBadgeVariants, TTrainingDetails } from "@/types";
 import {
   formatDate,
   formatDuration,
@@ -40,7 +42,7 @@ const columnDefinitions = (
   authUsername: string,
   isAuthenticated: boolean,
   handleTrainingModal: (trainingId: number) => void,
-  publishTraining: (trainingId: number) => void,
+  publishTraining: (trainingId: number) => void
 ): ColumnDef<TTrainingDetails>[] => [
   {
     accessorKey: "id",
@@ -244,7 +246,7 @@ const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
     modelId,
     offset,
     PAGE_LIMIT,
-    "-id",
+    "-id"
   );
   const [sorting, setSorting] = useState<SortingState>([]);
   const { user, isAuthenticated } = useAuth();
@@ -314,7 +316,7 @@ const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
             user?.username,
             isAuthenticated,
             handleTrainingModal,
-            mutate,
+            mutate
           )}
           sorting={sorting}
           setSorting={setSorting}

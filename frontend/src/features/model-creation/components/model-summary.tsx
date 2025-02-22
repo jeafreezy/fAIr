@@ -1,8 +1,4 @@
-import { BASE_MODELS } from '@/enums';
-import { IconProps } from '@/types';
-import { MODELS_CONTENT } from '@/constants';
-import { StepHeading } from '@/features/model-creation/components/';
-import { useModelsContext } from '@/app/providers/models-provider';
+import { useModelsContext } from "@/app/providers/models-provider";
 import {
   DatabaseIcon,
   MapIcon,
@@ -12,6 +8,10 @@ import {
   TextIcon,
   ZoomInIcon,
 } from "@/components/ui/icons";
+import { MODELS_CONTENT } from "@/constants";
+import { BASE_MODELS } from "@/enums";
+import { StepHeading } from "@/features/model-creation/components/";
+import { IconProps } from "@/types";
 
 const SummaryItem = ({
   icon: Icon,
@@ -91,9 +91,7 @@ const ModelSummaryForm = () => {
     <div className="flex flex-col gap-y-6">
       <StepHeading
         heading={MODELS_CONTENT.modelCreation.modelSummary.pageTitle}
-        description={
-          MODELS_CONTENT.modelCreation.modelSummary.pageDescription
-        }
+        description={MODELS_CONTENT.modelCreation.modelSummary.pageDescription}
       />
       {summaryData.map((item, index) => (
         <SummaryItem

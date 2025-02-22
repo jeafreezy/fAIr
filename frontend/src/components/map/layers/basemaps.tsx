@@ -1,9 +1,10 @@
-import { Map } from 'maplibre-gl';
-import { useMapLayers } from '@/hooks/use-map-layer';
+import { Map } from "maplibre-gl";
+
 import {
   GOOGLE_SATELLITE_BASEMAP_LAYER_ID,
   GOOGLE_SATELLITE_BASEMAP_SOURCE_ID,
 } from "@/config";
+import { useMapLayers } from "@/hooks/use-map-layer";
 
 export const Basemaps = ({ map }: { map: Map | null }) => {
   useMapLayers(
@@ -33,7 +34,7 @@ export const Basemaps = ({ map }: { map: Map | null }) => {
         },
       },
     ],
-    map,
+    map
   );
 
   return null;

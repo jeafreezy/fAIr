@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { cn } from "@/utils";
 import { Drawer } from "vaul";
+
+import React, { useState } from "react";
+
+import { cn } from "@/utils";
 
 export const MobileDrawer = ({
   open,
@@ -59,7 +61,7 @@ export const MobileDrawer = ({
               {
                 "overflow-y-auto": snap === lastSnapPoint,
                 "overflow-hidden": snap !== lastSnapPoint,
-              },
+              }
             )}
           >
             {children}

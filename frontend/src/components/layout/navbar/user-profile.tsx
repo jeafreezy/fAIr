@@ -1,20 +1,17 @@
-import SlAvatar from '@shoelace-style/shoelace/dist/react/avatar/index.js';
-import styles from '@/components/layout/navbar/navbar.module.css';
-import useScreenSize from '@/hooks/use-screen-size';
-import { DropDown } from '@/components/ui/dropdown';
-import { DropdownPlacement } from '@/enums';
-import { ELEMENT_DISTANCE_FROM_NAVBAR } from '@/config';
-import { TCSSWithVars } from '@/types';
-import { truncateString } from '@/utils';
-import { useAuth } from '@/app/providers/auth-provider';
-import { useDropdownMenu } from '@/hooks/use-dropdown-menu';
-import { useNavigate } from 'react-router-dom';
-import {
-  APPLICATION_ROUTES,
+import { useNavigate } from "react-router-dom";
 
-  SHARED_CONTENT,
-} from "@/constants";
+import SlAvatar from "@shoelace-style/shoelace/dist/react/avatar/index.js";
 
+import { useAuth } from "@/app/providers/auth-provider";
+import styles from "@/components/layout/navbar/navbar.module.css";
+import { DropDown } from "@/components/ui/dropdown";
+import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
+import { APPLICATION_ROUTES, SHARED_CONTENT } from "@/constants";
+import { DropdownPlacement } from "@/enums";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import useScreenSize from "@/hooks/use-screen-size";
+import { TCSSWithVars } from "@/types";
+import { truncateString } from "@/utils";
 
 export const UserProfile = ({
   hideFullName,

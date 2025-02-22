@@ -1,7 +1,8 @@
+import { useMutation } from "@tanstack/react-query";
+
+import { getModelPredictions } from "@/features/start-mapping/api/get-model-predictions";
 import { MutationConfig } from "@/services";
 import { TModelPredictionsConfig } from "@/types";
-import { useMutation } from "@tanstack/react-query";
-import { getModelPredictions } from "@/features/start-mapping/api/get-model-predictions";
 
 export type useGetModelPredictionsOptions = {
   mutationConfig?: MutationConfig<typeof getModelPredictions>;

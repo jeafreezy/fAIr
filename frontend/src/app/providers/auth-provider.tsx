@@ -1,20 +1,16 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState
-  } from 'react';
-import { apiClient } from '@/services/api-client';
-import { authService } from '@/services';
-import { HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY, HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY, HOT_FAIR_SESSION_REDIRECT_KEY } from '@/config';
-import { showErrorToast, showSuccessToast } from '@/utils';
-import { TUser } from '@/types/api';
-import { useLocalStorage, useSessionStorage } from '@/hooks/use-storage';
+import React, { createContext, useContext, useEffect, useState } from "react";
+
 import {
-  TOAST_NOTIFICATIONS,
-} from "@/constants";
-
-
+  HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY,
+  HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY,
+  HOT_FAIR_SESSION_REDIRECT_KEY,
+} from "@/config";
+import { TOAST_NOTIFICATIONS } from "@/constants";
+import { useLocalStorage, useSessionStorage } from "@/hooks/use-storage";
+import { authService } from "@/services";
+import { apiClient } from "@/services/api-client";
+import { TUser } from "@/types/api";
+import { showErrorToast, showSuccessToast } from "@/utils";
 
 type TAuthContext = {
   token: string;
@@ -41,14 +37,11 @@ type AuthProviderProps = {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const { getValue, setValue, removeValue } = useLocalStorage();
-  const {
-    getSessionValue,
-    removeSessionValue,
-    setSessionValue,
-  } = useSessionStorage();
+  const { getSessionValue, removeSessionValue, setSessionValue } =
+    useSessionStorage();
 
   const [token, setToken] = useState<string | undefined>(
-    getValue(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY),
+    getValue(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY)
   );
   const [user, setUser] = useState<TUser | null>(null);
 
@@ -57,7 +50,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   // Set token globally to eliminate the need to rewrite it
   apiClient.defaults.headers.common["access-token"] = token ? `${token}` : null;
-
 
   const handleRedirection = () => {
     const redirectTo = getSessionValue(HOT_FAIR_SESSION_REDIRECT_KEY);
@@ -75,7 +67,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const loginSuccessful = getSessionValue(
-      HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY,
+      HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY
     );
     if (loginSuccessful == "success") {
       showSuccessToast(TOAST_NOTIFICATIONS.loginSuccess);
@@ -112,7 +104,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       fetchUserProfile();
     }
   }, [token]);
-
 
   /**
    * Clean up and logout.

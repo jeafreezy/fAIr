@@ -1,25 +1,23 @@
-import ModelAction from '@/features/start-mapping/components/model-action';
-import { BrandLogoWithDropDown } from './logo-with-dropdown';
-import { ButtonWithIcon } from '@/components/ui/button';
-import { ChevronDownIcon } from '@/components/ui/icons';
-import { DropDown } from '@/components/ui/dropdown';
-import { DropdownPlacement, SHOELACE_SIZES } from '@/enums';
-import { ELEMENT_DISTANCE_FROM_NAVBAR } from '@/config';
-import { Map } from 'maplibre-gl';
-import { ModelDetailsButton } from '@/features/start-mapping/components/model-details-button';
-import { ModelPredictionsTracker } from '@/features/start-mapping/components/model-predictions-tracker';
-import { ModelSettings } from '@/features/start-mapping/components/model-settings';
-import { SkeletonWrapper } from '@/components/ui/skeleton';
-import { TDownloadOptions, TQueryParams } from '@/app/routes/start-mapping';
-import { TModel, TModelPredictions, TModelPredictionsConfig } from '@/types';
-import { ToolTip } from '@/components/ui/tooltip';
-import { useDropdownMenu } from '@/hooks/use-dropdown-menu';
-import { UserProfile } from '@/components/layout';
-import {
+import { Map } from "maplibre-gl";
 
-  START_MAPPING_PAGE_CONTENT,
-} from "@/constants";
+import { TDownloadOptions, TQueryParams } from "@/app/routes/start-mapping";
+import { UserProfile } from "@/components/layout";
+import { ButtonWithIcon } from "@/components/ui/button";
+import { DropDown } from "@/components/ui/dropdown";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { SkeletonWrapper } from "@/components/ui/skeleton";
+import { ToolTip } from "@/components/ui/tooltip";
+import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
+import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import { DropdownPlacement, SHOELACE_SIZES } from "@/enums";
+import ModelAction from "@/features/start-mapping/components/model-action";
+import { ModelDetailsButton } from "@/features/start-mapping/components/model-details-button";
+import { ModelPredictionsTracker } from "@/features/start-mapping/components/model-predictions-tracker";
+import { ModelSettings } from "@/features/start-mapping/components/model-settings";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { TModel, TModelPredictions, TModelPredictionsConfig } from "@/types";
 
+import { BrandLogoWithDropDown } from "./logo-with-dropdown";
 
 const StartMappingHeader = ({
   data,
@@ -111,8 +109,8 @@ const StartMappingHeader = ({
                   content={
                     !modelPredictionsExist
                       ? START_MAPPING_PAGE_CONTENT.actions.disabledModeTooltip(
-                        "see actions",
-                      )
+                          "see actions"
+                        )
                       : null
                   }
                 >

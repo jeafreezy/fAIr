@@ -1,17 +1,19 @@
-import { API_ENDPOINTS, apiClient } from "@/services";
-import { DirectoryIcon, FileIcon } from "@/components/ui/icons";
-import { getTrainingWorkspaceQueryOptions } from "@/features/models/api/factory";
-import { MODELS_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
-import { showErrorToast, showSuccessToast, truncateString } from "@/utils";
-import { Spinner } from "@/components/ui/spinner";
-import { TCSSWithVars } from "@/types";
 import { useEffect, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+
 import {
   SlFormatBytes,
   SlTree,
   SlTreeItem,
 } from "@shoelace-style/shoelace/dist/react";
+import { useQueryClient } from "@tanstack/react-query";
+
+import { DirectoryIcon, FileIcon } from "@/components/ui/icons";
+import { Spinner } from "@/components/ui/spinner";
+import { MODELS_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
+import { getTrainingWorkspaceQueryOptions } from "@/features/models/api/factory";
+import { API_ENDPOINTS, apiClient } from "@/services";
+import { TCSSWithVars } from "@/types";
+import { showErrorToast, showSuccessToast, truncateString } from "@/utils";
 
 type DirectoryTreeProps = {
   datasetId: number;
@@ -117,7 +119,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
   const fetchDirectoryRecursive = async (
     currentDirectory: string = "",
     currentDepth: number = 0,
-    maxDepth: number = 2,
+    maxDepth: number = 2
   ): Promise<any> => {
     if (currentDepth >= maxDepth) {
       return {};
@@ -138,7 +140,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
               const subDirData = await fetchDirectoryRecursive(
                 fullPath,
                 currentDepth + 1,
-                maxDepth,
+                maxDepth
               );
               return {
                 [key]: {
@@ -147,7 +149,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
                   length: dir[key]?.len || 0,
                 },
               };
-            }),
+            })
           )
         : [];
 
@@ -178,7 +180,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
         API_ENDPOINTS.DOWNLOAD_TRAINING_FILE(trainingId, validPath),
         {
           responseType: "blob",
-        },
+        }
       );
 
       if (response.status !== 200) {

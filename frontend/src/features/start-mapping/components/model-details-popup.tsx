@@ -1,15 +1,13 @@
-import useScreenSize from '@/hooks/use-screen-size';
-import { ELEMENT_DISTANCE_FROM_NAVBAR } from '@/config';
-import { extractDatePart, roundNumber, truncateString } from '@/utils';
-import { MobileDrawer } from '@/components/ui/drawer';
-import { Popup } from '@/components/ui/popup';
-import { SkeletonWrapper } from '@/components/ui/skeleton';
-import { TModelDetails, TTrainingDataset } from '@/types';
-import { useModelDetails } from '@/features/models/hooks/use-models';
-import { useTrainingDetails } from '@/features/models/hooks/use-training';
-import {
-  START_MAPPING_PAGE_CONTENT,
-} from "@/constants";
+import { MobileDrawer } from "@/components/ui/drawer";
+import { Popup } from "@/components/ui/popup";
+import { SkeletonWrapper } from "@/components/ui/skeleton";
+import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
+import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import { useModelDetails } from "@/features/models/hooks/use-models";
+import { useTrainingDetails } from "@/features/models/hooks/use-training";
+import useScreenSize from "@/hooks/use-screen-size";
+import { TModelDetails, TTrainingDataset } from "@/types";
+import { extractDatePart, roundNumber, truncateString } from "@/utils";
 
 const ModelDetailsPopUp = ({
   showPopup,
@@ -34,7 +32,7 @@ const ModelDetailsPopUp = ({
 }) => {
   const { data, isPending, isError } = useModelDetails(
     modelId as string,
-    modelId ? modelId !== undefined : false,
+    modelId ? modelId !== undefined : false
   );
 
   const {
@@ -42,7 +40,7 @@ const ModelDetailsPopUp = ({
     isPending: trainingDetailsIsPending,
     isError: trainingDetailsError,
   } = useTrainingDetails(
-    model?.published_training ?? (data?.published_training as number),
+    model?.published_training ?? (data?.published_training as number)
   );
   const { isSmallViewport } = useScreenSize();
 
@@ -66,7 +64,7 @@ const ModelDetailsPopUp = ({
           {START_MAPPING_PAGE_CONTENT.modelDetails.popover.lastModified}:{" "}
           <span className="font-medium">
             {extractDatePart(
-              model?.last_modified ?? (data?.last_modified as string),
+              model?.last_modified ?? (data?.last_modified as string)
             )}
           </span>
         </p>

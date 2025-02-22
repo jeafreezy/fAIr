@@ -1,19 +1,20 @@
-import { BASE_MODELS, INPUT_TYPES, TrainingType } from "@/enums";
-import { ButtonWithIcon } from "@/components/ui/button";
-import { CheckboxGroup, FormLabel, Input } from "@/components/ui/form";
-import { ChevronDownIcon } from "@/components/ui/icons";
-import { MODELS_CONTENT } from "@/constants";
 import { useEffect, useState } from "react";
-import {
-  AdvancedGuageIcon,
-  BasicGuageIcon,
-  IntermediateGuageIcon,
-} from "@/components/ui/icons";
+
 import {
   FORM_VALIDATION_CONFIG,
   MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
+import { ButtonWithIcon } from "@/components/ui/button";
+import { CheckboxGroup, FormLabel, Input } from "@/components/ui/form";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import {
+  AdvancedGuageIcon,
+  BasicGuageIcon,
+  IntermediateGuageIcon,
+} from "@/components/ui/icons";
+import { MODELS_CONTENT } from "@/constants";
+import { BASE_MODELS, INPUT_TYPES, TrainingType } from "@/enums";
 
 const trainingTypes = [
   { label: TrainingType.BASIC, Icon: BasicGuageIcon },
@@ -85,19 +86,19 @@ const TrainingSettingsForm = () => {
   useEffect(() => {
     handleChange(
       MODEL_CREATION_FORM_NAME.EPOCH,
-      defaultTrainingSettings[formData.trainingType].epoch,
+      defaultTrainingSettings[formData.trainingType].epoch
     );
     handleChange(
       MODEL_CREATION_FORM_NAME.BATCH_SIZE,
-      defaultTrainingSettings[formData.trainingType].batchSize,
+      defaultTrainingSettings[formData.trainingType].batchSize
     );
     handleChange(
       MODEL_CREATION_FORM_NAME.CONTACT_SPACING,
-      defaultTrainingSettings[formData.trainingType].contactSpacing,
+      defaultTrainingSettings[formData.trainingType].contactSpacing
     );
     handleChange(
       MODEL_CREATION_FORM_NAME.BOUNDARY_WIDTH,
-      defaultTrainingSettings[formData.trainingType].boundaryWidth,
+      defaultTrainingSettings[formData.trainingType].boundaryWidth
     );
   }, [formData.trainingType]);
 
@@ -127,7 +128,7 @@ const TrainingSettingsForm = () => {
           onCheck={(selection) =>
             handleChange(
               MODEL_CREATION_FORM_NAME.ZOOM_LEVELS,
-              selection.sort().map(Number),
+              selection.sort().map(Number)
             )
           }
         />
@@ -230,11 +231,11 @@ const TrainingSettingsForm = () => {
                         if (inputValue < min || inputValue > max) {
                           // Set validation message for out-of-range values
                           setValidationMessage(
-                            `${setting.label} must be between ${min} and ${max}.`,
+                            `${setting.label} must be between ${min} and ${max}.`
                           );
                           handleChange(
                             MODEL_CREATION_FORM_NAME.TRAINING_SETTINGS_IS_VALID,
-                            false,
+                            false
                           );
                         } else {
                           // Clear the validation message if the value is valid
@@ -242,7 +243,7 @@ const TrainingSettingsForm = () => {
                           handleChange(setting.value, inputValue);
                           handleChange(
                             MODEL_CREATION_FORM_NAME.TRAINING_SETTINGS_IS_VALID,
-                            true,
+                            true
                           );
                         }
                       }}

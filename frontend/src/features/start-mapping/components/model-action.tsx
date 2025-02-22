@@ -1,10 +1,12 @@
-import { handleConflation, showErrorToast, showSuccessToast } from "@/utils";
 import { Map } from "maplibre-gl";
-import { START_MAPPING_PAGE_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
-import { TModelPredictions, TModelPredictionsConfig } from "@/types";
-import { ToolTip } from "@/components/ui/tooltip";
+
 import { useCallback } from "react";
+
+import { ToolTip } from "@/components/ui/tooltip";
+import { START_MAPPING_PAGE_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
 import { useGetModelPredictions } from "@/features/start-mapping/hooks/use-model-predictions";
+import { TModelPredictions, TModelPredictionsConfig } from "@/types";
+import { handleConflation, showErrorToast, showSuccessToast } from "@/utils";
 
 const ModelAction = ({
   setModelPredictions,
@@ -23,12 +25,12 @@ const ModelAction = ({
     mutationConfig: {
       onSuccess: (data) => {
         showSuccessToast(
-          TOAST_NOTIFICATIONS.startMapping.modelPrediction.success,
+          TOAST_NOTIFICATIONS.startMapping.modelPrediction.success
         );
         const conflatedResults = handleConflation(
           modelPredictions,
           data.features,
-          trainingConfig,
+          trainingConfig
         );
         setModelPredictions(conflatedResults);
       },

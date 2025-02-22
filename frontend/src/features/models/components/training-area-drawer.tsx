@@ -1,24 +1,26 @@
 import React from "react";
-import { API_ENDPOINTS, apiClient } from "@/services";
-import { Button } from "@/components/ui/button";
-import { DialogProps } from "@/types";
-import { Drawer } from "@/components/ui/drawer";
-import { DrawerPlacements, SHOELACE_SIZES } from "@/enums";
-import { errorMessages, MODELS_CONTENT } from "@/constants";
-import { showErrorToast } from "@/utils";
-import { Spinner } from "@/components/ui/spinner";
-import { TrainingAreaMap } from "@/features/models/components";
+
 import { useQuery } from "@tanstack/react-query";
+
+import { Button } from "@/components/ui/button";
+import { Drawer } from "@/components/ui/drawer";
+import { Spinner } from "@/components/ui/spinner";
+import { MODELS_CONTENT, errorMessages } from "@/constants";
+import { DrawerPlacements, SHOELACE_SIZES } from "@/enums";
+import { TrainingAreaMap } from "@/features/models/components";
+import { API_ENDPOINTS, apiClient } from "@/services";
+import { DialogProps } from "@/types";
+import { showErrorToast } from "@/utils";
 
 type TAPIResponse = {
   result: string;
 };
 
 const getTrainingAreaPMTilesUrl = async (
-  trainingAreaId: number,
+  trainingAreaId: number
 ): Promise<TAPIResponse> => {
   const { data } = await apiClient.get(
-    API_ENDPOINTS.GET_PMTILES_URL(trainingAreaId),
+    API_ENDPOINTS.GET_PMTILES_URL(trainingAreaId)
   );
   if (!data || !data.result) {
     showErrorToast(undefined, errorMessages.MAP_LOAD_FAILURE);

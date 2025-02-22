@@ -1,5 +1,6 @@
-import { IconProps } from "@/types";
 import React from "react";
+
+import { IconProps } from "@/types";
 
 export const FeedbackIcon: React.FC<IconProps> = (props) => (
   <svg

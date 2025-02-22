@@ -1,4 +1,7 @@
-import { FAIR_PREDICTOR_API_ENDPOINT, OSM_DATABASE_STATUS_API_ENDPOINT } from '@/config';
+import {
+  FAIR_PREDICTOR_API_ENDPOINT,
+  OSM_DATABASE_STATUS_API_ENDPOINT,
+} from "@/config";
 
 /**
  * The backend API endpoints.

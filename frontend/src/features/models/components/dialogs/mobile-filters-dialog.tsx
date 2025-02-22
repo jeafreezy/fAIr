@@ -1,15 +1,15 @@
-import { APPLICATION_ROUTES } from "@/constants";
-import { Button } from "@/components/ui/button";
-import { Dialog } from "@/components/ui/dialog";
-import { DialogProps, TQueryParams } from "@/types";
 import { useLocation } from "react-router-dom";
 
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { APPLICATION_ROUTES } from "@/constants";
 import {
   CategoryFilter,
   DateRangeFilter,
   OrderingFilter,
   StatusFilter,
 } from "@/features/models/components/filters";
+import { DialogProps, TQueryParams } from "@/types";
 
 type TrainingAreaDrawerProps = DialogProps & {
   updateQuery: (updatedParams: TQueryParams) => void;
@@ -41,7 +41,7 @@ const MobileModelFiltersDialog: React.FC<TrainingAreaDrawerProps> = ({
 }) => {
   const currentRoute = useLocation();
   const userIsInAccountModelsPage = currentRoute.pathname.includes(
-    APPLICATION_ROUTES.ACCOUNT_MODELS,
+    APPLICATION_ROUTES.ACCOUNT_MODELS
   );
 
   return (

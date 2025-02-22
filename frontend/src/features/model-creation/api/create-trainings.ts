@@ -1,5 +1,4 @@
 import { API_ENDPOINTS, apiClient } from "@/services";
-
 import {
   TTrainingAreaFeature,
   TTrainingDataset,
@@ -115,7 +114,7 @@ export const createTrainingLabelsForAOI = async ({
   return await (
     await apiClient.post(
       API_ENDPOINTS.UPLOAD_TRAINING_AREA_LABELS(aoiId),
-      formData,
+      formData
     )
   ).data.status;
 };

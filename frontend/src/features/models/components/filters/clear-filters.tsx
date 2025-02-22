@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+import { Button } from "@/components/ui/button";
 import { TQueryParams } from "@/types";
 
 const ClearFilters = ({
@@ -15,7 +15,7 @@ const ClearFilters = ({
     query[SEARCH_PARAMS.searchQuery] ||
       query[SEARCH_PARAMS.startDate] ||
       query[SEARCH_PARAMS.endDate] ||
-      query[SEARCH_PARAMS.id],
+      query[SEARCH_PARAMS.id]
   );
 
   return (

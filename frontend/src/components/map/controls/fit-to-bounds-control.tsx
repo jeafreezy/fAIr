@@ -1,9 +1,11 @@
-import useScreenSize from "@/hooks/use-screen-size";
-import { ArrowMoveIcon } from "@/components/ui/icons";
 import { Map } from "maplibre-gl";
-import { MAP_CONTENT } from "@/constants";
-import { ToolTip } from "@/components/ui/tooltip";
+
 import { useCallback } from "react";
+
+import { ArrowMoveIcon } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
+import { MAP_CONTENT } from "@/constants";
+import useScreenSize from "@/hooks/use-screen-size";
 
 export const FitToBounds = ({
   map,

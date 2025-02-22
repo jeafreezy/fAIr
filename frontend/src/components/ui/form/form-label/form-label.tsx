@@ -1,4 +1,4 @@
-import { ToolTip } from '@/components/ui/tooltip';
+import { ToolTip } from "@/components/ui/tooltip";
 
 type FormLabelProps = {
   label: string;
@@ -33,7 +33,9 @@ const FormLabel: React.FC<FormLabelProps> = ({
       </span>
 
       {maxLength && (
-        <span className={`${isMaxReached || (currentLength > 1 && isBelowMin) ? "text-primary" : ""}`}>
+        <span
+          className={`${isMaxReached || (currentLength > 1 && isBelowMin) ? "text-primary" : ""}`}
+        >
           ({currentLength}/{maxLength})
         </span>
       )}

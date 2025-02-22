@@ -1,10 +1,10 @@
-import { CheckboxGroup } from "@/components/ui/form";
+import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { DropDown } from "@/components/ui/dropdown";
 import { DropdownMenuItem } from "@/components/ui/dropdown/dropdown";
+import { CheckboxGroup } from "@/components/ui/form";
 import { MODELS_CONTENT } from "@/constants";
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
-import { TQueryParams } from "@/types";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { TQueryParams } from "@/types";
 
 export const ORDERING_FIELDS: DropdownMenuItem[] = [
   {
@@ -41,7 +41,7 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
   const onSortSelect = (selectedItem: string) => {
     updateQuery({
       [SEARCH_PARAMS.ordering]: ORDERING_FIELDS.find(
-        (v) => v.value === selectedItem,
+        (v) => v.value === selectedItem
       )?.apiValue as string,
     });
   };
@@ -62,7 +62,7 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
           withCheckbox
           defaultSelectedItem={
             ORDERING_FIELDS.find(
-              (v) => v.apiValue === query[SEARCH_PARAMS.ordering],
+              (v) => v.apiValue === query[SEARCH_PARAMS.ordering]
             )?.value
           }
           triggerComponent={
@@ -86,7 +86,7 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
       onCheck={onSortSelect}
       defaultSelectedOption={
         ORDERING_FIELDS.find(
-          (v) => v.apiValue === query[SEARCH_PARAMS.ordering],
+          (v) => v.apiValue === query[SEARCH_PARAMS.ordering]
         )?.value
       }
     ></CheckboxGroup>

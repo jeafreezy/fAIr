@@ -1,15 +1,11 @@
-import useScreenSize from '@/hooks/use-screen-size';
-import { LegendBookIcon } from '@/components/ui/icons';
-import { Map } from 'maplibre-gl';
-import { START_MAPPING_PAGE_CONTENT } from '@/constants';
-import { useCallback, useState } from 'react';
-import {
+import { Map } from "maplibre-gl";
 
-  LEGEND_NAME_MAPPING,
-  MAP_STYLES_PREFIX,
-} from "@/config";
+import { useCallback, useState } from "react";
 
-
+import { LegendBookIcon } from "@/components/ui/icons";
+import { LEGEND_NAME_MAPPING, MAP_STYLES_PREFIX } from "@/config";
+import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import useScreenSize from "@/hooks/use-screen-size";
 
 const FillLegendStyle = ({
   fillColor,
@@ -39,7 +35,7 @@ export const Legend = ({ map }: { map: Map | null }) => {
         (layer) =>
           layer.id.includes(MAP_STYLES_PREFIX) &&
           layer.layout?.visibility === "visible" &&
-          layer.type === "fill",
+          layer.type === "fill"
       )
       .reverse() || [];
 

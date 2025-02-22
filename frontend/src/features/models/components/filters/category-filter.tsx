@@ -1,6 +1,6 @@
-import { CheckboxGroup } from "@/components/ui/form";
 import { DropDown } from "@/components/ui/dropdown";
 import { DropdownMenuItem } from "@/components/ui/dropdown/dropdown";
+import { CheckboxGroup } from "@/components/ui/form";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 
 type CategoryFilterProps = {

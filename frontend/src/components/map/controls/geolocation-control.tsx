@@ -1,10 +1,12 @@
-import { GeolocationIcon } from "@/components/ui/icons";
 import { Map } from "maplibre-gl";
-import { showErrorToast, showWarningToast } from "@/utils";
-import { TOAST_NOTIFICATIONS } from "@/constants";
-import { ToolTip } from "@/components/ui/tooltip";
-import { ToolTipPlacement } from "@/enums";
+
 import { useCallback } from "react";
+
+import { GeolocationIcon } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
+import { TOAST_NOTIFICATIONS } from "@/constants";
+import { ToolTipPlacement } from "@/enums";
+import { showErrorToast, showWarningToast } from "@/utils";
 
 export const GeolocationControl = ({ map }: { map: Map | null }) => {
   const handleGeolocationClick = useCallback(() => {
@@ -22,7 +24,7 @@ export const GeolocationControl = ({ map }: { map: Map | null }) => {
         },
         (error) => {
           showErrorToast(error, `Error getting location: ${error.message}.`);
-        },
+        }
       );
     } else {
       showWarningToast(TOAST_NOTIFICATIONS.geolocationNotSupported);

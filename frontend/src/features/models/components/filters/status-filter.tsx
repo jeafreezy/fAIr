@@ -1,9 +1,9 @@
-import { CheckboxGroup } from "@/components/ui/form";
+import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { DropDown } from "@/components/ui/dropdown";
 import { DropdownMenuItem } from "@/components/ui/dropdown/dropdown";
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
-import { TQueryParams } from "@/types";
+import { CheckboxGroup } from "@/components/ui/form";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { TQueryParams } from "@/types";
 
 type StatusFilterProps = {
   disabled: boolean;
@@ -57,7 +57,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
     },
   ];
   const categoryLabel = statusCategories.filter(
-    (status) => status.apiValue === query[SEARCH_PARAMS.status],
+    (status) => status.apiValue === query[SEARCH_PARAMS.status]
   );
 
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =

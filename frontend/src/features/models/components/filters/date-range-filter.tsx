@@ -1,10 +1,12 @@
-import { DateFilter, TQueryParams } from "@/types";
-import { DateRangePicker } from "@/components/ui/form";
-import { DropDown } from "@/components/ui/dropdown";
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
-import { SlCheckbox } from "@shoelace-style/shoelace/dist/react";
-import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 import { useEffect, useState } from "react";
+
+import { SlCheckbox } from "@shoelace-style/shoelace/dist/react";
+
+import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+import { DropDown } from "@/components/ui/dropdown";
+import { DateRangePicker } from "@/components/ui/form";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { DateFilter, TQueryParams } from "@/types";
 
 export const dateFilters: DateFilter[] = [
   {
@@ -36,10 +38,10 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     useDropdownMenu();
 
   const [startDate, setStartDate] = useState<string>(
-    query[SEARCH_PARAMS.startDate] as string,
+    query[SEARCH_PARAMS.startDate] as string
   );
   const [endDate, setEndDate] = useState<string>(
-    query[SEARCH_PARAMS.endDate] as string,
+    query[SEARCH_PARAMS.endDate] as string
   );
   const [triggerText, setTriggerText] = useState<string>("Date");
 
@@ -55,7 +57,7 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           ? `${startDate} - Today`
           : endDate
             ? `Start - ${endDate}`
-            : "Date",
+            : "Date"
     );
     onDropdownHide();
   };
@@ -66,7 +68,7 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     setTriggerText(
       query[SEARCH_PARAMS.startDate] || query[SEARCH_PARAMS.endDate]
         ? `${query[SEARCH_PARAMS.startDate] || "Start"} - ${query[SEARCH_PARAMS.endDate] || "Today"}`
-        : "Date",
+        : "Date"
     );
   }, [query[SEARCH_PARAMS.startDate], query[SEARCH_PARAMS.endDate]]);
 

@@ -1,17 +1,18 @@
-import { APPLICATION_ROUTES, SHARED_CONTENT } from "@/constants";
-import { Button } from "@/components/ui/button";
-import { Head } from "@/components/seo";
 import { useLocation, useNavigate } from "react-router-dom";
+
+import { Head } from "@/components/seo";
+import { Button } from "@/components/ui/button";
+import { APPLICATION_ROUTES, SHARED_CONTENT } from "@/constants";
 
 export const PageNotFound = () => {
   const location = useLocation();
 
   const modelNotFound = location.state?.from.includes(
-    APPLICATION_ROUTES.MODELS,
+    APPLICATION_ROUTES.MODELS
   );
 
   const trainingDatasetNotFound = location.state?.from.includes(
-    APPLICATION_ROUTES.TRAINING_DATASETS,
+    APPLICATION_ROUTES.TRAINING_DATASETS
   );
 
   const navigate = useNavigate();
@@ -72,7 +73,7 @@ export const PageNotFound = () => {
                 ? APPLICATION_ROUTES.MODELS
                 : trainingDatasetNotFound
                   ? APPLICATION_ROUTES.TRAINING_DATASETS
-                  : APPLICATION_ROUTES.HOMEPAGE,
+                  : APPLICATION_ROUTES.HOMEPAGE
             );
           }}
           className="max-w-[300px]"

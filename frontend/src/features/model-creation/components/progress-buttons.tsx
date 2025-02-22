@@ -1,15 +1,16 @@
-import { ButtonWithIcon } from "@/components/ui/button";
-import { ChevronDownIcon } from "@/components/ui/icons";
-import { MODELS_BASE, MODELS_ROUTES } from "@/constants";
-import { MODELS_CONTENT } from "@/constants";
-import { TrainingDatasetOption } from "@/enums";
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   FORM_VALIDATION_CONFIG,
   MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
+import { ButtonWithIcon } from "@/components/ui/button";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { MODELS_BASE, MODELS_ROUTES } from "@/constants";
+import { MODELS_CONTENT } from "@/constants";
+import { TrainingDatasetOption } from "@/enums";
 
 type ProgressButtonsProps = {
   currentPath: string;
@@ -67,7 +68,7 @@ const ProgressButtons: React.FC<ProgressButtonsProps> = ({
       ) {
         handleChange(
           MODEL_CREATION_FORM_NAME.TRAINING_DATASET_OPTION,
-          TrainingDatasetOption.NONE,
+          TrainingDatasetOption.NONE
         );
         // When the user clicks the back button, all their changes will be lost. This is because if we don't clear it, the user can
         // be able to select existing dataset and also create a new one which will lead to confusion.

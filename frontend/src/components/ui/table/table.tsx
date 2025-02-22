@@ -1,5 +1,7 @@
 import * as React from "react";
+
 import { cn } from "@/utils";
+
 /**
  * Inspired by https://ui.shadcn.com/docs/components/table
  */
@@ -26,7 +28,7 @@ const TableHeader = React.forwardRef<
     ref={ref}
     className={cn(
       "[&_tr]:border-b text-nowrap [&_tr]:border-light-gray",
-      className,
+      className
     )}
     {...props}
   />
@@ -41,7 +43,7 @@ const TableBody = React.forwardRef<
     ref={ref}
     className={cn(
       "[&_tr:last-child]:border-0 text-body-2base text-left text-dark",
-      className,
+      className
     )}
     {...props}
   />
@@ -68,7 +70,7 @@ const TableRow = React.forwardRef<
     ref={ref}
     className={cn(
       "transition-colors hover:bg-hover-accent cursor-pointer data-[state=selected]:bg-muted",
-      className,
+      className
     )}
     {...props}
   />
@@ -83,7 +85,7 @@ const TableHead = React.forwardRef<
     ref={ref}
     className={cn(
       "h-12 px-4 text-body-3 cursor-pointer text-left text-gray align-middle font-medium [&:has([role=checkbox])]:pr-0",
-      className,
+      className
     )}
     {...props}
   />
@@ -98,7 +100,7 @@ const TableCell = React.forwardRef<
     ref={ref}
     className={cn(
       "p-4 align-middle text-nowrap [&:has([role=checkbox])]:pr-0",
-      className,
+      className
     )}
     {...props}
   />

@@ -1,4 +1,4 @@
-import { roundNumber } from '@/utils';
+import { roundNumber } from "@/utils";
 
 const AccuracyDisplay = ({ accuracy }: { accuracy: number }) => {
   const colors = [

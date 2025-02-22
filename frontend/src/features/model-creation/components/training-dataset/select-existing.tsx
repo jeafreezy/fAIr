@@ -1,15 +1,16 @@
-import useDebounce from '@/hooks/use-debounce';
-import { CheckIcon } from '@/components/ui/icons';
-import { HelpText, Input } from '@/components/ui/form';
-import { MODELS_CONTENT } from '@/constants';
-import { SearchIcon } from '@/components/ui/icons';
-import { SkeletonWrapper } from '@/components/ui/skeleton';
-import { useGetTrainingDatasets } from '@/features/model-creation/hooks/use-training-datasets';
-import { useState } from 'react';
+import { useState } from "react";
+
 import {
   MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
+import { HelpText, Input } from "@/components/ui/form";
+import { CheckIcon } from "@/components/ui/icons";
+import { SearchIcon } from "@/components/ui/icons";
+import { SkeletonWrapper } from "@/components/ui/skeleton";
+import { MODELS_CONTENT } from "@/constants";
+import { useGetTrainingDatasets } from "@/features/model-creation/hooks/use-training-datasets";
+import useDebounce from "@/hooks/use-debounce";
 
 const SelectExistingTrainingDatasetForm = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -27,8 +28,12 @@ const SelectExistingTrainingDatasetForm = () => {
               .existingTrainingDatasetSectionHeading
           }
         </p>
-        <HelpText content={MODELS_CONTENT.modelCreation.trainingDataset.form
-          .existingTrainingDatasetSectionDescription} />
+        <HelpText
+          content={
+            MODELS_CONTENT.modelCreation.trainingDataset.form
+              .existingTrainingDatasetSectionDescription
+          }
+        />
       </div>
       <div className={`flex  items-center border border-gray-border`}>
         <SearchIcon className={`ml-2 icon-lg text-dark`} />
@@ -43,7 +48,6 @@ const SelectExistingTrainingDatasetForm = () => {
           }
           disabled={isError}
           className="w-full"
-
         />
       </div>
 
@@ -58,7 +62,7 @@ const SelectExistingTrainingDatasetForm = () => {
               {data &&
                 data
                   .filter((td) =>
-                    td.name.toLowerCase().includes(searchQuery.toLowerCase()),
+                    td.name.toLowerCase().includes(searchQuery.toLowerCase())
                   )
                   .map((td, id) => (
                     <li
@@ -69,20 +73,19 @@ const SelectExistingTrainingDatasetForm = () => {
                         disabled={!td.source_imagery}
                         className="w-full text-start"
                         onClick={() => {
-
                           handleChange(
                             MODEL_CREATION_FORM_NAME.SELECTED_TRAINING_DATASET_ID,
-                            String(td.id),
+                            String(td.id)
                           );
                           // Also update other parameters
                           handleChange(
                             MODEL_CREATION_FORM_NAME.TMS_URL,
-                            String(td.source_imagery),
+                            String(td.source_imagery)
                           );
 
                           handleChange(
                             MODEL_CREATION_FORM_NAME.DATASET_NAME,
-                            String(td.name),
+                            String(td.name)
                           );
                         }}
                       >

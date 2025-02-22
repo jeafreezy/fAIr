@@ -1,5 +1,5 @@
-import { cn } from "@/utils";
 import { TBadgeVariants } from "@/types";
+import { cn } from "@/utils";
 
 type BadgeProps = {
   variant: TBadgeVariants;
@@ -26,7 +26,7 @@ const Badge: React.FC<BadgeProps> = ({
   return (
     <button
       className={cn(
-        `h-8 w-fit ${variants[variant]} ${rounded ? "rounded-full p-2" : "rounded-2xl py-1 px-3 "} ${className}`,
+        `h-8 w-fit ${variants[variant]} ${rounded ? "rounded-full p-2" : "rounded-2xl py-1 px-3 "} ${className}`
       )}
       onClick={onClick}
     >

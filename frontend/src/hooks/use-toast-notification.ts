@@ -22,7 +22,7 @@ export const useToastNotification = () => {
       | "neutral"
       | "warning"
       | "danger" = "primary",
-    duration: number = 3000,
+    duration: number = 3000
   ) => {
     const alert = Object.assign(document.createElement("sl-alert"), {
       variant,

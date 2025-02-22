@@ -1,25 +1,27 @@
-import AccuracyDisplay from './accuracy-display';
-import CodeBlock from '@/components/ui/codeblock/codeblock';
-import ModelFilesButton from './model-files-button';
-import ToolTip from '@/components/ui/tooltip/tooltip';
-import useCopyToClipboard from '@/hooks/use-clipboard';
-import { BASE_API_URL } from '@/config';
-import { ChevronDownIcon } from '@/components/ui/icons';
-import { cn, showErrorToast } from '@/utils';
-import { CopyIcon, ExternalLinkIcon } from '@/components/ui/icons';
-import { Image, ZoomableImage } from '@/components/ui/image';
-import { Link } from '@/components/ui/link';
-import { ModelFilesDialog } from './dialogs';
-import { ModelPropertiesSkeleton } from './skeletons';
-import { MODELS_CONTENT } from '@/constants';
-import { TrainingAreaButton } from './training-area-button';
-import { TrainingAreaDrawer } from './training-area-drawer';
-import { useDialog } from '@/hooks/use-dialog';
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
+
+import CodeBlock from "@/components/ui/codeblock/codeblock";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { CopyIcon, ExternalLinkIcon } from "@/components/ui/icons";
+import { Image, ZoomableImage } from "@/components/ui/image";
+import { Link } from "@/components/ui/link";
+import ToolTip from "@/components/ui/tooltip/tooltip";
+import { BASE_API_URL } from "@/config";
+import { MODELS_CONTENT } from "@/constants";
 import {
   useTrainingDetails,
   useTrainingStatus,
 } from "@/features/models/hooks/use-training";
+import useCopyToClipboard from "@/hooks/use-clipboard";
+import { useDialog } from "@/hooks/use-dialog";
+import { cn, showErrorToast } from "@/utils";
+
+import AccuracyDisplay from "./accuracy-display";
+import { ModelFilesDialog } from "./dialogs";
+import ModelFilesButton from "./model-files-button";
+import { ModelPropertiesSkeleton } from "./skeletons";
+import { TrainingAreaButton } from "./training-area-button";
+import { TrainingAreaDrawer } from "./training-area-drawer";
 
 enum TrainingStatus {
   FAILED = "FAILED",
@@ -84,7 +86,7 @@ const PropertyDisplay: React.FC<PropertyDisplayProps> = ({
       ) : (
         <span
           className={cn(
-            `${animate && "animate-pulse"} text-dark font-semibold text-body-2 md:text-body-1`,
+            `${animate && "animate-pulse"} text-dark font-semibold text-body-2 md:text-body-1`
           )}
         >
           {value ?? "N/A"}
@@ -111,7 +113,7 @@ const ModelProperties: React.FC<ModelPropertiesProps> = ({
 }) => {
   const { isPending, data, error, isError } = useTrainingDetails(
     trainingId,
-    10000,
+    10000
   );
 
   const { isOpened, closeDialog, openDialog } = useDialog();
@@ -161,7 +163,7 @@ const ModelProperties: React.FC<ModelPropertiesProps> = ({
       <>
         <div
           className={cn(
-            `grid ${isTrainingDetailsDialog ? "grid-cols-2" : "grid-cols-1 lg:grid-cols-5"} gap-14 items-center `,
+            `grid ${isTrainingDetailsDialog ? "grid-cols-2" : "grid-cols-1 lg:grid-cols-5"} gap-14 items-center `
           )}
         >
           <div className="col-span-3 grid grid-cols-1 sm:grid-cols-2 grid-rows-4 gap-y-4 md:gap-y-8">
@@ -313,7 +315,7 @@ const ModelProperties: React.FC<ModelPropertiesProps> = ({
 
           {trainingResultsGraph &&
             ![TrainingStatus.RUNNING, TrainingStatus.FAILED].includes(
-              data?.status as TrainingStatus,
+              data?.status as TrainingStatus
             ) && (
               <div
                 className={`col-span-3 lg:col-span-2 ${isTrainingDetailsDialog && "lg:col-span-3"}`}

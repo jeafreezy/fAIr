@@ -1,18 +1,18 @@
-import ModelAction from '@/features/start-mapping/components/model-action';
-import { ChevronDownIcon, CloudDownloadIcon } from '@/components/ui/icons';
-import { Map } from 'maplibre-gl';
-import { MINIMUM_ZOOM_LEVEL_INSTRUCTION_FOR_PREDICTION } from '@/config';
-import { MobileDrawer } from '@/components/ui/drawer';
-import { ModelDetailsButton } from '@/features/start-mapping/components/model-details-button';
-import { ModelPredictionsTracker } from '@/features/start-mapping/components/model-predictions-tracker';
-import { ModelSettings } from '@/features/start-mapping/components/model-settings';
-import { TDownloadOptions, TQueryParams } from '@/app/routes/start-mapping';
-import { TModelPredictions, TModelPredictionsConfig } from '@/types';
-import { ToolTip } from '@/components/ui/tooltip';
-import { useState } from 'react';
-import {
-  START_MAPPING_PAGE_CONTENT,
-} from "@/constants";
+import { Map } from "maplibre-gl";
+
+import { useState } from "react";
+
+import { TDownloadOptions, TQueryParams } from "@/app/routes/start-mapping";
+import { MobileDrawer } from "@/components/ui/drawer";
+import { ChevronDownIcon, CloudDownloadIcon } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
+import { MINIMUM_ZOOM_LEVEL_INSTRUCTION_FOR_PREDICTION } from "@/config";
+import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import ModelAction from "@/features/start-mapping/components/model-action";
+import { ModelDetailsButton } from "@/features/start-mapping/components/model-details-button";
+import { ModelPredictionsTracker } from "@/features/start-mapping/components/model-predictions-tracker";
+import { ModelSettings } from "@/features/start-mapping/components/model-settings";
+import { TModelPredictions, TModelPredictionsConfig } from "@/types";
 
 export const StartMappingMobileDrawer = ({
   isOpen,
@@ -87,8 +87,8 @@ export const StartMappingMobileDrawer = ({
             content={
               disablePrediction
                 ? START_MAPPING_PAGE_CONTENT.actions.disabledModeTooltip(
-                  "see download options",
-                )
+                    "see download options"
+                  )
                 : null
             }
           >

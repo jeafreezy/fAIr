@@ -1,8 +1,9 @@
-import { DrawingModes, ToolTipPlacement } from "@/enums";
-import { PenIcon } from "@/components/ui/icons";
-import { TerraDraw } from "terra-draw";
-import { ToolTip } from "@/components/ui/tooltip";
 import { useCallback } from "react";
+import { TerraDraw } from "terra-draw";
+
+import { PenIcon } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
+import { DrawingModes, ToolTipPlacement } from "@/enums";
 
 export const DrawControl = ({
   drawingMode,
@@ -18,14 +19,14 @@ export const DrawControl = ({
       terraDraw?.setMode(newMode);
       setDrawingMode(newMode);
     },
-    [terraDraw],
+    [terraDraw]
   );
 
   const renderButton = (
     currentMode: DrawingModes,
     activeMode: DrawingModes,
     label: string,
-    isActive: boolean,
+    isActive: boolean
   ) => (
     <ToolTip
       content={label}
@@ -36,7 +37,7 @@ export const DrawControl = ({
         className={`p-2 ${currentMode === activeMode ? "bg-primary" : "bg-white"} flex items-center justify-center`}
         onClick={() =>
           changeMode(
-            currentMode === activeMode ? DrawingModes.STATIC : activeMode,
+            currentMode === activeMode ? DrawingModes.STATIC : activeMode
           )
         }
       >
@@ -59,7 +60,7 @@ export const DrawControl = ({
         drawingMode,
         DrawingModes.RECTANGLE,
         drawingMode === DrawingModes.STATIC ? "Draw AOI" : "Cancel",
-        drawingMode === DrawingModes.RECTANGLE,
+        drawingMode === DrawingModes.RECTANGLE
       )}
     </>
   );

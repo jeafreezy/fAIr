@@ -1,11 +1,13 @@
-import maplibregl from 'maplibre-gl';
-import { HexColorStyling } from 'node_modules/terra-draw/dist/common';
+import maplibregl from "maplibre-gl";
+import { HexColorStyling } from "node_modules/terra-draw/dist/common";
+
 import {
   TerraDraw,
   TerraDrawMapLibreGLAdapter,
-  ValidateNotSelfIntersecting,
   TerraDrawRectangleMode,
+  ValidateNotSelfIntersecting,
 } from "terra-draw";
+
 import {
   TRAINING_AREAS_AOI_FILL_COLOR,
   TRAINING_AREAS_AOI_FILL_OPACITY,

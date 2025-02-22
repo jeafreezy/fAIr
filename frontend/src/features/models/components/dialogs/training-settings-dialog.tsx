@@ -1,17 +1,17 @@
-import TrainingSettingsForm from "@/features/model-creation/components/training-settings/training-settings-form";
-import { ButtonWithIcon } from "@/components/ui/button";
-import { ChevronDownIcon } from "@/components/ui/icons";
-import { Dialog } from "@/components/ui/dialog";
-import { MODELS_CONTENT } from "@/constants";
-import { PAGE_LIMIT } from "@/components/shared";
 import { useEffect } from "react";
-import { useModelDetails } from "@/features/models/hooks/use-models";
-import { useTrainingHistory } from "@/features/models/hooks/use-training";
 
 import {
   MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
+import { PAGE_LIMIT } from "@/components/shared";
+import { ButtonWithIcon } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { MODELS_CONTENT } from "@/constants";
+import TrainingSettingsForm from "@/features/model-creation/components/training-settings/training-settings-form";
+import { useModelDetails } from "@/features/models/hooks/use-models";
+import { useTrainingHistory } from "@/features/models/hooks/use-training";
 
 type ModelEnhancementDialogProps = {
   isOpened: boolean;
@@ -38,7 +38,7 @@ const ModelTrainingSettingsDialog: React.FC<ModelEnhancementDialogProps> = ({
     if (!data) return;
     handleChange(
       MODEL_CREATION_FORM_NAME.BASE_MODELS,
-      data?.base_model as string,
+      data?.base_model as string
     );
   }, [data?.base_model]);
 
@@ -47,7 +47,7 @@ const ModelTrainingSettingsDialog: React.FC<ModelEnhancementDialogProps> = ({
     modelId as string,
     0,
     PAGE_LIMIT,
-    "-id",
+    "-id"
   );
 
   const handleClick = () => {
@@ -68,7 +68,7 @@ const ModelTrainingSettingsDialog: React.FC<ModelEnhancementDialogProps> = ({
         onError: () => {
           closeDialog();
         },
-      },
+      }
     );
   };
 

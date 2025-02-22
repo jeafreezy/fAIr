@@ -1,8 +1,9 @@
-import { InfoIcon } from "@/components/ui/icons";
-import { ToolTipPlacement } from "@/enums";
 import SlTooltip, {
   SlHideEvent,
 } from "@shoelace-style/shoelace/dist/react/tooltip/index.js";
+
+import { InfoIcon } from "@/components/ui/icons";
+import { ToolTipPlacement } from "@/enums";
 
 type ToolTipProps = {
   content?: string | React.ReactElement | null;

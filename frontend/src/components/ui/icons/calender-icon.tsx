@@ -1,8 +1,9 @@
-import { IconProps, ShoelaceSlotProps } from "@/types";
 import React from "react";
 
+import { IconProps, ShoelaceSlotProps } from "@/types";
+
 export const CalenderIcon: React.FC<ShoelaceSlotProps & IconProps> = (
-  props,
+  props
 ) => (
   <svg
     viewBox="0 0 14 15"

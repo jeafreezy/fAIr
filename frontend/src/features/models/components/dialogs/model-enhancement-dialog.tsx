@@ -1,10 +1,11 @@
-import ModelTrainingSettingsDialog from "@/features/models/components/dialogs/training-settings-dialog";
-import { ChevronDownIcon } from "@/components/ui/icons";
-import { Dialog } from "@/components/ui/dialog";
-import { MODELS_BASE, MODELS_CONTENT, MODELS_ROUTES } from "@/constants";
-import { ModelsProvider } from "@/app/providers/models-provider";
-import { useDialog } from "@/hooks/use-dialog";
 import { useNavigate } from "react-router-dom";
+
+import { ModelsProvider } from "@/app/providers/models-provider";
+import { Dialog } from "@/components/ui/dialog";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { MODELS_BASE, MODELS_CONTENT, MODELS_ROUTES } from "@/constants";
+import ModelTrainingSettingsDialog from "@/features/models/components/dialogs/training-settings-dialog";
+import { useDialog } from "@/hooks/use-dialog";
 
 type ModelEnhancementDialogProps = {
   isOpened: boolean;
@@ -40,7 +41,7 @@ const ModelEnhancementDialog: React.FC<ModelEnhancementDialogProps> = ({
           .description,
       onClick: () =>
         navigate(
-          MODELS_BASE + "/" + modelId + "/" + MODELS_ROUTES.TRAINING_AREA,
+          MODELS_BASE + "/" + modelId + "/" + MODELS_ROUTES.TRAINING_AREA
         ),
     },
   ];

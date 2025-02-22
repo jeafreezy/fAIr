@@ -15,7 +15,7 @@ import { useToastNotification } from "@/hooks/use-toast-notification";
 
 export const showErrorToast = (
   error: any | undefined = undefined,
-  customMessage: string | undefined = undefined,
+  customMessage: string | undefined = undefined
 ) => {
   const toast = useToastNotification();
   let message = "An unexpected error occurred";

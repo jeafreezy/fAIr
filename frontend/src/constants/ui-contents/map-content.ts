@@ -1,4 +1,4 @@
-import { TMapContent } from '@/types';
+import { TMapContent } from "@/types";
 
 export const MAP_CONTENT: TMapContent = {
   controls: {

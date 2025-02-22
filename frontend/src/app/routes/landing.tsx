@@ -1,15 +1,15 @@
-import { FAQs } from "@/components/shared";
-import { Head } from "@/components/seo";
 import {
+  CallToAction,
+  CoreFeatures,
+  Corevalues,
   Header,
   Kpi,
   TaglineBanner,
   TheFAIRProcess,
-  CallToAction,
-  Corevalues,
-  CoreFeatures,
   WhatIsFAIR,
 } from "@/components/landing";
+import { Head } from "@/components/seo";
+import { FAQs } from "@/components/shared";
 
 export const LandingPage = () => {
   return (

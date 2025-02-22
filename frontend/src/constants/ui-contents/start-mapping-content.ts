@@ -1,4 +1,4 @@
-import { TStartMappingPageContent } from '@/types';
+import { TStartMappingPageContent } from "@/types";
 
 export const START_MAPPING_PAGE_CONTENT: TStartMappingPageContent = {
   pageTitle: (modelName: string) => `Start Mapping with ${modelName}`,

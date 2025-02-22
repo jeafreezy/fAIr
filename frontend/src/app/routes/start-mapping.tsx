@@ -1,25 +1,31 @@
-import useScreenSize from '@/hooks/use-screen-size';
-import { APPLICATION_ROUTES, START_MAPPING_PAGE_CONTENT, TOAST_NOTIFICATIONS } from '@/constants';
-import { BASE_MODELS } from '@/enums';
-import { FitToBounds, LayerControl, ZoomLevel } from '@/components/map';
-import { Head } from '@/components/seo';
-import { LngLatBoundsLike } from 'maplibre-gl';
-import { ModelDetailsPopUp } from '@/features/start-mapping/components';
-import { useCallback, useEffect, useState } from 'react';
-import { useDropdownMenu } from '@/hooks/use-dropdown-menu';
-import { useGetTMSTileJSON } from '@/features/model-creation/hooks/use-tms-tilejson';
-import { useGetTrainingDataset } from '@/features/models/hooks/use-dataset';
-import { useMapInstance } from '@/hooks/use-map-instance';
-import { useModelDetails } from '@/features/models/hooks/use-models';
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { UserProfile } from '@/components/layout';
+import { LngLatBoundsLike } from "maplibre-gl";
+
+import { useCallback, useEffect, useState } from "react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+
+import { UserProfile } from "@/components/layout";
+import { FitToBounds, LayerControl, ZoomLevel } from "@/components/map";
+import { Head } from "@/components/seo";
 import {
-  BBOX,
-  Feature,
-  TileJSON,
-  TModelPredictions,
-  TModelPredictionsConfig,
-} from "@/types";
+  ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+  ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+  ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
+  ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+  MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION,
+  PREDICTION_API_FILE_EXTENSIONS,
+  REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+  REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+} from "@/config";
+import {
+  APPLICATION_ROUTES,
+  START_MAPPING_PAGE_CONTENT,
+  TOAST_NOTIFICATIONS,
+} from "@/constants";
+import { BASE_MODELS } from "@/enums";
+import { useGetTMSTileJSON } from "@/features/model-creation/hooks/use-tms-tilejson";
+import { useGetTrainingDataset } from "@/features/models/hooks/use-dataset";
+import { useModelDetails } from "@/features/models/hooks/use-models";
+import { ModelDetailsPopUp } from "@/features/start-mapping/components";
 import {
   BrandLogoWithDropDown,
   Legend,
@@ -27,23 +33,22 @@ import {
   StartMappingMapComponent,
   StartMappingMobileDrawer,
 } from "@/features/start-mapping/components";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { useMapInstance } from "@/hooks/use-map-instance";
+import useScreenSize from "@/hooks/use-screen-size";
+import {
+  BBOX,
+  Feature,
+  TModelPredictions,
+  TModelPredictionsConfig,
+  TileJSON,
+} from "@/types";
 import {
   extractTileJSONURL,
   geoJSONDowloader,
   openInJOSM,
   showSuccessToast,
 } from "@/utils";
-import {
-
-  PREDICTION_API_FILE_EXTENSIONS,
-  REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-  MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION,
-  ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-  ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-} from "@/config";
 
 export type TDownloadOptions = {
   name: string;
@@ -75,7 +80,7 @@ export const StartMappingPage = () => {
 
   const { isError, isPending, data, error } = useModelDetails(
     modelId as string,
-    !!modelId,
+    !!modelId
   );
 
   const {
@@ -143,7 +148,7 @@ export const StartMappingPage = () => {
       }
       setSearchParams(updatedParams, { replace: true });
     },
-    [searchParams, setSearchParams],
+    [searchParams, setSearchParams]
   );
 
   const trainingConfig: TModelPredictionsConfig = {
@@ -173,42 +178,42 @@ export const StartMappingPage = () => {
   const mapLayers = [
     ...(modelPredictions.accepted.length > 0
       ? [
-        {
-          value:
-            START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-              .acceptedPredictions,
-          subLayers: [
-            ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-            ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-          ],
-        },
-      ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .acceptedPredictions,
+            subLayers: [
+              ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
       : []),
     ...(modelPredictions.rejected.length > 0
       ? [
-        {
-          value:
-            START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-              .rejectedPredictions,
-          subLayers: [
-            REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-            REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-          ],
-        },
-      ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .rejectedPredictions,
+            subLayers: [
+              REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
       : []),
     ...(modelPredictions.all.length > 0
       ? [
-        {
-          value:
-            START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-              .predictionResults,
-          subLayers: [
-            ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
-            ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-          ],
-        },
-      ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .predictionResults,
+            subLayers: [
+              ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
       : []),
   ];
 
@@ -222,7 +227,7 @@ export const StartMappingPage = () => {
           ...modelPredictions.all,
         ],
       },
-      `all_predictions_${data.dataset}`,
+      `all_predictions_${data.dataset}`
     );
     showSuccessToast(TOAST_NOTIFICATIONS.startMapping.fileDownloadSuccess);
   }, [modelPredictions]);
@@ -230,7 +235,7 @@ export const StartMappingPage = () => {
   const handleAcceptedFeaturesDownload = useCallback(async () => {
     geoJSONDowloader(
       { type: "FeatureCollection", features: modelPredictions.accepted },
-      `accepted_predictions_${data.dataset}`,
+      `accepted_predictions_${data.dataset}`
     );
     showSuccessToast(TOAST_NOTIFICATIONS.startMapping.fileDownloadSuccess);
   }, [modelPredictions]);
@@ -243,10 +248,10 @@ export const StartMappingPage = () => {
         trainingDataset.name,
         trainingDataset.source_imagery,
         features,
-        true,
+        true
       );
     },
-    [map, oamTileJSON, trainingDataset],
+    [map, oamTileJSON, trainingDataset]
   );
 
   const handleAllFeaturesDownloadToJOSM = useCallback(() => {
@@ -260,21 +265,21 @@ export const StartMappingPage = () => {
   const downloadOptions: TDownloadOptions = [
     {
       name: START_MAPPING_PAGE_CONTENT.buttons.download.options.allFeatures(
-        isSmallViewport ? "All" : "Download all",
+        isSmallViewport ? "All" : "Download all"
       ),
       value: START_MAPPING_PAGE_CONTENT.buttons.download.options.allFeatures(
-        isSmallViewport ? "All" : "Download all",
+        isSmallViewport ? "All" : "Download all"
       ),
       onClick: handleAllFeaturesDownload,
       showOnMobile: true,
     },
     {
       name: START_MAPPING_PAGE_CONTENT.buttons.download.options.acceptedFeatures(
-        isSmallViewport ? "Accepted" : "Download accepted",
+        isSmallViewport ? "Accepted" : "Download accepted"
       ),
       value:
         START_MAPPING_PAGE_CONTENT.buttons.download.options.acceptedFeatures(
-          isSmallViewport ? "Accepted" : "Download accepted",
+          isSmallViewport ? "Accepted" : "Download accepted"
         ),
       onClick: handleAcceptedFeaturesDownload,
       showOnMobile: true,

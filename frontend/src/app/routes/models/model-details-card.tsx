@@ -1,27 +1,28 @@
 import axios from "axios";
-import ModelEnhancementDialog from "@/features/models/components/dialogs/model-enhancement-dialog";
-import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
-import { BackButton, ButtonWithIcon } from "@/components/ui/button";
-import { Head } from "@/components/seo";
-import { Image } from "@/components/ui/image";
-import { ModelDetailsSkeleton } from "@/features/models/components/skeletons";
-import { ModelFilesDialog } from "@/features/models/components/dialogs";
-import { StarStackIcon } from "@/components/ui/icons";
-import { TModelDetails, TTrainingDataset } from "@/types";
-import { TrainingAreaDrawer } from "@/features/models/components/training-area-drawer";
-import { TrainingInProgressImage } from "@/assets/images";
-import { useAuth } from "@/app/providers/auth-provider";
-import { useDialog } from "@/hooks/use-dialog";
 import { useEffect } from "react";
-import { useGetTrainingDataset } from "@/features/models/hooks/use-dataset";
-import { useModelDetails } from "@/features/models/hooks/use-models";
 import { useNavigate, useParams } from "react-router-dom";
+
+import { useAuth } from "@/app/providers/auth-provider";
+import { TrainingInProgressImage } from "@/assets/images";
+import { Head } from "@/components/seo";
+import { BackButton, ButtonWithIcon } from "@/components/ui/button";
+import { StarStackIcon } from "@/components/ui/icons";
+import { Image } from "@/components/ui/image";
+import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
 import {
-  ModelDetailsSection,
-  ModelDetailsProperties,
   ModelDetailsInfo,
+  ModelDetailsProperties,
+  ModelDetailsSection,
   TrainingHistoryTable,
 } from "@/features/models/components";
+import { ModelFilesDialog } from "@/features/models/components/dialogs";
+import ModelEnhancementDialog from "@/features/models/components/dialogs/model-enhancement-dialog";
+import { ModelDetailsSkeleton } from "@/features/models/components/skeletons";
+import { TrainingAreaDrawer } from "@/features/models/components/training-area-drawer";
+import { useGetTrainingDataset } from "@/features/models/hooks/use-dataset";
+import { useModelDetails } from "@/features/models/hooks/use-models";
+import { useDialog } from "@/hooks/use-dialog";
+import { TModelDetails, TTrainingDataset } from "@/types";
 
 export const ModelDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -37,7 +38,7 @@ export const ModelDetailsPage = () => {
   const { data, isPending, isError, error } = useModelDetails(
     id as string,
     !!id,
-    10000,
+    10000
   );
   const { isAuthenticated } = useAuth();
 

@@ -1,5 +1,6 @@
-import { BBOX } from './common';
-import { GeoJsonProperties, Geometry } from 'geojson';
+import { GeoJsonProperties, Geometry } from "geojson";
+
+import { BBOX } from "./common";
 
 /**
  * This file contains the different types/schema for the API responses from the backend.
@@ -159,10 +160,10 @@ export type Feature = {
   type: "Feature";
   geometry: Geometry;
   properties:
-  | {
-    mid: string;
-  }
-  | GeoJsonProperties;
+    | {
+        mid: string;
+      }
+    | GeoJsonProperties;
 };
 
 export type FeatureCollection = {
@@ -183,8 +184,6 @@ export type TModelPredictionsConfig = {
   use_josm_q: boolean;
   zoom_level: number;
 };
-
-
 
 export type TModelPredictionFeature = {
   type: "Feature";

@@ -1,5 +1,6 @@
-import { getTrainingDatasetQueryOptions } from "../api/factory";
 import { useQuery } from "@tanstack/react-query";
+
+import { getTrainingDatasetQueryOptions } from "../api/factory";
 
 export const useGetTrainingDataset = (id: number, enabled: boolean = !!id) => {
   return useQuery({

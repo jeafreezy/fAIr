@@ -1,26 +1,16 @@
-import ModelNotFound from "@/features/models/components/model-not-found";
-import { FeatureCollection } from "@/types";
-import { Head } from "@/components/seo";
-import { LayoutView } from "@/enums";
-import { MobileModelFiltersDialog } from "@/features/models/components/dialogs";
-import { MODELS_CONTENT } from "@/constants";
-import { PAGE_LIMIT, Pagination } from "@/components/shared";
-import { PageHeader } from "@/features/models/components/";
-import { useDialog } from "@/hooks/use-dialog";
 import { useEffect } from "react";
-import {
-  useModelsListFilters,
-  useModelsMapData,
-} from "@/features/models/hooks/use-models";
-import {
-  ModelListGridLayout,
-  ModelListTableLayout,
-} from "@/features/models/layouts";
+
+import { Head } from "@/components/seo";
+import { PAGE_LIMIT, Pagination } from "@/components/shared";
+import { MODELS_CONTENT } from "@/constants";
+import { LayoutView } from "@/enums";
 import {
   LayoutToggle,
   ModelMapToggle,
   ModelsMap,
 } from "@/features/models/components";
+import { PageHeader } from "@/features/models/components/";
+import { MobileModelFiltersDialog } from "@/features/models/components/dialogs";
 import {
   CategoryFilter,
   ClearFilters,
@@ -29,11 +19,21 @@ import {
   OrderingFilter,
   SearchFilter,
 } from "@/features/models/components/filters";
-
+import ModelNotFound from "@/features/models/components/model-not-found";
+import {
+  useModelsListFilters,
+  useModelsMapData,
+} from "@/features/models/hooks/use-models";
+import {
+  ModelListGridLayout,
+  ModelListTableLayout,
+} from "@/features/models/layouts";
+import { useDialog } from "@/hooks/use-dialog";
 import {
   useScrollToElement,
   useScrollToTop,
 } from "@/hooks/use-scroll-to-element";
+import { FeatureCollection } from "@/types";
 
 export const SEARCH_PARAMS = {
   startDate: "start_date",

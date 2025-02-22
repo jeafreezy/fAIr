@@ -1,6 +1,9 @@
-import { cn } from "@/utils";
 import { motion } from "framer-motion";
+
 import { RefObject, useEffect, useId, useState } from "react";
+
+import { cn } from "@/utils";
+
 // Reference - https://magicui.design/docs/components/animated-beam
 // Accessed on 19/09/2024.
 
@@ -130,7 +133,7 @@ const AnimatedBeam: React.FC<AnimatedBeamProps> = ({
       xmlns="http://www.w3.org/2000/svg"
       className={cn(
         "pointer-events-none absolute left-0 top-0 transform-gpu stroke-2",
-        className,
+        className
       )}
       viewBox={`0 0 ${svgDimensions.width} ${svgDimensions.height}`}
     >

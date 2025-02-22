@@ -1,11 +1,14 @@
-import { ChevronDownIcon } from "@/components/ui/icons";
-import { cn } from "@/utils";
-import { DropdownPlacement } from "@/enums";
+import { useEffect, useState } from "react";
+
 import { SlCheckbox } from "@shoelace-style/shoelace/dist/react";
 import { SlDropdown } from "@shoelace-style/shoelace/dist/react";
 import { SlMenu } from "@shoelace-style/shoelace/dist/react";
 import { SlMenuItem } from "@shoelace-style/shoelace/dist/react";
-import { useEffect, useState } from "react";
+
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { DropdownPlacement } from "@/enums";
+import { cn } from "@/utils";
+
 import "./dropdown.css";
 
 export type DropdownMenuItem = {
@@ -79,7 +82,7 @@ const DropDown: React.FC<DropDownProps> = ({
 
           if (isSelected) {
             updatedSelectedItems = prevSelectedItems.filter(
-              (item) => item !== value,
+              (item) => item !== value
             );
           } else {
             updatedSelectedItems = [...prevSelectedItems, value];
@@ -117,14 +120,14 @@ const DropDown: React.FC<DropDownProps> = ({
         {!disableCheveronIcon && (
           <ChevronDownIcon
             className={cn(
-              `w-3 h-3 text-dark  ml-2 transition-all ${dropdownIsOpened && "rotate-180"}`,
+              `w-3 h-3 text-dark  ml-2 transition-all ${dropdownIsOpened && "rotate-180"}`
             )}
           />
         )}
       </div>
       <div
         className={cn(
-          `shadow-2xl z-[1000000000] map-elements-z-index ${className}`,
+          `shadow-2xl z-[1000000000] map-elements-z-index ${className}`
         )}
       >
         {menuItems && menuItems.length > 0 ? (

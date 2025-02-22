@@ -1,9 +1,10 @@
-import styles from "./faqs.module.css";
 import { Accordion } from "@/components/ui/accordion";
-import { APPLICATION_ROUTES, SHARED_CONTENT } from "@/constants";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { Link } from "@/components/ui/link";
+import { APPLICATION_ROUTES, SHARED_CONTENT } from "@/constants";
 import { TFAQs } from "@/types";
+
+import styles from "./faqs.module.css";
 
 export const FAQs = ({
   faqs = SHARED_CONTENT.homepage.faqs.content,

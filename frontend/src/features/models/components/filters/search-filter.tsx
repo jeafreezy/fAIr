@@ -1,10 +1,11 @@
-import { Input } from "@/components/ui/form";
-import { MODELS_CONTENT } from "@/constants";
+import { useCallback } from "react";
+
 import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+import { Input } from "@/components/ui/form";
 import { SearchIcon } from "@/components/ui/icons";
+import { MODELS_CONTENT } from "@/constants";
 import { SHOELACE_SIZES } from "@/enums";
 import { TQueryParams } from "@/types";
-import { useCallback } from "react";
 
 type SearchFilterProps = {
   query: TQueryParams;
@@ -19,7 +20,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({ updateQuery, query }) => {
         [SEARCH_PARAMS.searchQuery]: value,
       });
     },
-    [],
+    []
   );
 
   return (

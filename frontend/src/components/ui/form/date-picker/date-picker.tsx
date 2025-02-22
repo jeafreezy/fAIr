@@ -1,7 +1,7 @@
-import Input from "@/components/ui/form/input/input";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/utils";
+import Input from "@/components/ui/form/input/input";
 import { INPUT_TYPES, SHOELACE_SIZES } from "@/enums";
+import { cn } from "@/utils";
 
 type DateRangePickerProps = {
   startDate: string;
@@ -27,7 +27,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       {/* Native date pickers */}
       <div
         className={cn(
-          `w-full flex items-center ${isMobileFilterModal ? "flex-col gap-y-4" : "flex-row gap-x-4 "}`,
+          `w-full flex items-center ${isMobileFilterModal ? "flex-col gap-y-4" : "flex-row gap-x-4 "}`
         )}
       >
         <Input
@@ -54,7 +54,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
       {(startDate || endDate) && (
         <div
           className={cn(
-            `flex ${!isMobileFilterModal && "self-end"} items-center gap-x-3`,
+            `flex ${!isMobileFilterModal && "self-end"} items-center gap-x-3`
           )}
         >
           <Button

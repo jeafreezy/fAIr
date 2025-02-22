@@ -1,20 +1,22 @@
-import { Button } from '@/components/ui/button';
-import { DeleteIcon, FileIcon, UploadIcon } from '@/components/ui/icons';
-import { Dialog } from '@/components/ui/dialog';
-import { DialogProps, Feature, FeatureCollection } from '@/types';
-import { FileWithPath, useDropzone } from 'react-dropzone';
-import { Geometry, MultiPolygon, Polygon } from 'geojson';
-import { MODELS_CONTENT } from '@/constants';
-import { SlFormatBytes } from '@shoelace-style/shoelace/dist/react';
-import { Spinner } from '@/components/ui/spinner';
-import { useCallback, useState } from 'react';
+import { Geometry, MultiPolygon, Polygon } from "geojson";
+
+import { useCallback, useState } from "react";
+import { FileWithPath, useDropzone } from "react-dropzone";
+
+import { SlFormatBytes } from "@shoelace-style/shoelace/dist/react";
+
+import { Button } from "@/components/ui/button";
+import { Dialog } from "@/components/ui/dialog";
+import { DeleteIcon, FileIcon, UploadIcon } from "@/components/ui/icons";
+import { Spinner } from "@/components/ui/spinner";
 import {
   MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE,
-  MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREA_LABELS,
   MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREAS,
+  MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREA_LABELS,
   MAX_TRAINING_AREA_UPLOAD_FILE_SIZE,
 } from "@/config";
-
+import { MODELS_CONTENT } from "@/constants";
+import { DialogProps, Feature, FeatureCollection } from "@/types";
 import {
   formatAreaInAppropriateUnit,
   showErrorToast,
@@ -34,7 +36,7 @@ type FileUploadDialogProps = DialogProps & {
 };
 
 const isPolygonGeometry = (
-  geometry: Geometry,
+  geometry: Geometry
 ): geometry is Polygon | MultiPolygon => {
   return geometry.type === "Polygon" || geometry.type === "MultiPolygon";
 };
@@ -65,14 +67,14 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
         if (!file.name.endsWith(".geojson") && !file.name.endsWith(".json")) {
           showErrorToast(
             undefined,
-            `File ${file.name} is not a supported format`,
+            `File ${file.name} is not a supported format`
           );
           return false;
         }
         if (file.size > MAX_TRAINING_AREA_UPLOAD_FILE_SIZE) {
           showErrorToast(
             undefined,
-            `File ${file.name} is too large (max ${formatAreaInAppropriateUnit(MAX_TRAINING_AREA_UPLOAD_FILE_SIZE)})`,
+            `File ${file.name} is too large (max ${formatAreaInAppropriateUnit(MAX_TRAINING_AREA_UPLOAD_FILE_SIZE)})`
           );
           return false;
         }
@@ -95,7 +97,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                 ) {
                   showErrorToast(
                     undefined,
-                    `File ${file.name} exceeds limit of ${MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE} polygon features.`,
+                    `File ${file.name} exceeds limit of ${MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE} polygon features.`
                   );
                   continue;
                 }
@@ -107,7 +109,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
             ) {
               showErrorToast(
                 undefined,
-                `File area for ${file.name} exceeds area limit.`,
+                `File area for ${file.name} exceeds area limit.`
               );
             } else {
               validFiles.push({ file, id: generateUniqueId() });
@@ -122,7 +124,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
 
       validateFiles();
     },
-    [disableFileSizeValidation],
+    [disableFileSizeValidation]
   );
 
   const generateUniqueId = () => {
@@ -141,7 +143,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
       disabled ||
       uploadInProgress ||
       acceptedFiles.length ===
-      MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREA_LABELS ||
+        MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREA_LABELS ||
       acceptedFiles.length === MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREAS,
   });
 
@@ -177,7 +179,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
             ) {
               showErrorToast(
                 undefined,
-                `File area for ${file.name} exceeds area limit.`,
+                `File area for ${file.name} exceeds area limit.`
               );
               continue;
             }
@@ -188,7 +190,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
               if (polygons.length === 0) {
                 showErrorToast(
                   undefined,
-                  `No valid Polygon features found in ${file.name}.`,
+                  `No valid Polygon features found in ${file.name}.`
                 );
                 continue;
               }
@@ -199,7 +201,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
               } else {
                 showErrorToast(
                   undefined,
-                  `Feature geometry in ${file.name} is not a Polygon.`,
+                  `Feature geometry in ${file.name} is not a Polygon.`
                 );
                 continue;
               }
@@ -220,7 +222,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
 
       const rawUploadPromises = rawFiles.map((file) => uploadRawFile(file));
       const geometryUploadPromises = allGeometries.map((geometry) =>
-        fileUploadHandler?.(geometry as Polygon),
+        fileUploadHandler?.(geometry as Polygon)
       );
 
       await Promise.all([...rawUploadPromises, ...geometryUploadPromises]);

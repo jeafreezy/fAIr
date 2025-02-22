@@ -1,16 +1,17 @@
-import { Dispatch, SetStateAction } from 'react';
-import { fetchOSMDatabaseLastUpdated } from '@/features/model-creation/hooks/use-training-areas';
-import { formatDuration } from '@/utils';
-import { Map } from 'maplibre-gl';
-import { NoTrainingAreaIcon } from '@/components/ui/icons';
-import { OSM_LAST_UPDATED_POOLING_INTERVAL_MS } from '@/config';
-import { PaginatedTrainingArea } from '@/types';
-import { Pagination } from '@/components/shared';
-import { TrainingAreaItem } from '@/features/model-creation/components/training-area/training-area-item';
-import { useQuery } from '@tanstack/react-query';
-import {
-  MODELS_CONTENT,
-} from "@/constants";
+import { Map } from "maplibre-gl";
+
+import { Dispatch, SetStateAction } from "react";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { Pagination } from "@/components/shared";
+import { NoTrainingAreaIcon } from "@/components/ui/icons";
+import { OSM_LAST_UPDATED_POOLING_INTERVAL_MS } from "@/config";
+import { MODELS_CONTENT } from "@/constants";
+import { TrainingAreaItem } from "@/features/model-creation/components/training-area/training-area-item";
+import { fetchOSMDatabaseLastUpdated } from "@/features/model-creation/hooks/use-training-areas";
+import { PaginatedTrainingArea } from "@/types";
+import { formatDuration } from "@/utils";
 
 const TrainingAreaList = ({
   offset,
@@ -61,7 +62,7 @@ const TrainingAreaList = ({
               {formatDuration(
                 new Date(String(osmData?.lastUpdated)),
                 new Date(),
-                1,
+                1
               )}{" "}
               ago
             </small>

@@ -1,4 +1,5 @@
-import { IconProps } from './common';
+import { IconProps } from "./common";
+
 // Models related pages content types starts.
 
 export type TModelsContent = {

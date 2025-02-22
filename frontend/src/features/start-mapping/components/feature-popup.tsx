@@ -1,30 +1,26 @@
-import maplibregl, { Map, Popup } from 'maplibre-gl';
-import { CheckIcon } from '@/components/ui/icons';
-import {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState
-} from 'react';
-import { geojsonToWKT } from '@terraformer/wkt';
-import { Input } from '@/components/ui/form';
-import { SHOELACE_SIZES } from '@/enums';
-import { showErrorToast } from '@/utils';
-import { START_MAPPING_PAGE_CONTENT } from '@/constants';
-import { useAuth } from '@/app/providers/auth-provider';
-import {
-  GeoJSONType,
-  TModelPredictionFeature,
-  TModelPredictions,
-} from "@/types";
+import maplibregl, { Map, Popup } from "maplibre-gl";
 
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+
+import { geojsonToWKT } from "@terraformer/wkt";
+
+import { useAuth } from "@/app/providers/auth-provider";
+import { Input } from "@/components/ui/form";
+import { CheckIcon } from "@/components/ui/icons";
+import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import { SHOELACE_SIZES } from "@/enums";
 import {
   useCreateApprovedModelPrediction,
   useCreateModelFeedback,
   useDeleteApprovedModelPrediction,
   useDeleteModelPredictionFeedback,
 } from "@/features/start-mapping/hooks/use-feedbacks";
+import {
+  GeoJSONType,
+  TModelPredictionFeature,
+  TModelPredictions,
+} from "@/types";
+import { showErrorToast } from "@/utils";
 
 const PredictedFeatureActionPopup = ({
   event,
@@ -57,10 +53,10 @@ const PredictedFeatureActionPopup = ({
   const { accepted, rejected, all } = modelPredictions;
 
   const alreadyAccepted = accepted.some(
-    (feature) => feature.properties.id === featureId,
+    (feature) => feature.properties.id === featureId
   );
   const alreadyRejected = rejected.some(
-    (feature) => feature.properties.id === featureId,
+    (feature) => feature.properties.id === featureId
   );
 
   // if already accepted, it means it's in accepted array
@@ -78,7 +74,7 @@ const PredictedFeatureActionPopup = ({
     source: TModelPredictionFeature[],
     target: TModelPredictionFeature[],
     id: number,
-    additionalProperties: Partial<TModelPredictionFeature["properties"]> = {},
+    additionalProperties: Partial<TModelPredictionFeature["properties"]> = {}
   ) => {
     const movedFeatures = source
       .filter((feature) => feature.properties.id === id)
@@ -128,13 +124,13 @@ const PredictedFeatureActionPopup = ({
         onSuccess: (data) => {
           const { updatedSource, updatedTarget } = alreadyRejected
             ? moveFeature(rejected, accepted, featureId, {
-              _id: data.id,
-              ...data.properties,
-            })
+                _id: data.id,
+                ...data.properties,
+              })
             : moveFeature(all, accepted, featureId, {
-              _id: data.id,
-              ...data.properties,
-            });
+                _id: data.id,
+                ...data.properties,
+              });
 
           setModelPredictions((prev) => ({
             ...prev,
@@ -159,7 +155,7 @@ const PredictedFeatureActionPopup = ({
           const { updatedSource: updatedRejected } = moveFeature(
             rejected,
             all,
-            featureId,
+            featureId
           );
           setModelPredictions((prev) => ({
             ...prev,
@@ -177,8 +173,6 @@ const PredictedFeatureActionPopup = ({
     },
   });
 
-
-
   const deleteApprovedModelPrediction = useDeleteApprovedModelPrediction({
     mutationConfig: {
       onSuccess: async (_, variables) => {
@@ -195,7 +189,7 @@ const PredictedFeatureActionPopup = ({
           const { updatedSource: updatedAccepted } = moveFeature(
             accepted,
             all,
-            featureId,
+            featureId
           );
           setModelPredictions((prev) => ({
             ...prev,
@@ -241,7 +235,7 @@ const PredictedFeatureActionPopup = ({
             rejected,
             featureId,
             // update the feature with the returned id from the backend as `_id`.
-            { _id: data.id },
+            { _id: data.id }
           );
           setModelPredictions((prev) => ({
             ...prev,
@@ -254,7 +248,7 @@ const PredictedFeatureActionPopup = ({
             rejected,
             featureId,
             // update the feature with the returned id from the backend as `_id`.
-            { _id: data.id },
+            { _id: data.id }
           );
           setModelPredictions((prev) => ({
             ...prev,
@@ -314,45 +308,45 @@ const PredictedFeatureActionPopup = ({
 
   const primaryButton = alreadyAccepted
     ? {
-      label: START_MAPPING_PAGE_CONTENT.map.popup.reject,
-      action: handleRejection,
-      className: "bg-primary",
-      icon: RejectIcon,
-    }
+        label: START_MAPPING_PAGE_CONTENT.map.popup.reject,
+        action: handleRejection,
+        className: "bg-primary",
+        icon: RejectIcon,
+      }
     : alreadyRejected
       ? {
+          label: START_MAPPING_PAGE_CONTENT.map.popup.resolve,
+          action: handleResolve,
+          className: "bg-black",
+          icon: ResolveIcon,
+        }
+      : {
+          label: START_MAPPING_PAGE_CONTENT.map.popup.accept,
+          action: handleAcceptance,
+          className: "bg-green-primary",
+          icon: AcceptIcon,
+        };
+
+  const secondaryButton = alreadyAccepted
+    ? {
         label: START_MAPPING_PAGE_CONTENT.map.popup.resolve,
         action: handleResolve,
         className: "bg-black",
         icon: ResolveIcon,
       }
-      : {
-        label: START_MAPPING_PAGE_CONTENT.map.popup.accept,
-        action: handleAcceptance,
-        className: "bg-green-primary",
-        icon: AcceptIcon,
-      };
-
-  const secondaryButton = alreadyAccepted
-    ? {
-      label: START_MAPPING_PAGE_CONTENT.map.popup.resolve,
-      action: handleResolve,
-      className: "bg-black",
-      icon: ResolveIcon,
-    }
     : alreadyRejected
       ? {
-        label: START_MAPPING_PAGE_CONTENT.map.popup.accept,
-        action: handleAcceptance,
-        className: "bg-green-primary",
-        icon: AcceptIcon,
-      }
+          label: START_MAPPING_PAGE_CONTENT.map.popup.accept,
+          action: handleAcceptance,
+          className: "bg-green-primary",
+          icon: AcceptIcon,
+        }
       : {
-        label: START_MAPPING_PAGE_CONTENT.map.popup.reject,
-        action: handleRejection,
-        className: "bg-primary",
-        icon: RejectIcon,
-      };
+          label: START_MAPPING_PAGE_CONTENT.map.popup.reject,
+          action: handleRejection,
+          className: "bg-primary",
+          icon: RejectIcon,
+        };
 
   return (
     <div

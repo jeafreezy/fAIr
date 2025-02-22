@@ -1,7 +1,10 @@
-import { cn } from "@/utils";
-import { SHOELACE_SIZES } from "@/enums";
-import { SlCheckbox } from "@shoelace-style/shoelace/dist/react/index.js";
 import { useEffect, useState } from "react";
+
+import { SlCheckbox } from "@shoelace-style/shoelace/dist/react/index.js";
+
+import { SHOELACE_SIZES } from "@/enums";
+import { cn } from "@/utils";
+
 import "./checkbox-group.css";
 
 type CheckboxGroupProps = {
@@ -31,7 +34,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       ? defaultSelectedOption.map(String)
       : defaultSelectedOption
         ? [String(defaultSelectedOption)]
-        : [],
+        : []
   );
 
   useEffect(() => {
@@ -39,7 +42,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
       setSelectedOptions(
         Array.isArray(defaultSelectedOption)
           ? defaultSelectedOption.map(String)
-          : [String(defaultSelectedOption)],
+          : [String(defaultSelectedOption)]
       );
     }
   }, [defaultSelectedOption]);
@@ -59,7 +62,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
 
     setSelectedOptions(updatedOptions);
     onCheck(
-      updatedOptions.map((opt) => (isNaN(Number(opt)) ? opt : Number(opt))),
+      updatedOptions.map((opt) => (isNaN(Number(opt)) ? opt : Number(opt)))
     );
   };
 
@@ -73,7 +76,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
             //@ts-expect-error bad type definition
             value={option.apiValue ?? option.value}
             checked={selectedOptions.includes(
-              String(option.apiValue ?? option.value),
+              String(option.apiValue ?? option.value)
             )}
             className={variant}
             onSlChange={(e) => {

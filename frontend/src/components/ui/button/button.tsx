@@ -1,8 +1,10 @@
+import { SlButton } from "@shoelace-style/shoelace/dist/react";
+
+import { Spinner } from "@/components/ui/spinner";
 import useScreenSize from "@/hooks/use-screen-size";
 import { ButtonSize, ButtonVariant } from "@/types";
 import { cn } from "@/utils";
-import { SlButton } from "@shoelace-style/shoelace/dist/react";
-import { Spinner } from "@/components/ui/spinner";
+
 import "./button.css";
 
 type ButtonProps = {
@@ -44,7 +46,7 @@ const Button: React.FC<ButtonProps> = ({
     >
       <div
         className={cn(
-          `flex items-center gap-x-2  ${uppercase && "uppercase"} `,
+          `flex items-center gap-x-2  ${uppercase && "uppercase"} `
         )}
       >
         {children}

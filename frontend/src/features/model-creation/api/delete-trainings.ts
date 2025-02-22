@@ -9,7 +9,7 @@ export const deleteTrainingArea = async ({
 }: TDeleteTrainingAreaArgs): Promise<any> => {
   return await (
     await apiClient.delete(
-      `${API_ENDPOINTS.DELETE_TRAINING_AREA(trainingAreaId)}`,
+      `${API_ENDPOINTS.DELETE_TRAINING_AREA(trainingAreaId)}`
     )
   ).data;
 };

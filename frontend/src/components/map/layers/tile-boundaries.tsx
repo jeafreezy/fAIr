@@ -1,9 +1,11 @@
-import { GeoJSONSource, Map } from 'maplibre-gl';
-import { GeoJSONType } from '@/types';
-import { getTileBoundariesGeoJSON } from '@/utils';
-import { TILE_BOUNDARY_LAYER_ID, TILE_BOUNDARY_SOURCE_ID } from '@/config';
-import { useCallback, useEffect } from 'react';
-import { useMapLayers } from '@/hooks/use-map-layer';
+import { GeoJSONSource, Map } from "maplibre-gl";
+
+import { useCallback, useEffect } from "react";
+
+import { TILE_BOUNDARY_LAYER_ID, TILE_BOUNDARY_SOURCE_ID } from "@/config";
+import { useMapLayers } from "@/hooks/use-map-layer";
+import { GeoJSONType } from "@/types";
+import { getTileBoundariesGeoJSON } from "@/utils";
 
 export const TileBoundaries = ({ map }: { map: Map | null }) => {
   useMapLayers(
@@ -28,7 +30,7 @@ export const TileBoundaries = ({ map }: { map: Map | null }) => {
         },
       },
     ],
-    map,
+    map
   );
 
   const updateTileBoundary = useCallback(() => {
@@ -38,7 +40,7 @@ export const TileBoundaries = ({ map }: { map: Map | null }) => {
           map,
           // There is a mismatch of 1 in the mag.getZoom() results and the actual zoom level of the map.
           // Adding 1 to the result resolves it.
-          Math.round(map.getZoom() + 1),
+          Math.round(map.getZoom() + 1)
         );
         const source = map.getSource(TILE_BOUNDARY_SOURCE_ID) as GeoJSONSource;
         source.setData(tileBoundaries as GeoJSONType);

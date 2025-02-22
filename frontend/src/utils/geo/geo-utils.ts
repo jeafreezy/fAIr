@@ -1,18 +1,20 @@
-import bbox from '@turf/bbox';
+import { Feature, FeatureCollection } from "geojson";
+
+import bbox from "@turf/bbox";
+
 import {
   BASE_API_URL,
   JOSM_REMOTE_URL,
   MAX_TRAINING_AREA_SIZE,
   MIN_TRAINING_AREA_SIZE,
-  OSM_HASHTAGS
-  } from '@/config';
-import { calculateGeoJSONArea } from './geometry-utils';
-import { Feature, FeatureCollection } from 'geojson';
-import { geojsonToOsmPolygons } from './geojson-to-osm';
-import { showErrorToast, showSuccessToast } from '../general-utils';
-import { TOAST_NOTIFICATIONS } from '@/constants';
-import { API_ENDPOINTS, } from '@/services';
+  OSM_HASHTAGS,
+} from "@/config";
+import { TOAST_NOTIFICATIONS } from "@/constants";
+import { API_ENDPOINTS } from "@/services";
 
+import { showErrorToast, showSuccessToast } from "../general-utils";
+import { geojsonToOsmPolygons } from "./geojson-to-osm";
+import { calculateGeoJSONArea } from "./geometry-utils";
 
 /**
  * Creates a GeoJSON FeatureCollection
@@ -22,7 +24,7 @@ import { API_ENDPOINTS, } from '@/services';
  * @param {Feature[]} features - The GeoJSON features. If it's not provided, it creates an empty FeatureCollection.
  */
 export const createFeatureCollection = (
-  features: Feature[] = [],
+  features: Feature[] = []
 ): FeatureCollection => {
   return {
     type: "FeatureCollection",
@@ -51,7 +53,7 @@ export const openInIDEditor = (
   rightLng: number,
   imageryURL: string,
   datasetId: string,
-  aoiId: number,
+  aoiId: number
 ) => {
   const centerLat = (bottomLat + topLat) / 2;
   const centerLng = (leftLng + rightLng) / 2;
@@ -88,7 +90,7 @@ export const validateGeoJSONArea = (geojsonFeature: Feature) => {
  */
 export const geoJSONDowloader = (
   geojson: FeatureCollection | Feature,
-  filename: string,
+  filename: string
 ) => {
   const geojsonStr = JSON.stringify(geojson);
   const blob = new Blob([geojsonStr], { type: "application/json" });
@@ -105,7 +107,7 @@ export const openInJOSM = async (
   oamTileName: string,
   tmsURL: string,
   features?: Feature[],
-  toXML = false,
+  toXML = false
 ) => {
   try {
     const imgURL = new URL(`${JOSM_REMOTE_URL}imagery`);
@@ -127,7 +129,10 @@ export const openInJOSM = async (
       loadurl.searchParams.set("top", String(bounds[3]));
       loadurl.searchParams.set("left", String(bounds[0]));
       loadurl.searchParams.set("right", String(bounds[2]));
-      loadurl.searchParams.set("changeset_tags", `comment=${OSM_HASHTAGS}|source=${oamTileName}`);
+      loadurl.searchParams.set(
+        "changeset_tags",
+        `comment=${OSM_HASHTAGS}|source=${oamTileName}`
+      );
       await fetch(loadurl);
       showSuccessToast(TOAST_NOTIFICATIONS.josmOpenSuccess);
     } catch (error) {

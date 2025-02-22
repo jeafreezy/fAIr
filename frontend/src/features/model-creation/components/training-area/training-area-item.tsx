@@ -1,20 +1,10 @@
-import FileUploadDialog from '@/features/model-creation/components/dialogs/file-upload-dialog';
-import { DropDown } from '@/components/ui/dropdown';
-import { IconProps, TTrainingAreaFeature } from '@/types';
-import { JOSMLogo, OSMLogo } from '@/assets/svgs';
-import { LabelStatus } from '@/enums/training-area';
-import { Map } from 'maplibre-gl';
-import { ToolTip } from '@/components/ui/tooltip';
-import { TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS } from '@/config';
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState
-  } from 'react';
-import { useDialog } from '@/hooks/use-dialog';
-import { useDropdownMenu } from '@/hooks/use-dropdown-menu';
-import { useModelsContext } from '@/app/providers/models-provider';
+import { Map } from "maplibre-gl";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { useModelsContext } from "@/app/providers/models-provider";
+import { JOSMLogo, OSMLogo } from "@/assets/svgs";
+import { DropDown } from "@/components/ui/dropdown";
 import {
   CloudDownloadIcon,
   DeleteIcon,
@@ -23,6 +13,22 @@ import {
   MapIcon,
   UploadIcon,
 } from "@/components/ui/icons";
+import { ToolTip } from "@/components/ui/tooltip";
+import { TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS } from "@/config";
+import { MODELS_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
+import { LabelStatus } from "@/enums/training-area";
+import FileUploadDialog from "@/features/model-creation/components/dialogs/file-upload-dialog";
+import {
+  useCreateTrainingLabelsForAOI,
+  useDeleteTrainingArea,
+  useGetTrainingArea,
+  useGetTrainingAreaLabels,
+  useGetTrainingAreaLabelsFromOSM,
+  useGetTrainingAreas,
+} from "@/features/model-creation/hooks/use-training-areas";
+import { useDialog } from "@/hooks/use-dialog";
+import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
+import { IconProps, TTrainingAreaFeature } from "@/types";
 import {
   calculateGeoJSONArea,
   formatAreaInAppropriateUnit,
@@ -36,18 +42,6 @@ import {
   showWarningToast,
   truncateString,
 } from "@/utils";
-import {
-  MODELS_CONTENT,
-  TOAST_NOTIFICATIONS,
-} from "@/constants";
-import {
-  useCreateTrainingLabelsForAOI,
-  useDeleteTrainingArea,
-  useGetTrainingArea,
-  useGetTrainingAreaLabels,
-  useGetTrainingAreaLabelsFromOSM,
-  useGetTrainingAreas,
-} from "@/features/model-creation/hooks/use-training-areas";
 
 type LabelState = {
   isFetching: boolean;
@@ -93,7 +87,7 @@ const LabelFetchStatus = ({
     updateTimeSince();
     const intervalId = setInterval(
       updateTimeSince,
-      TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS,
+      TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS
     );
     return () => clearInterval(intervalId);
   }, [fetchedDate]);
@@ -102,7 +96,9 @@ const LabelFetchStatus = ({
     if (isFetching) return "Fetching labels...";
     if (isError) return "Error occurred. Please retry.";
     if (status === LabelStatus.DOWNLOADED) {
-      return timeSince ? `Labels fetched ${timeSince} ago` : "Labels fetched recently";
+      return timeSince
+        ? `Labels fetched ${timeSince} ago`
+        : "Labels fetched recently";
     }
     return "No labels yet";
   };
@@ -200,13 +196,13 @@ export const TrainingAreaItem: React.FC<
 
   const getTrainingAreaLabels = useGetTrainingAreaLabels(
     trainingArea.id,
-    false,
+    false
   );
 
   const getTrainingArea = useGetTrainingArea(
     trainingArea.id,
     labelState.shouldPoll,
-    TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS,
+    TRAINING_AREA_LABELS_FETCH_POOLING_TIME_MS
   );
 
   const handleLabelError = useCallback(() => {
@@ -221,7 +217,7 @@ export const TrainingAreaItem: React.FC<
     if (!labelState.errorToastShown) {
       showErrorToast(
         undefined,
-        `Could not fetch labels for AOI ${trainingArea.id}. Please retry.`,
+        `Could not fetch labels for AOI ${trainingArea.id}. Please retry.`
       );
       setLabelState((prev) => ({ ...prev, errorToastShown: true }));
     }
@@ -273,7 +269,7 @@ export const TrainingAreaItem: React.FC<
 
   const { refetch: refetchTrainingAreas } = useGetTrainingAreas(
     datasetId,
-    offset,
+    offset
   );
 
   const handleFetchLabels = useCallback(() => {
@@ -294,12 +290,12 @@ export const TrainingAreaItem: React.FC<
         shouldPoll: false,
         errorToastShown: false,
       }));
-      refetchTrainingAreas()
+      refetchTrainingAreas();
       showSuccessToast(
-        `Training labels for Training Area ${trainingArea.id} have been successfully fetched.`,
+        `Training labels for Training Area ${trainingArea.id} have been successfully fetched.`
       );
     },
-    [setLabelState],
+    [setLabelState]
   );
 
   useEffect(() => {
@@ -357,7 +353,7 @@ export const TrainingAreaItem: React.FC<
         formData: formData,
       });
     },
-    [createTrainingLabelsForAOI, trainingArea.id],
+    [createTrainingLabelsForAOI, trainingArea.id]
   );
 
   const disableLabelsFetchOrUpload =
@@ -389,7 +385,7 @@ export const TrainingAreaItem: React.FC<
           formData.oamBounds[2],
           formData.tmsURL,
           formData.selectedTrainingDatasetId,
-          trainingArea.id,
+          trainingArea.id
         ),
     },
     {
@@ -422,7 +418,7 @@ export const TrainingAreaItem: React.FC<
     {
       tooltip: disableLabelsFetchOrUpload
         ? MODELS_CONTENT.modelCreation.trainingArea.toolTips
-          .labelsFetchInProgress
+            .labelsFetchInProgress
         : MODELS_CONTENT.modelCreation.trainingArea.toolTips.uploadLabels,
       isIcon: true,
       Icon: UploadIcon,
@@ -477,9 +473,9 @@ export const TrainingAreaItem: React.FC<
             content={
               disableLabelsFetchOrUpload
                 ? MODELS_CONTENT.modelCreation.trainingArea.toolTips
-                  .labelsFetchInProgress
+                    .labelsFetchInProgress
                 : MODELS_CONTENT.modelCreation.trainingArea.toolTips
-                  .fetchOSMLabels
+                    .fetchOSMLabels
             }
           >
             <button

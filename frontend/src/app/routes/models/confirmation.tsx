@@ -1,11 +1,12 @@
 import ConfettiExplosion from "react-confetti-explosion";
-import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
+import { useSearchParams } from "react-router-dom";
+
+import { useModelsContext } from "@/app/providers/models-provider";
+import { ModelFormConfirmation } from "@/assets/images";
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 import { Link } from "@/components/ui/link";
-import { ModelFormConfirmation } from "@/assets/images";
-import { useModelsContext } from "@/app/providers/models-provider";
-import { useSearchParams } from "react-router-dom";
+import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
 
 export const ModelConfirmationPage = () => {
   const [searchParams] = useSearchParams();

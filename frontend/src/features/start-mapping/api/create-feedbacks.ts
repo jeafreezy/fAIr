@@ -1,5 +1,5 @@
-import { API_ENDPOINTS, apiClient } from '@/services';
-import { Feature, TModelPredictionFeature } from '@/types';
+import { API_ENDPOINTS, apiClient } from "@/services";
+import { Feature, TModelPredictionFeature } from "@/types";
 
 export type TCreateFeedbackPayload = {
   comments: string;

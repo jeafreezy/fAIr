@@ -1,13 +1,12 @@
 /**
  * Inspired by https://ui.shadcn.com/docs/components/data-table
  */
-
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -58,7 +57,7 @@ const DataTable = <TData, TValue>({
                     ? null
                     : flexRender(
                         header.column.columnDef.header,
-                        header.getContext(),
+                        header.getContext()
                       )}
                 </TableHead>
               );

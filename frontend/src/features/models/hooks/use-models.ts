@@ -1,19 +1,21 @@
-import useDebounce from "@/hooks/use-debounce";
-import { buildDateFilterQueryString } from "@/utils";
-import { dateFilters } from "@/features/models/components/filters/date-range-filter";
-import { LayoutView } from "@/enums";
-import { ORDERING_FIELDS } from "@/features/models/components/filters/ordering-filter";
-import { PAGE_LIMIT } from "@/components/shared";
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
-import { TQueryParams } from "@/types";
 import { useCallback, useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+
+import { useQuery } from "@tanstack/react-query";
+
+import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+import { PAGE_LIMIT } from "@/components/shared";
+import { LayoutView } from "@/enums";
 import {
-  getModelsQueryOptions,
   getModelDetailsQueryOptions,
   getModelsMapDataQueryOptions,
+  getModelsQueryOptions,
 } from "@/features/models/api/factory";
+import { dateFilters } from "@/features/models/components/filters/date-range-filter";
+import { ORDERING_FIELDS } from "@/features/models/components/filters/ordering-filter";
+import useDebounce from "@/hooks/use-debounce";
+import { TQueryParams } from "@/types";
+import { buildDateFilterQueryString } from "@/utils";
 
 type UseModelsOptions = {
   limit: number;
@@ -53,7 +55,7 @@ export const useModels = ({
 export const useModelDetails = (
   id: string,
   enabled: boolean = true,
-  refetchInterval: boolean | number = false,
+  refetchInterval: boolean | number = false
 ) => {
   return useQuery({
     ...getModelDetailsQueryOptions(id, refetchInterval),
@@ -74,7 +76,7 @@ export const useModelsMapData = () => {
 
 export const useModelsListFilters = (
   status: number | undefined,
-  userId?: number,
+  userId?: number
 ) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -103,7 +105,7 @@ export const useModelsListFilters = (
 
   const debouncedSearchText = useDebounce(
     query[SEARCH_PARAMS.searchQuery] as string,
-    300,
+    300
   );
 
   const { data, isPending, isPlaceholderData, isError } = useModels({
@@ -114,10 +116,10 @@ export const useModelsListFilters = (
     id: query[SEARCH_PARAMS.id] as number,
     dateFilters: buildDateFilterQueryString(
       dateFilters.find(
-        (filter) => filter.searchParams === query[SEARCH_PARAMS.dateFilter],
+        (filter) => filter.searchParams === query[SEARCH_PARAMS.dateFilter]
       ),
       query[SEARCH_PARAMS.startDate] as string,
-      query[SEARCH_PARAMS.endDate] as string,
+      query[SEARCH_PARAMS.endDate] as string
     ),
     userId: userId,
     status: query[SEARCH_PARAMS.status] as number,
@@ -141,7 +143,7 @@ export const useModelsListFilters = (
 
       setSearchParams(updatedParams, { replace: true });
     },
-    [searchParams, setSearchParams],
+    [searchParams, setSearchParams]
   );
 
   //reset offset back to 0 when searching or when ID filtering is applied from the map.

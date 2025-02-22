@@ -1,8 +1,10 @@
-import { DrawingModes } from "@/enums";
 import { Map } from "maplibre-gl";
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
 import { setupMaplibreMap } from "@/components/map/setups/setup-maplibre";
 import { setupTerraDraw } from "@/components/map/setups/setup-terra-draw";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { DrawingModes } from "@/enums";
 
 /**
  * useMapInstance - Initializes and manages a MapLibre map instance with TerraDraw integration.
@@ -15,7 +17,7 @@ export const useMapInstance = (pmtiles: boolean = false) => {
   const [map, setMap] = useState<Map | null>(null);
   const [currentZoom, setCurrentZoom] = useState<number>(0);
   const [drawingMode, setDrawingMode] = useState<DrawingModes>(
-    DrawingModes.STATIC,
+    DrawingModes.STATIC
   );
 
   useEffect(() => {

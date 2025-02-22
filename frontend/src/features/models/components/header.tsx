@@ -1,7 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
+import { ButtonWithIcon } from "@/components/ui/button";
 import { AddIcon } from "@/components/ui/icons";
 import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
-import { ButtonWithIcon } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 const PageHeader = ({
   title,

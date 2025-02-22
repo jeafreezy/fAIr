@@ -1,27 +1,17 @@
-import useDebounce from '@/hooks/use-debounce';
-import { ControlsPosition, DrawingModes } from '@/enums';
-import { GeoJSONSource, Map } from 'maplibre-gl';
-import { geojsonToWKT } from '@terraformer/wkt';
-import { GeoJSONType, PaginatedTrainingArea } from '@/types';
-import { MapComponent, MapCursorToolTip } from '@/components/map';
-import { Polygon } from 'geojson';
-import {
-  RefObject,
-  useCallback,
-  useEffect,
-  useState
-  } from 'react';
-import { TerraDraw } from 'terra-draw';
-import { useMapLayers } from '@/hooks/use-map-layer';
-import { useToolTipVisibility } from '@/hooks/use-tooltip-visibility';
-import {
-  useCreateTrainingArea,
-  useGetTrainingDatasetLabels,
-} from "@/features/model-creation/hooks/use-training-areas";
+import { Polygon } from "geojson";
+import { GeoJSONSource, Map } from "maplibre-gl";
+
+import { RefObject, useCallback, useEffect, useState } from "react";
+import { TerraDraw } from "terra-draw";
+
+import { geojsonToWKT } from "@terraformer/wkt";
+
+import { MapComponent, MapCursorToolTip } from "@/components/map";
 import {
   MAP_STYLES_PREFIX,
   MAX_TRAINING_AREA_SIZE,
   MIN_TRAINING_AREA_SIZE,
+  MIN_ZOOM_LEVEL_FOR_TRAINING_AREA_LABELS,
   TRAINING_AREAS_AOI_FILL_COLOR,
   TRAINING_AREAS_AOI_FILL_OPACITY,
   TRAINING_AREAS_AOI_LABELS_FILL_COLOR,
@@ -30,8 +20,16 @@ import {
   TRAINING_AREAS_AOI_LABELS_OUTLINE_WIDTH,
   TRAINING_AREAS_AOI_OUTLINE_COLOR,
   TRAINING_AREAS_AOI_OUTLINE_WIDTH,
-  MIN_ZOOM_LEVEL_FOR_TRAINING_AREA_LABELS,
 } from "@/config";
+import { ControlsPosition, DrawingModes } from "@/enums";
+import {
+  useCreateTrainingArea,
+  useGetTrainingDatasetLabels,
+} from "@/features/model-creation/hooks/use-training-areas";
+import useDebounce from "@/hooks/use-debounce";
+import { useMapLayers } from "@/hooks/use-map-layer";
+import { useToolTipVisibility } from "@/hooks/use-tooltip-visibility";
+import { GeoJSONType, PaginatedTrainingArea } from "@/types";
 import {
   calculateGeoJSONArea,
   formatAreaInAppropriateUnit,
@@ -87,7 +85,7 @@ const TrainingAreaMap = ({
   const { data: labels } = useGetTrainingDatasetLabels(
     trainingDatasetId,
     debouncedBbox,
-    Number(debouncedZoom),
+    Number(debouncedZoom)
   );
 
   const createTrainingArea = useCreateTrainingArea({
@@ -163,7 +161,7 @@ const TrainingAreaMap = ({
         },
       },
     ],
-    map,
+    map
   );
 
   // useLayerReorder(map, {
@@ -174,7 +172,7 @@ const TrainingAreaMap = ({
     if (map) {
       if (map.getSource(trainingDatasetLabelsSourceId) && labels) {
         const source = map.getSource(
-          trainingDatasetLabelsSourceId,
+          trainingDatasetLabelsSourceId
         ) as GeoJSONSource;
         source?.setData(labels as GeoJSONType);
       }
@@ -248,7 +246,7 @@ const TrainingAreaMap = ({
           {
             onSuccess: () =>
               showSuccessToast("Training area created successfully"),
-          },
+          }
         );
         terraDraw.clear();
       }
@@ -317,22 +315,22 @@ const TrainingAreaMap = ({
       layerControlLayers={[
         ...(data?.results?.features?.length
           ? [
-            {
-              value: "Training Areas",
-              subLayers: [trainingAreasLayerId, trainingAreasFillLayerId],
-            },
-          ]
+              {
+                value: "Training Areas",
+                subLayers: [trainingAreasLayerId, trainingAreasFillLayerId],
+              },
+            ]
           : []),
         ...(labels && labels?.features.length > 0
           ? [
-            {
-              value: "Training Labels",
-              subLayers: [
-                trainingDatasetLabelsLayerId,
-                trainingDatasetLabelsOutlineLayerId,
-              ],
-            },
-          ]
+              {
+                value: "Training Labels",
+                subLayers: [
+                  trainingDatasetLabelsLayerId,
+                  trainingDatasetLabelsOutlineLayerId,
+                ],
+              },
+            ]
           : []),
       ]}
     >

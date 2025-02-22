@@ -1,18 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 import {
-  createModel,
   TCreateModelArgs,
+  createModel,
 } from "@/features/model-creation/api/create-models";
-import { MutationConfig, queryKeys } from "@/services";
 import {
-  createTrainingRequest,
   TCreateTrainingRequestArgs,
+  createTrainingRequest,
 } from "@/features/model-creation/api/create-trainings";
-import { useModelDetails } from "@/features/models/hooks/use-models";
 import {
   TUpdateModelArgs,
   updateModel,
 } from "@/features/model-creation/api/update-models";
+import { useModelDetails } from "@/features/models/hooks/use-models";
+import { MutationConfig, queryKeys } from "@/services";
 
 type useCreateModelOptions = {
   mutationConfig?: MutationConfig<typeof createModel>;

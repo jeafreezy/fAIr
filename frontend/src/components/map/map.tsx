@@ -1,20 +1,22 @@
-import { Basemaps } from "@/components/map/layers/basemaps";
-import { ControlsPosition } from "@/enums";
-import { DrawingModes } from "@/enums";
 import { LngLatBoundsLike, Map } from "maplibre-gl";
-import { OpenAerialMap } from "@/components/map/layers/open-aerial-map";
+import "maplibre-gl/dist/maplibre-gl.css";
+
 import { RefObject } from "react";
 import { TerraDraw } from "terra-draw";
-import { TileBoundaries } from "@/components/map/layers/tile-boundaries";
-import "maplibre-gl/dist/maplibre-gl.css";
+
 import {
-  GeolocationControl,
-  FitToBounds,
   DrawControl,
-  ZoomLevel,
+  FitToBounds,
+  GeolocationControl,
   LayerControl,
   ZoomControls,
+  ZoomLevel,
 } from "@/components/map/controls";
+import { Basemaps } from "@/components/map/layers/basemaps";
+import { OpenAerialMap } from "@/components/map/layers/open-aerial-map";
+import { TileBoundaries } from "@/components/map/layers/tile-boundaries";
+import { ControlsPosition } from "@/enums";
+import { DrawingModes } from "@/enums";
 
 type MapComponentProps = {
   geolocationControl?: boolean;

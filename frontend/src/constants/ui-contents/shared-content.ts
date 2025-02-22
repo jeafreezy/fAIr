@@ -1,5 +1,6 @@
-import { APPLICATION_ROUTES } from '../routes';
-import { TSharedContent } from '@/types';
+import { TSharedContent } from "@/types";
+
+import { APPLICATION_ROUTES } from "../routes";
 
 export const SHARED_CONTENT: TSharedContent = {
   navbar: {

@@ -1,5 +1,6 @@
-import { ArrowBackIcon } from "@/components/ui/icons";
 import { useNavigate } from "react-router-dom";
+
+import { ArrowBackIcon } from "@/components/ui/icons";
 
 const BackButton = ({ className }: { className?: string }) => {
   const navigate = useNavigate();

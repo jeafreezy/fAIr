@@ -1,22 +1,24 @@
-import axios from 'axios';
-import { API_ENDPOINTS, MutationConfig } from '@/services';
-import { deleteTrainingArea } from '@/features/model-creation/api/delete-trainings';
-import { MIN_ZOOM_LEVEL_FOR_TRAINING_AREA_LABELS } from '@/config';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import axios from "axios";
+
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { MIN_ZOOM_LEVEL_FOR_TRAINING_AREA_LABELS } from "@/config";
+import {
+  TCreateTrainingAreaArgs,
+  TCreateTrainingLabelsForAOIArgs,
+  TGetTrainingAreaLabelsFromOSMArgs,
+  createTrainingArea,
+  createTrainingLabelsForAOI,
+  getTrainingAreaLabelsFromOSM,
+} from "@/features/model-creation/api/create-trainings";
+import { deleteTrainingArea } from "@/features/model-creation/api/delete-trainings";
 import {
   getTrainingAreaLabelsQueryOptions,
   getTrainingAreaQueryOptions,
   getTrainingAreasQueryOptions,
   getTrainingDatasetLabelsQueryOptions,
 } from "@/features/model-creation/api/factory";
-import {
-  createTrainingArea,
-  createTrainingLabelsForAOI,
-  getTrainingAreaLabelsFromOSM,
-  TCreateTrainingAreaArgs,
-  TCreateTrainingLabelsForAOIArgs,
-  TGetTrainingAreaLabelsFromOSMArgs,
-} from "@/features/model-creation/api/create-trainings";
+import { API_ENDPOINTS, MutationConfig } from "@/services";
 
 export const useGetTrainingAreas = (datasetId: number, offset: number) => {
   return useQuery({
@@ -37,7 +39,7 @@ export const useCreateTrainingArea = ({
 }: useCreateTrainingAreaOptions) => {
   const { refetch: refetchTrainingAreas } = useGetTrainingAreas(
     datasetId,
-    offset,
+    offset
   );
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
@@ -83,7 +85,7 @@ export const useDeleteTrainingArea = ({
 }: useDeleteTrainingAreaOptions) => {
   const { refetch: refetchTrainingAreas } = useGetTrainingAreas(
     datasetId,
-    offset,
+    offset
   );
 
   const { onSuccess, ...restConfig } = mutationConfig || {};
@@ -108,7 +110,6 @@ type useGetTrainingAreaLabelsFromOSMOptions = {
 export const useGetTrainingAreaLabelsFromOSM = ({
   mutationConfig,
 }: useGetTrainingAreaLabelsFromOSMOptions) => {
-
   const { onSuccess, ...restConfig } = mutationConfig || {};
 
   return useMutation({
@@ -124,7 +125,7 @@ export const useGetTrainingAreaLabelsFromOSM = ({
 export const useGetTrainingDatasetLabels = (
   datasetId: number,
   bbox: string,
-  currentZoom: number,
+  currentZoom: number
 ) => {
   return useQuery({
     ...getTrainingDatasetLabelsQueryOptions(datasetId, bbox),
@@ -144,7 +145,7 @@ export const useGetTrainingAreaLabels = (aoiId: number, enabled: boolean) => {
 export const useGetTrainingArea = (
   aoiId: number,
   enabled: boolean,
-  refetchInterval: number,
+  refetchInterval: number
 ) => {
   return useQuery({
     ...getTrainingAreaQueryOptions(aoiId),
@@ -160,7 +161,7 @@ type TOSMDatabaseResponse = {
 export const fetchOSMDatabaseLastUpdated =
   async (): Promise<TOSMDatabaseResponse> => {
     const { data } = await axios.get(
-      API_ENDPOINTS.GET_OSM_DATABASE_LAST_UPDATED,
+      API_ENDPOINTS.GET_OSM_DATABASE_LAST_UPDATED
     );
     return data;
   };

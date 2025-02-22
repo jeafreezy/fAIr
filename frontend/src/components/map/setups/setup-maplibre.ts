@@ -1,17 +1,18 @@
-import maplibregl, { Map } from 'maplibre-gl';
-import { BASEMAPS } from '@/enums';
-import { MAP_STYLES, MAX_ZOOM_LEVEL } from '@/config';
-import { Protocol } from 'pmtiles';
+import maplibregl, { Map } from "maplibre-gl";
+import { Protocol } from "pmtiles";
+
+import { MAP_STYLES, MAX_ZOOM_LEVEL } from "@/config";
+import { BASEMAPS } from "@/enums";
 
 export const setupMaplibreMap = (
   containerRef: React.RefObject<HTMLElement>,
-  pmtiles: boolean,
+  pmtiles: boolean
 ): Map => {
   // Check if RTL plugin is needed and set it
   if (maplibregl.getRTLTextPluginStatus() === "unavailable") {
     maplibregl.setRTLTextPlugin(
       "https://unpkg.com/@mapbox/mapbox-gl-rtl-text@0.2.3/mapbox-gl-rtl-text.min.js",
-      true,
+      true
     );
   }
 

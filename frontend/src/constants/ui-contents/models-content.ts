@@ -1,8 +1,7 @@
-import { BASE_MODELS } from '@/enums';
-import { formatAreaInAppropriateUnit } from '@/utils';
-import { MAX_TRAINING_AREA_SIZE, MIN_TRAINING_AREA_SIZE } from '@/config';
-import { TModelsContent } from '@/types';
-
+import { MAX_TRAINING_AREA_SIZE, MIN_TRAINING_AREA_SIZE } from "@/config";
+import { BASE_MODELS } from "@/enums";
+import { TModelsContent } from "@/types";
+import { formatAreaInAppropriateUnit } from "@/utils";
 
 export const MODELS_CONTENT: TModelsContent = {
   trainingArea: {
@@ -32,11 +31,15 @@ export const MODELS_CONTENT: TModelsContent = {
         },
         baseModel: {
           label: "Base Model",
-          helpText: "Choose a base model to use for training. All base models currently support building detection.",
-          toolTip: "A base model is the pre-trained model that serves as the foundation for fine-tuning your local AI model.",
+          helpText:
+            "Choose a base model to use for training. All base models currently support building detection.",
+          toolTip:
+            "A base model is the pre-trained model that serves as the foundation for fine-tuning your local AI model.",
           suffixes: {
-            [BASE_MODELS.RAMP]: "Optimized for faster training with decent accuracy. Best suited for building detection tasks.",
-            [BASE_MODELS.YOLOV8_V1]: "A well-balanced model offering good accuracy for detecting structures in major areas. Trained by the community.",
+            [BASE_MODELS.RAMP]:
+              "Optimized for faster training with decent accuracy. Best suited for building detection tasks.",
+            [BASE_MODELS.YOLOV8_V1]:
+              "A well-balanced model offering good accuracy for detecting structures in major areas. Trained by the community.",
             [BASE_MODELS.YOLOV8_V2]:
               "Our most advanced model. Designed for detecting various features across different areas. Developed in collaboration with Omdena AI.",
           },
@@ -68,13 +71,15 @@ export const MODELS_CONTENT: TModelsContent = {
         },
         tmsURL: {
           label: "TMS URL",
-          toolTip: "Enter the Tile Map Service (TMS) URL. You can input the TMS from OpenAerialMap (OAM), or provide a custom one.",
+          toolTip:
+            "Enter the Tile Map Service (TMS) URL. You can input the TMS from OpenAerialMap (OAM), or provide a custom one.",
           helpText:
             "TMS imagery link should look like this https://tiles.openaerialmap.org/****/*/***/{z}/{x}/{y}",
           placeholder: "https://tiles.openaerialmap.org/****/*/***/{z}/{x}/{y}",
         },
         existingTrainingDatasetSectionHeading: "Existing Training Dataset",
-        existingTrainingDatasetSectionDescription: 'Browse or search for a dataset name. Select a dataset to proceed.',
+        existingTrainingDatasetSectionDescription:
+          "Browse or search for a dataset name. Select a dataset to proceed.",
         newTrainingDatasetSectionHeading: "Create New Training Dataset",
         searchBar: {
           placeholder: "Enter a dataset name to search",
@@ -88,16 +93,19 @@ export const MODELS_CONTENT: TModelsContent = {
     trainingArea: {
       toolTips: {
         labelsFetchInProgress: "Processing labels...",
-        fetchOSMLabels: "Click to retrieve mapped buildings from OpenStreetMap (OSM) for this area. These buildings will be used as training labels to help the model learn.",
+        fetchOSMLabels:
+          "Click to retrieve mapped buildings from OpenStreetMap (OSM) for this area. These buildings will be used as training labels to help the model learn.",
         lastUpdatedPrefix: "OSM last synced:",
         zoomToAOI: "Click to zoom to this training area.",
         openINJOSM: "Click to open this training area in JOSM.",
         openInIdEditor: "Click to open this training area in ID Editor.",
         downloadAOI: "Click to download this training area as GeoJSON.",
-        downloadLabels: "Click to download the labels in this training area as GeoJSON.",
+        downloadLabels:
+          "Click to download the labels in this training area as GeoJSON.",
         uploadLabels: "Click to upload training labels for this training area.",
         deleteAOI: "Click to delete this training area.",
-        fitToTMSBounds: "Click to adjust the map view to fit the imagery bounds.",
+        fitToTMSBounds:
+          "Click to adjust the map view to fit the imagery bounds.",
       },
       pageTitle: "Create Training Area",
       datasetID: "Dataset ID:",
@@ -139,8 +147,7 @@ export const MODELS_CONTENT: TModelsContent = {
         zoomLevels: "Zoom Levels",
         trainingSettings: "Training Settings",
       },
-      pageDescription:
-        "Please check all the model details before you proceed!",
+      pageDescription: "Please check all the model details before you proceed!",
     },
     confirmation: {
       buttons: {
@@ -155,7 +162,8 @@ export const MODELS_CONTENT: TModelsContent = {
       form: {
         zoomLevel: {
           label: "Select Zoom Level",
-          toolTip: "Choose the zoom level for training. A higher zoom level provides finer details but may increase training time.",
+          toolTip:
+            "Choose the zoom level for training. A higher zoom level provides finer details but may increase training time.",
         },
         trainingType: {
           label: "Select Model Training Type",
@@ -163,27 +171,33 @@ export const MODELS_CONTENT: TModelsContent = {
         },
         advancedSettings: {
           label: "Advanced Settings",
-          toolTip: "Modify additional parameters for fine-tuning your model training.",
+          toolTip:
+            "Modify additional parameters for fine-tuning your model training.",
         },
         epoch: {
           label: "Epoch",
-          toolTip: "Specify the number of training iterations. A higher number improves learning.",
+          toolTip:
+            "Specify the number of training iterations. A higher number improves learning.",
         },
         contactSpacing: {
           label: "Contact Spacing",
-          toolTip: "Defines the minimum spacing between detected objects during training.",
+          toolTip:
+            "Defines the minimum spacing between detected objects during training.",
         },
         batchSize: {
           label: "Batch Size",
-          toolTip: "The number of training samples processed in one step. A larger batch size may speed up training.",
+          toolTip:
+            "The number of training samples processed in one step. A larger batch size may speed up training.",
         },
         boundaryWidth: {
           label: "Boundary Width",
-          toolTip: "Determines the width of the boundary around detected objects, affecting how edges are handled.",
+          toolTip:
+            "Determines the width of the boundary around detected objects, affecting how edges are handled.",
         },
       },
       pageTitle: "Model Training Settings",
-      pageDescription: "Customize your model training preferences by selecting the appropriate options below.",
+      pageDescription:
+        "Customize your model training preferences by selecting the appropriate options below.",
     },
     progressStepper: {
       modelDetails: "Model Details",
@@ -321,8 +335,7 @@ export const MODELS_CONTENT: TModelsContent = {
       },
       trainingSettings: {
         dialogHeading: "Model Training Settings",
-        description:
-          "Please make sure the following settings are accurate!",
+        description: "Please make sure the following settings are accurate!",
         submitButtonText: "Submit",
       },
       modelEnhancement: {

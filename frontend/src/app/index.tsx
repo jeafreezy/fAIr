@@ -1,11 +1,12 @@
-import { AppRouter } from "@/app/router";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { showErrorToast } from "@/utils";
 import {
   QueryCache,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+import { AppRouter } from "@/app/router";
+import { showErrorToast } from "@/utils";
 
 export const App = () => {
   const queryClient = new QueryClient({

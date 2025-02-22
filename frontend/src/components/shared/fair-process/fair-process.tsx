@@ -1,16 +1,18 @@
-import styles from "./fair-process.module.css";
-import { AnimatedBeam } from "@/components/ui/animated-beam";
-import { BotIcon, FeedbackIcon, PredictionsIcon } from "@/components/ui/icons";
-import { DesktopFlowIcon } from "@/components/ui/icons";
-import { IconProps } from "@/types";
-import { SHARED_CONTENT } from "@/constants";
 import React, {
   useCallback,
   useEffect,
   useMemo,
-  useState,
   useRef,
+  useState,
 } from "react";
+
+import { AnimatedBeam } from "@/components/ui/animated-beam";
+import { BotIcon, FeedbackIcon, PredictionsIcon } from "@/components/ui/icons";
+import { DesktopFlowIcon } from "@/components/ui/icons";
+import { SHARED_CONTENT } from "@/constants";
+import { IconProps } from "@/types";
+
+import styles from "./fair-process.module.css";
 
 /**
  * The delay in seconds before switching to the next step. This can be adjust accordingly.
@@ -54,7 +56,7 @@ export const TheFAIRProcess = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const itemRefs = useRef<Array<React.RefObject<HTMLDivElement>>>(
-    steps.map(() => React.createRef<HTMLDivElement>()),
+    steps.map(() => React.createRef<HTMLDivElement>())
   );
 
   const [activeIndex, setActiveIndex] = useState<number>(0);

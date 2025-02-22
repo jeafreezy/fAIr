@@ -1,17 +1,15 @@
-import area from '@turf/area';
-import bboxPolygon from '@turf/bbox';
-import { booleanIntersects } from '@turf/boolean-intersects';
-import { createFeatureCollection } from './geo-utils';
-import {
-  Feature,
-  FeatureCollection,
-  Polygon,
-  Position
-  } from 'geojson';
-import { LngLatBoundsLike, Map } from 'maplibre-gl';
-import { roundNumber } from '../number-utils';
-import { TModelPredictions, TModelPredictionsConfig } from '@/types';
-import { uuid4 } from '../general-utils';
+import { Feature, FeatureCollection, Polygon, Position } from "geojson";
+import { LngLatBoundsLike, Map } from "maplibre-gl";
+
+import area from "@turf/area";
+import bboxPolygon from "@turf/bbox";
+import { booleanIntersects } from "@turf/boolean-intersects";
+
+import { TModelPredictions, TModelPredictionsConfig } from "@/types";
+
+import { uuid4 } from "../general-utils";
+import { roundNumber } from "../number-utils";
+import { createFeatureCollection } from "./geo-utils";
 
 /**
  * Calculates the area of a GeoJSON Feature or FeatureCollection.
@@ -26,7 +24,7 @@ import { uuid4 } from '../general-utils';
  * @returns {number} The calculated area of the GeoJSON feature in square meters.
  */
 export const calculateGeoJSONArea = (
-  geojsonFeature: Feature | FeatureCollection,
+  geojsonFeature: Feature | FeatureCollection
 ): number => {
   return area(geojsonFeature);
 };
@@ -44,10 +42,15 @@ export const calculateGeoJSONArea = (
 export function formatAreaInAppropriateUnit(area: number) {
   const SQUARE_METERS_IN_SQUARE_KILOMETER = 1000000;
   if (area > SQUARE_METERS_IN_SQUARE_KILOMETER) {
-    return roundNumber(area / SQUARE_METERS_IN_SQUARE_KILOMETER, 1).toLocaleString() + "km²";
+    return (
+      roundNumber(
+        area / SQUARE_METERS_IN_SQUARE_KILOMETER,
+        1
+      ).toLocaleString() + "km²"
+    );
   }
   return roundNumber(area, 1).toLocaleString() + "m²";
-};
+}
 
 /**
  * Computes the bounding box of a GeoJSON Feature.
@@ -63,7 +66,7 @@ export function formatAreaInAppropriateUnit(area: number) {
  */
 
 export const getGeoJSONFeatureBounds = (
-  geojsonFeature: Feature,
+  geojsonFeature: Feature
 ): LngLatBoundsLike => {
   return bboxPolygon(geojsonFeature) as [number, number, number, number];
 };
@@ -98,7 +101,7 @@ const degrees_to_radians = (degrees: number): number => {
 const deg2num = (
   lat_deg: number,
   lon_deg: number,
-  zoom: number,
+  zoom: number
 ): { xtile: number; ytile: number } => {
   const lat_rad = degrees_to_radians(lat_deg);
   const n = Math.pow(2.0, zoom);
@@ -106,7 +109,7 @@ const deg2num = (
   const xtile = Math.floor(((lon_deg + 180.0) / 360.0) * n);
 
   const ytile = Math.floor(
-    ((1.0 - Math.asinh(Math.tan(lat_rad)) / Math.PI) / 2.0) * n,
+    ((1.0 - Math.asinh(Math.tan(lat_rad)) / Math.PI) / 2.0) * n
   );
   return { xtile, ytile };
 };
@@ -138,7 +141,7 @@ const radians_to_degrees = (radians: number): number => {
 const num2deg = (
   xtile: number,
   ytile: number,
-  zoom: number,
+  zoom: number
 ): { lat_deg: number; lon_deg: number } => {
   const n = Math.pow(2.0, zoom);
   const lon_deg = (xtile / n) * 360.0 - 180.0;
@@ -167,7 +170,7 @@ export const distance = (
   lon1: number,
   lat2: number,
   lon2: number,
-  unit: "K" | "N" | "M",
+  unit: "K" | "N" | "M"
 ): number => {
   if (lat1 === lat2 && lon1 === lon2) {
     return 0;
@@ -209,7 +212,7 @@ export const distance = (
 const getClosestCorner = (
   lat: number,
   lon: number,
-  zoom: number,
+  zoom: number
 ): { lat_deg: number; lon_deg: number } | null => {
   const tile = deg2num(lat, lon, zoom);
   let shortest = Infinity;
@@ -240,7 +243,7 @@ const getClosestCorner = (
  */
 export const approximateGeom = (
   coordinates: Position[],
-  zoom = 19,
+  zoom = 19
 ): [number, number][] => {
   return coordinates.map(([lon, lat]) => {
     const closest = getClosestCorner(lat, lon, zoom);
@@ -260,7 +263,7 @@ export const approximateGeom = (
  */
 export const getTileBoundariesGeoJSON = (
   map: Map,
-  zoom: number,
+  zoom: number
 ): FeatureCollection => {
   const bounds = map.getBounds();
 
@@ -321,20 +324,20 @@ export const snapGeoJSONPolygonToClosestTile = (geometry: Polygon) => {
 export const handleConflation = (
   existingPredictions: TModelPredictions,
   newFeatures: Feature[],
-  predictionConfig: TModelPredictionsConfig,
+  predictionConfig: TModelPredictionsConfig
 ): TModelPredictions => {
   let updatedAll = [...existingPredictions.all];
 
   newFeatures.forEach((newFeature) => {
     const intersectsWithAccepted = existingPredictions.accepted.some(
-      (acceptedFeature) => booleanIntersects(newFeature, acceptedFeature),
+      (acceptedFeature) => booleanIntersects(newFeature, acceptedFeature)
     );
     const intersectsWithRejected = existingPredictions.rejected.some(
-      (rejectedFeature) => booleanIntersects(newFeature, rejectedFeature),
+      (rejectedFeature) => booleanIntersects(newFeature, rejectedFeature)
     );
 
     const intersectingIndex = updatedAll.findIndex((existingFeature) =>
-      booleanIntersects(newFeature, existingFeature),
+      booleanIntersects(newFeature, existingFeature)
     );
 
     if (intersectingIndex !== -1) {

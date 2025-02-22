@@ -1,18 +1,20 @@
-import ModelDetailItem from "@/features/models/components/model-detail-item";
-import ModelDetailsSection from "@/features/models/components/model-details-section";
-import ModelDetailsUpdateDialog from "./dialogs/model-details-update-dialog";
-import ModelFeedbacks from "@/features/models/components/model-feedbacks";
-import ModelFilesButton from "./model-files-button";
-import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
+import { useNavigate } from "react-router-dom";
+
+import { useAuth } from "@/app/providers/auth-provider";
 import { ButtonWithIcon } from "@/components/ui/button";
 import { Divider } from "@/components/ui/divider";
-import { formatDate, truncateString } from "@/utils";
 import { MapIcon, PenIcon } from "@/components/ui/icons";
-import { TModelDetails, TTrainingDataset } from "@/types";
-import { TrainingAreaButton } from "./training-area-button";
-import { useAuth } from "@/app/providers/auth-provider";
+import { APPLICATION_ROUTES, MODELS_CONTENT } from "@/constants";
+import ModelDetailItem from "@/features/models/components/model-detail-item";
+import ModelDetailsSection from "@/features/models/components/model-details-section";
+import ModelFeedbacks from "@/features/models/components/model-feedbacks";
 import { useDialog } from "@/hooks/use-dialog";
-import { useNavigate } from "react-router-dom";
+import { TModelDetails, TTrainingDataset } from "@/types";
+import { formatDate, truncateString } from "@/utils";
+
+import ModelDetailsUpdateDialog from "./dialogs/model-details-update-dialog";
+import ModelFilesButton from "./model-files-button";
+import { TrainingAreaButton } from "./training-area-button";
 
 const ModelDetailsInfo = ({
   data,
@@ -70,7 +72,7 @@ const ModelDetailsInfo = ({
                   disabled={data?.published_training === null}
                   onClick={() => {
                     navigate(
-                      `${APPLICATION_ROUTES.START_MAPPING_BASE}${data.id}`,
+                      `${APPLICATION_ROUTES.START_MAPPING_BASE}${data.id}`
                     );
                   }}
                 />

@@ -1,13 +1,5 @@
-import PredictedFeatureActionPopup from '@/features/start-mapping/components/feature-popup';
-import useScreenSize from '@/hooks/use-screen-size';
-import { ControlsPosition } from '@/enums';
-import { extractTileJSONURL, showErrorToast } from '@/utils';
-import { GeoJSONSource, LngLatBoundsLike, Map } from 'maplibre-gl';
-import { Legend } from '@/features/start-mapping/components';
-import { MapComponent, MapCursorToolTip } from '@/components/map';
-import { TOAST_NOTIFICATIONS } from '@/constants';
-import { useMapLayers } from '@/hooks/use-map-layer';
-import { useToolTipVisibility } from '@/hooks/use-tooltip-visibility';
+import { GeoJSONSource, LngLatBoundsLike, Map } from "maplibre-gl";
+
 import {
   Dispatch,
   RefObject,
@@ -17,28 +9,35 @@ import {
   useState,
 } from "react";
 
+import { MapComponent, MapCursorToolTip } from "@/components/map";
 import {
-  GeoJSONType,
-  TileJSON,
-  TModelPredictionFeature,
-  TModelPredictions,
-  TTrainingDataset,
-} from "@/types";
-import {
-
   ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
   ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   ACCEPTED_MODEL_PREDICTIONS_SOURCE_ID,
   ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
   ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   ALL_MODEL_PREDICTIONS_SOURCE_ID,
-  MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION,
   MINIMUM_ZOOM_LEVEL_INSTRUCTION_FOR_PREDICTION,
+  MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION,
   REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
   REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   REJECTED_MODEL_PREDICTIONS_SOURCE_ID,
 } from "@/config";
-
+import { TOAST_NOTIFICATIONS } from "@/constants";
+import { ControlsPosition } from "@/enums";
+import { Legend } from "@/features/start-mapping/components";
+import PredictedFeatureActionPopup from "@/features/start-mapping/components/feature-popup";
+import { useMapLayers } from "@/hooks/use-map-layer";
+import useScreenSize from "@/hooks/use-screen-size";
+import { useToolTipVisibility } from "@/hooks/use-tooltip-visibility";
+import {
+  GeoJSONType,
+  TModelPredictionFeature,
+  TModelPredictions,
+  TTrainingDataset,
+  TileJSON,
+} from "@/types";
+import { extractTileJSONURL, showErrorToast } from "@/utils";
 
 export const StartMappingMapComponent = ({
   trainingDataset,
@@ -53,9 +52,9 @@ export const StartMappingMapComponent = ({
   currentZoom,
   layers,
   tmsBounds,
-  trainingId
+  trainingId,
 }: {
-  trainingId: number
+  trainingId: number;
   trainingDataset?: TTrainingDataset;
   modelPredictions: TModelPredictions;
   setModelPredictions: Dispatch<
@@ -191,14 +190,14 @@ export const StartMappingMapComponent = ({
         },
       },
     ],
-    map,
+    map
   );
 
   const updateLayers = useCallback(() => {
     if (map) {
       if (map?.getSource(ACCEPTED_MODEL_PREDICTIONS_SOURCE_ID)) {
         const source = map.getSource(
-          ACCEPTED_MODEL_PREDICTIONS_SOURCE_ID,
+          ACCEPTED_MODEL_PREDICTIONS_SOURCE_ID
         ) as GeoJSONSource;
         source.setData({
           type: "FeatureCollection",
@@ -208,7 +207,7 @@ export const StartMappingMapComponent = ({
 
       if (map?.getSource(REJECTED_MODEL_PREDICTIONS_SOURCE_ID)) {
         const source = map.getSource(
-          REJECTED_MODEL_PREDICTIONS_SOURCE_ID,
+          REJECTED_MODEL_PREDICTIONS_SOURCE_ID
         ) as GeoJSONSource;
         source.setData({
           type: "FeatureCollection",
@@ -218,7 +217,7 @@ export const StartMappingMapComponent = ({
 
       if (map?.getSource(ALL_MODEL_PREDICTIONS_SOURCE_ID)) {
         const source = map.getSource(
-          ALL_MODEL_PREDICTIONS_SOURCE_ID,
+          ALL_MODEL_PREDICTIONS_SOURCE_ID
         ) as GeoJSONSource;
         source.setData({
           type: "FeatureCollection",

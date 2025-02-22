@@ -1,12 +1,13 @@
-import ModelDescriptionFormInput from "@/features/model-creation/components/model-details/model-description-input";
-import ModelNameFormInput from "@/features/model-creation/components/model-details/model-name-input";
+import { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { MODELS_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
-import { showErrorToast, showSuccessToast } from "@/utils";
-import { TModel } from "@/types";
-import { useState } from "react";
+import ModelDescriptionFormInput from "@/features/model-creation/components/model-details/model-description-input";
+import ModelNameFormInput from "@/features/model-creation/components/model-details/model-name-input";
 import { useUpdateModel } from "@/features/model-creation/hooks/use-models";
+import { TModel } from "@/types";
+import { showErrorToast, showSuccessToast } from "@/utils";
 
 type ModelDetailsUpdateDialogProps = {
   isOpened: boolean;
@@ -20,7 +21,7 @@ const ModelDetailsUpdateDialog: React.FC<ModelDetailsUpdateDialogProps> = ({
 }) => {
   const [modelName, setModelName] = useState(data.name ?? "");
   const [modelDescription, setModelDescription] = useState(
-    data.description ?? "",
+    data.description ?? ""
   );
   const modelUpdateMutation = useUpdateModel({
     modelId: data.id,

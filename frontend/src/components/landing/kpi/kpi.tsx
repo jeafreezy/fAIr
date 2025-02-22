@@ -1,8 +1,11 @@
-import styles from './kpi.module.css';
-import { API_ENDPOINTS, apiClient } from '@/services';
-import { KPI_STATS_CACHE_TIME_MS } from '@/config';
-import { SHARED_CONTENT } from '@/constants';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
+
+import { KPI_STATS_CACHE_TIME_MS } from "@/config";
+import { SHARED_CONTENT } from "@/constants";
+import { API_ENDPOINTS, apiClient } from "@/services";
+
+import styles from "./kpi.module.css";
+
 type TKPIS = {
   figure?: number;
   label: string;
@@ -26,8 +29,6 @@ export const Kpi = () => {
     queryFn: fetchKPIStats,
     refetchInterval: KPI_STATS_CACHE_TIME_MS,
   });
-
-
 
   const KPIs: TKPIS = [
     {

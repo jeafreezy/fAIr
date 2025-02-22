@@ -1,4 +1,5 @@
-import { PageUnderConstruction } from '@/components/errors';
+import { PageUnderConstruction } from "@/components/errors";
+
 // import { Button } from "@/components/ui/button";
 // import { ExternalLinkIcon, YouTubePlayCircleIcon } from "@/components/ui/icons";
 // import { fAIrValues } from "@/assets/svgs";

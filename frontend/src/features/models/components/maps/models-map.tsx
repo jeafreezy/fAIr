@@ -1,10 +1,12 @@
-import { FeatureCollection, TQueryParams } from "@/types";
 import { Map } from "maplibre-gl";
-import { MapComponent } from "@/components/map";
-import { MapMarkerIcon } from "@/assets/images";
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+
 import { useCallback, useEffect } from "react";
+
+import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
+import { MapMarkerIcon } from "@/assets/images";
+import { MapComponent } from "@/components/map";
 import { useMapInstance } from "@/hooks/use-map-instance";
+import { FeatureCollection, TQueryParams } from "@/types";
 
 const mapSourceName = "models";
 // Font from OpenFreeMap
@@ -17,7 +19,7 @@ const maplibreLayerDefn = (
   map: Map,
   mapResults: any,
   handleClickOnModelID: (clickedId: string) => void,
-  disablePoiClick = false,
+  disablePoiClick = false
 ) => {
   map.addImage("mapMarker", markerIcon, {
     // @ts-expect-error bad type definition
@@ -139,7 +141,7 @@ export const ModelsMap: React.FC<ModelsMapProps> = ({
       maplibreLayerDefn(map, mapResults, handleClickOnModelID);
     } else {
       map.on("load", () =>
-        maplibreLayerDefn(map, mapResults, handleClickOnModelID),
+        maplibreLayerDefn(map, mapResults, handleClickOnModelID)
       );
     }
   }, [map, mapResults, handleClickOnModelID]);

@@ -1,14 +1,14 @@
-import CreateNewTrainingDatasetForm from '@/features/model-creation/components/training-dataset/create-new';
-import SelectExistingTrainingDatasetForm from '@/features/model-creation/components/training-dataset/select-existing';
-import { ButtonWithIcon } from '@/components/ui/button';
-import { ChevronDownIcon } from '@/components/ui/icons';
-import { MODELS_CONTENT } from '@/constants';
-import { StepHeading } from '@/features/model-creation/components/';
-import { TrainingDatasetOption } from '@/enums';
 import {
   MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
+import { ButtonWithIcon } from "@/components/ui/button";
+import { ChevronDownIcon } from "@/components/ui/icons";
+import { MODELS_CONTENT } from "@/constants";
+import { TrainingDatasetOption } from "@/enums";
+import { StepHeading } from "@/features/model-creation/components/";
+import CreateNewTrainingDatasetForm from "@/features/model-creation/components/training-dataset/create-new";
+import SelectExistingTrainingDatasetForm from "@/features/model-creation/components/training-dataset/select-existing";
 
 const TrainingDatasetForm = () => {
   const { handleChange, formData, isEditMode } = useModelsContext();
@@ -35,7 +35,7 @@ const TrainingDatasetForm = () => {
             onClick={() =>
               handleChange(
                 MODEL_CREATION_FORM_NAME.TRAINING_DATASET_OPTION,
-                TrainingDatasetOption.CREATE_NEW,
+                TrainingDatasetOption.CREATE_NEW
               )
             }
           ></ButtonWithIcon>
@@ -51,7 +51,7 @@ const TrainingDatasetForm = () => {
             onClick={() =>
               handleChange(
                 MODEL_CREATION_FORM_NAME.TRAINING_DATASET_OPTION,
-                TrainingDatasetOption.USE_EXISTING,
+                TrainingDatasetOption.USE_EXISTING
               )
             }
             variant={"default"}

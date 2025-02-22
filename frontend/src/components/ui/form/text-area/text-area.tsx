@@ -1,6 +1,8 @@
-import { FormLabel, HelpText } from '@/components/ui/form';
-import { SlTextarea } from '@shoelace-style/shoelace/dist/react';
-import './text-area.css';
+import { SlTextarea } from "@shoelace-style/shoelace/dist/react";
+
+import { FormLabel, HelpText } from "@/components/ui/form";
+
+import "./text-area.css";
 
 type TextAreaProps = {
   toolTipContent?: string;

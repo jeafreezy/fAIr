@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Head } from "@/components/seo";
-import { SHARED_CONTENT } from "@/constants";
-import { ShieldIcon } from "@/components/ui/icons";
 import { useAuth } from "@/app/providers/auth-provider";
+import { Head } from "@/components/seo";
+import { Button } from "@/components/ui/button";
+import { ShieldIcon } from "@/components/ui/icons";
+import { SHARED_CONTENT } from "@/constants";
 import { useLogin } from "@/hooks/use-login";
 
 type ProtectedRouteProps = {

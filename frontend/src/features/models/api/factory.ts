@@ -1,8 +1,8 @@
 import { keepPreviousData, queryOptions } from "@tanstack/react-query";
-import { queryKeys } from "@/services";
+
 import {
-  getModels,
   getModelDetails,
+  getModels,
   getModelsMapData,
 } from "@/features/models/api/get-models";
 import {
@@ -13,6 +13,7 @@ import {
   getTrainingStatus,
   getTrainingWorkspace,
 } from "@/features/models/api/get-trainings";
+import { queryKeys } from "@/services";
 
 // Models
 
@@ -51,7 +52,7 @@ export const getModelsQueryOptions = ({
         searchQuery,
         dateFilters,
         id,
-        userId,
+        userId
       ),
     placeholderData: keepPreviousData,
   });
@@ -59,7 +60,7 @@ export const getModelsQueryOptions = ({
 
 export const getModelDetailsQueryOptions = (
   id: string,
-  refetchInterval: boolean | number,
+  refetchInterval: boolean | number
 ) => {
   return queryOptions({
     queryKey: [queryKeys.MODEL_DETAILS(id)],
@@ -102,7 +103,7 @@ export const getTrainingFeedbacksQueryOptions = (id: number) => {
 
 export const getTrainingWorkspaceQueryOptions = (
   trainingId: number,
-  directory_name: string,
+  directory_name: string
 ) => {
   return queryOptions({
     queryKey: ["training-workspace", trainingId, directory_name],
@@ -115,7 +116,7 @@ export const getTrainingHistoryQueryOptions = (
   modelId: string,
   offset: number,
   limit: number,
-  ordering: string,
+  ordering: string
 ) => {
   return queryOptions({
     queryKey: ["training-history", modelId, offset, limit, ordering],

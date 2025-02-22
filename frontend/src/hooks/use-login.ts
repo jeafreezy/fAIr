@@ -1,12 +1,11 @@
-import { authService } from '@/services';
-import { HOT_FAIR_SESSION_REDIRECT_KEY } from '@/config';
-import { showErrorToast } from '@/utils';
-import { useLocation } from 'react-router-dom';
-import { useSessionStorage } from '@/hooks/use-storage';
-import { useState } from 'react';
-import {
-  TOAST_NOTIFICATIONS,
-} from "@/constants";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+
+import { HOT_FAIR_SESSION_REDIRECT_KEY } from "@/config";
+import { TOAST_NOTIFICATIONS } from "@/constants";
+import { useSessionStorage } from "@/hooks/use-storage";
+import { authService } from "@/services";
+import { showErrorToast } from "@/utils";
 
 /**
  * Custom hook to handle the login button click event.

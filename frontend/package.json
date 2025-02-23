@@ -18,7 +18,8 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,}": [
       "pnpm format:check",
-      "pnpm format"
+      "pnpm format",
+      "pnpm test"
     ]
   },
   "dependencies": {

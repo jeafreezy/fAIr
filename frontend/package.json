@@ -20,6 +20,9 @@
       "pnpm format:check",
       "pnpm format",
       "pnpm test"
+    ],
+    "*.{js,mjs,json}": [
+      "pnpm format"
     ]
   },
   "dependencies": {

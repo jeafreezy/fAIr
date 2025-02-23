@@ -10,22 +10,14 @@
     "preview": "vite preview",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
     "format:check": "prettier --check 'src/**/*.{js,jsx,ts,tsx,json,css,scss,md}'",
-    "test": "vitest",
+    "test": "vitest run",
     "coverage": "vitest run --coverage",
     "precommit": "lint-staged",
     "prepare": "cd .. && husky frontend/.husky"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "pre-push": "pnpm test"
-    }
-  },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "pnpm format",
-      "pnpm lint",
-      "git add ."
+    "**/*.{js,jsx,ts,tsx,json,css,scss,md,}": [
+      "pnpm format"
     ]
   },
   "dependencies": {
@@ -81,7 +73,7 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "globals": "^15.9.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.4.3",
+    "lint-staged": "^15.2.10",
     "postcss": "^8.4.47",
     "prettier": "3.3.3",
     "tailwindcss": "^3.4.12",

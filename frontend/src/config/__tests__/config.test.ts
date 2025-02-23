@@ -40,15 +40,19 @@ describe("parseFloatEnv()", () => {
 
 describe("parseStringEnv()", () => {
   it("should return the provided value when it is a valid string", () => {
-    expect(parseStringEnv("example.com", "default.com")).toBe("example.com");
+    expect(parseStringEnv("fair.hotosm.org", "default.com")).toBe(
+      "fair.hotosm.org"
+    );
   });
 
   it("should return the default value when input is undefined", () => {
-    expect(parseStringEnv(undefined, "default.com")).toBe("default.com");
+    expect(parseStringEnv(undefined, "fair.hotosm.org")).toBe(
+      "fair.hotosm.org"
+    );
   });
 
   it("should return the default value when input is an empty string", () => {
-    expect(parseStringEnv("", "default.com")).toBe("default.com");
+    expect(parseStringEnv("", "fair.hotosm.org")).toBe("fair.hotosm.org");
   });
 
   it("should return the default value when input is only spaces", () => {
@@ -56,8 +60,8 @@ describe("parseStringEnv()", () => {
   });
 
   it("should trim spaces from a valid input", () => {
-    expect(parseStringEnv("  example.com  ", "default.com")).toBe(
-      "example.com"
+    expect(parseStringEnv("  fair.hotosm.org  ", "default.com")).toBe(
+      "fair.hotosm.org"
     );
   });
 });

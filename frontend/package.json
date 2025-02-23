@@ -16,13 +16,9 @@
     "prepare": "cd .. && husky frontend/.husky"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,}": [
-      "pnpm format:check",
+    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,test.ts}": [
       "pnpm format",
       "pnpm test"
-    ],
-    "*.{js,mjs,json}": [
-      "pnpm format"
     ]
   },
   "dependencies": {

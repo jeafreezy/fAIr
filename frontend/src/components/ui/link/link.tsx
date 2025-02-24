@@ -31,7 +31,7 @@ const Link: React.FC<LinkProps> = ({
         <a
           href={href}
           title={title}
-          rel="origin"
+          rel="origin noreferrer"
           target={blank ? "_blank" : "_self"}
           className={cn(`${styles.link} ${className}`)}
           download={download}

@@ -6,7 +6,7 @@ export type TDeleteTrainingAreaArgs = {
 
 export const deleteTrainingArea = async ({
   trainingAreaId,
-}: TDeleteTrainingAreaArgs): Promise<any> => {
+}: TDeleteTrainingAreaArgs): Promise<unknown> => {
   return await (
     await apiClient.delete(
       `${API_ENDPOINTS.DELETE_TRAINING_AREA(trainingAreaId)}`

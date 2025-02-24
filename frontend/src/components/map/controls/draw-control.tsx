@@ -47,7 +47,7 @@ export const DrawControl = ({
           />
         ) : (
           <div
-            className={`border-[2px] ${isActive ? "border-white" : "border-dark"} rounded-[4px] map-icon`}
+            className={`border-2 ${isActive ? "border-white" : "border-dark"} map-icon rounded-[4px]`}
           ></div>
         )}
       </button>

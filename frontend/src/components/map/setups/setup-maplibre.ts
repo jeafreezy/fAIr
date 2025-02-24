@@ -17,7 +17,7 @@ export const setupMaplibreMap = (
   }
 
   if (pmtiles) {
-    let protocol = new Protocol();
+    const protocol = new Protocol();
     maplibregl.addProtocol("pmtiles", protocol.tile);
   }
 

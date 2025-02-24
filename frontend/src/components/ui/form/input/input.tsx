@@ -1,3 +1,5 @@
+import { SlInputEvent } from "node_modules/@shoelace-style/shoelace/dist/events/sl-input";
+
 import { useRef } from "react";
 
 import { SlInput } from "@shoelace-style/shoelace/dist/react";
@@ -12,7 +14,7 @@ import useScreenSize from "@/hooks/use-screen-size";
 import styles from "./input.module.css";
 
 type InputProps = {
-  handleInput: (arg: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInput: (arg: SlInputEvent) => void;
   value: string | number;
   className?: string;
   placeholder?: string;
@@ -73,7 +75,7 @@ const Input: React.FC<InputProps> = ({
   return (
     <SlInput
       onSlInput={(e) => {
-        validationStateUpdateCallback &&
+        if (validationStateUpdateCallback) {
           validationStateUpdateCallback?.(
             // @ts-expect-error bad type definition
             {
@@ -81,8 +83,8 @@ const Input: React.FC<InputProps> = ({
               message: inputRef.current?.validationMessage,
             }
           );
+        }
 
-        // @ts-expect-error bad type definition
         handleInput(e);
       }}
       // @ts-expect-error bad type definition
@@ -136,7 +138,7 @@ const Input: React.FC<InputProps> = ({
        */}
       {!isChrome && type === "date" && (
         <CalenderIcon
-          className="icon text-dark cursor-pointer"
+          className="icon cursor-pointer text-dark"
           slot="suffix"
           onClick={openNativeDatePicker}
         />
@@ -144,7 +146,7 @@ const Input: React.FC<InputProps> = ({
 
       {isValid && (
         <span
-          className="icon rounded-full p-1 bg-green-primary flex items-center justify-center"
+          className="icon flex items-center justify-center rounded-full bg-green-primary p-1"
           slot="suffix"
         >
           <CheckIcon className=" text-white" />

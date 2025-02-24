@@ -41,16 +41,16 @@ const TrainingAreaList = ({
   });
 
   return (
-    <div className="flex max-h-[60%] flex-col gap-y-4 justify-between p-2 lg:p-4">
-      <div className="flex items-start w-full flex-col gap-y-4">
+    <div className="flex max-h-[60%] flex-col justify-between gap-y-4 p-2 lg:p-4">
+      <div className="flex w-full flex-col items-start gap-y-4">
         <p className="text-body-2">
           {MODELS_CONTENT.modelCreation.trainingArea.form.trainingArea}
           {`${data && data.count > 1 ? "s" : ""}`}{" "}
-          <span className="text-white bg-primary text-body-3 font-medium rounded-xl px-3 py-1">
+          <span className="rounded-xl bg-primary px-3 py-1 text-body-3 font-medium text-white">
             {data?.count ?? 0}
           </span>
         </p>
-        <span className="flex flex-col gap-y-1 text-gray italic">
+        <span className="flex flex-col gap-y-1 italic text-gray">
           {isOSMPending || isOSMError ? (
             ""
           ) : (
@@ -84,9 +84,9 @@ const TrainingAreaList = ({
           />
         </div>
       </div>
-      <div className="flex items-center justify-center h-full">
+      <div className="flex h-full items-center justify-center">
         {data?.count === 0 ? (
-          <div className="flex items-center justify-center flex-col gap-y-10 text-center">
+          <div className="flex flex-col items-center justify-center gap-y-10 text-center">
             <NoTrainingAreaIcon />
             <p className="text-gray">
               No Training Area (TA) added yet. Start by drawing a TA on the map
@@ -94,9 +94,9 @@ const TrainingAreaList = ({
             </p>
           </div>
         ) : isPending ? (
-          <div className="w-full h-full animate-pulse bg-light-gray"></div>
+          <div className="size-full animate-pulse bg-light-gray"></div>
         ) : (
-          <div className="h-full overflow-y-auto flex flex-col gap-y-4 w-full">
+          <div className="flex size-full flex-col gap-y-4 overflow-y-auto">
             {data?.results.features
               .sort((a, b) => b.id - a.id)
               .map((ta) => (

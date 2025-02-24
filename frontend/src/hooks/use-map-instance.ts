@@ -27,7 +27,7 @@ export const useMapInstance = (pmtiles: boolean = false) => {
       setMap(map);
     });
     return () => map.remove();
-  }, []);
+  }, [mapContainerRef, pmtiles]);
 
   const terraDraw = useMemo(() => {
     if (map) {
@@ -56,7 +56,7 @@ export const useMapInstance = (pmtiles: boolean = false) => {
     return () => {
       map.off("zoomend", updateZoom);
     };
-  }, [map]);
+  }, [map, updateZoom]);
 
   return {
     mapContainerRef,

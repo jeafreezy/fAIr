@@ -17,7 +17,7 @@ export const useLocalStorage = () => {
       const item = localStorage.getItem(key);
       return item ? item : undefined;
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
 
@@ -25,7 +25,7 @@ export const useLocalStorage = () => {
     try {
       localStorage.setItem(key, value);
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
 
@@ -33,7 +33,7 @@ export const useLocalStorage = () => {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
 
@@ -57,7 +57,7 @@ export const useSessionStorage = () => {
       const item = sessionStorage.getItem(key);
       return item ? item : undefined;
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
 
@@ -65,7 +65,7 @@ export const useSessionStorage = () => {
     try {
       sessionStorage.setItem(key, value);
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
 
@@ -73,7 +73,7 @@ export const useSessionStorage = () => {
     try {
       sessionStorage.removeItem(key);
     } catch (error) {
-      showErrorToast(error);
+      showErrorToast(error as Error);
     }
   };
   return { getSessionValue, setSessionValue, removeSessionValue };

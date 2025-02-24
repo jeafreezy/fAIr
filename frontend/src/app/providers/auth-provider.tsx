@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 import {
   HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY,
@@ -23,6 +29,7 @@ type TAuthContext = {
 // @ts-expect-error bad type definition
 const AuthContext = createContext<TAuthContext>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -51,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Set token globally to eliminate the need to rewrite it
   apiClient.defaults.headers.common["access-token"] = token ? `${token}` : null;
 
-  const handleRedirection = () => {
+  const handleRedirection = useCallback(() => {
     const redirectTo = getSessionValue(HOT_FAIR_SESSION_REDIRECT_KEY);
     if (redirectTo) {
       // remove it before redirecting.
@@ -61,7 +68,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setSessionValue(HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY, "success");
       window.location.replace(redirectTo);
     }
-  };
+  }, [getSessionValue, removeSessionValue, setSessionValue]);
+
+  /**
+   * Complete the oauth flow by exchanging code, and state tokens for access token from the backend.
+   * @param state The state token from OSM.
+   * @param code  The code token from OSM.
+   */
+  const authenticateUser = useCallback(
+    async (state: string, code: string) => {
+      try {
+        const data = await authService.authenticate(state, code);
+        setValue(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY, data.access_token);
+        setToken(data.access_token);
+      } catch {
+        showErrorToast(TOAST_NOTIFICATIONS.authenticationFailed);
+      }
+    },
+    [setValue]
+  );
 
   // To show the login success after completing redirection if any.
 
@@ -73,7 +98,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       showSuccessToast(TOAST_NOTIFICATIONS.loginSuccess);
       removeSessionValue(HOT_FAIR_LOGIN_SUCCESSFUL_SESSION_KEY);
     }
-  }, []);
+  }, [getSessionValue, removeSessionValue]);
 
   // Proceed with the oauth flow when the state and code are in the url params.
   useEffect(() => {
@@ -83,27 +108,23 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (code && state && user === null) {
       authenticateUser(state, code);
     }
-  }, [user]);
+  }, [user, authenticateUser]);
 
   /**
    * Retrieve the user profile information from the backend.
    * @param token The access token stored in local storage.
    */
-  const fetchUserProfile = async () => {
-    try {
-      const user = await authService.getUser();
-      setUser(user);
-      handleRedirection();
-    } catch (error) {
-      showErrorToast(error);
-    }
-  };
+  const fetchUserProfile = useCallback(async () => {
+    const user = await authService.getUser();
+    setUser(user);
+    handleRedirection();
+  }, [handleRedirection]);
 
   useEffect(() => {
     if (token) {
       fetchUserProfile();
     }
-  }, [token]);
+  }, [token, fetchUserProfile]);
 
   /**
    * Clean up and logout.
@@ -113,21 +134,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
     removeValue(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY);
     showSuccessToast(TOAST_NOTIFICATIONS.logoutSuccess);
-  };
-
-  /**
-   * Complete the oauth flow by exchanging code, and state tokens for access token from the backend.
-   * @param state The state token from OSM.
-   * @param code  The code token from OSM.
-   */
-  const authenticateUser = async (state: string, code: string) => {
-    try {
-      const data = await authService.authenticate(state, code);
-      setValue(HOT_FAIR_LOCAL_STORAGE_ACCESS_TOKEN_KEY, data.access_token);
-      setToken(data.access_token);
-    } catch (error) {
-      showErrorToast(error, TOAST_NOTIFICATIONS.authenticationFailed);
-    }
   };
 
   return (

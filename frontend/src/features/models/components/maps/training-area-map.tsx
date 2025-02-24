@@ -108,16 +108,6 @@ export const TrainingAreaMap = ({
     ];
   });
 
-  const sources = [
-    {
-      id: trainingAreasSourceId,
-      spec: {
-        type: "vector",
-        url: `pmtiles://${file}`,
-      } as SourceSpecification,
-    },
-  ];
-
   const layerControlLayers = vectorLayers.map((layer) => ({
     value: `Training ${layer.id}`,
     subLayers: [`${layer.id}_fill`, `${layer.id}_outline`],
@@ -242,9 +232,19 @@ export const TrainingAreaMap = ({
 
   useEffect(() => {
     if (!map) return;
+    const sources = [
+      {
+        id: trainingAreasSourceId,
+        spec: {
+          type: "vector",
+          url: `pmtiles://${file}`,
+        } as SourceSpecification,
+      },
+    ];
+
     addSources(map, sources);
     addLayers(map, mapLayers);
-  }, [map, mapLayers]);
+  }, [map, mapLayers, trainingAreasSourceId, file]);
 
   useEffect(() => {
     return () => {

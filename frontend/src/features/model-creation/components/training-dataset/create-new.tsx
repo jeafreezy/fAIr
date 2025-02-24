@@ -2,12 +2,11 @@ import { useEffect } from "react";
 
 import {
   FORM_VALIDATION_CONFIG,
-  MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
 import { Input } from "@/components/ui/form";
 import { MODELS_CONTENT } from "@/constants";
-import { INPUT_TYPES } from "@/enums";
+import { INPUT_TYPES, MODEL_CREATION_FORM_NAME } from "@/enums";
 
 const CreateNewTrainingDatasetForm = () => {
   const { formData, handleChange } = useModelsContext();
@@ -30,7 +29,7 @@ const CreateNewTrainingDatasetForm = () => {
   }, [formData.tmsURL]);
   return (
     <div className="flex flex-col gap-y-10">
-      <p className="font-semibold text-body-2 md:text-body-1 mb-2">
+      <p className="mb-2 text-body-2 font-semibold md:text-body-1">
         {
           MODELS_CONTENT.modelCreation.trainingDataset.form
             .newTrainingDatasetSectionHeading

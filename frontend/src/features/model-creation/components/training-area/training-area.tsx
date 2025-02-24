@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 
 import { geojsonToWKT } from "@terraformer/wkt";
 
-import {
-  MODEL_CREATION_FORM_NAME,
-  useModelsContext,
-} from "@/app/providers/models-provider";
+import { useModelsContext } from "@/app/providers/models-provider";
 import { Button, ButtonWithIcon } from "@/components/ui/button";
 import { UploadIcon, YouTubePlayIcon } from "@/components/ui/icons";
 import { MODELS_CONTENT, TOAST_NOTIFICATIONS } from "@/constants";
-import { DrawingModes, SHOELACE_SIZES } from "@/enums";
+import {
+  DrawingModes,
+  MODEL_CREATION_FORM_NAME,
+  SHOELACE_SIZES,
+} from "@/enums";
 import { StepHeading } from "@/features/model-creation/components/";
 import FileUploadDialog from "@/features/model-creation/components/dialogs/file-upload-dialog";
 import OpenAerialMap from "@/features/model-creation/components/training-area/open-area-map";
@@ -85,8 +86,8 @@ const TrainingAreaForm = () => {
         successToast={TOAST_NOTIFICATIONS.trainingAreasFileUploadSuccess}
         disabled={createTrainingArea.isPending}
       />
-      <div className="md:h-screen min-h-screen flex flex-col mb-40">
-        <div className="flex md:justify-between md:items-center flex-col md:flex-row gap-y-4 mb-10">
+      <div className="mb-40 flex min-h-screen flex-col md:h-screen">
+        <div className="mb-10 flex flex-col gap-y-4 md:flex-row md:items-center md:justify-between">
           <div className="basis-2/3">
             <StepHeading
               heading={MODELS_CONTENT.modelCreation.trainingArea.pageTitle}
@@ -95,7 +96,7 @@ const TrainingAreaForm = () => {
               }
             />
           </div>
-          <div className="flex flex-col md:items-end gap-y-4 ">
+          <div className="flex flex-col gap-y-4 md:items-end ">
             <p className="flex items-center gap-x-2">
               <YouTubePlayIcon className="icon-lg" />
               {MODELS_CONTENT.modelCreation.trainingArea.tutorialText}
@@ -107,15 +108,15 @@ const TrainingAreaForm = () => {
           </div>
         </div>
 
-        <div className="border-t-8 border-x-8 border-off-white mb-10 fullscreen md:no-fullscreen md:hidden">
+        <div className="fullscreen md:no-fullscreen mb-10 border-x-8 border-t-8 border-off-white md:hidden">
           <OpenAerialMap
             tileJSONURL={tileJSONURL}
             map={map}
             trainingDatasetId={Number(formData.selectedTrainingDatasetId)}
           />
         </div>
-        <div className="h-full grid grid-cols-12 md:grid-cols-9  border-8 border-off-white fullscreen md:no-fullscreen">
-          <div className="w-full h-[90vh] col-span-12 md:col-span-6 2xl:col-span-7">
+        <div className="fullscreen md:no-fullscreen grid h-full  grid-cols-12 border-8 border-off-white md:grid-cols-9">
+          <div className="col-span-12 h-[90vh] w-full md:col-span-6 2xl:col-span-7">
             <TrainingAreaMap
               tileJSONURL={tileJSONURL}
               data={trainingAreasData}
@@ -129,7 +130,7 @@ const TrainingAreaForm = () => {
               currentZoom={currentZoom}
             />
           </div>
-          <div className="hidden md:flex h-[90vh] max-h-screen col-span-12 md:col-span-3 2xl:col-span-2 flex-col w-full border-l-8 border-off-white gap-y-6 py-4 ">
+          <div className="col-span-12 hidden h-[90vh] max-h-screen w-full flex-col gap-y-6 border-l-8 border-off-white py-4 md:col-span-3 md:flex 2xl:col-span-2 ">
             <OpenAerialMap
               tileJSONURL={tileJSONURL}
               map={map}
@@ -152,7 +153,7 @@ const TrainingAreaForm = () => {
           </div>
         </div>
 
-        <div className="md:hidden fullscreen md:no-fullscreen border-8 border-off-white py-2">
+        <div className="fullscreen md:no-fullscreen border-8 border-off-white py-2 md:hidden">
           <div className="h-[60vh]  overflow-y-auto ">
             <TrainingAreaList
               offset={offset}
@@ -191,7 +192,7 @@ const ActionButtons = ({
   const { isTablet } = useScreenSize();
   return (
     <div
-      className={`flex gap-y-2 mt-auto px-4 md:px-1 lg:px-4  w-full ${trainingAreasDataCount === 0 ? "flex-col w-full" : "items-center justify-between gap-x-1 md:gap-x-2 "}"`}
+      className={`mt-auto flex w-full gap-y-2 px-4 md:px-1  lg:px-4 ${trainingAreasDataCount === 0 ? "w-full flex-col" : "items-center justify-between gap-x-1 md:gap-x-2 "}"`}
     >
       <div className="w-full">
         <Button
@@ -204,7 +205,7 @@ const ActionButtons = ({
         >
           <div className="flex items-center gap-x-1 md:gap-x-2">
             <p>{MODELS_CONTENT.modelCreation.trainingArea.form.draw}</p>
-            <div className="w-4 h-4 border-2 rounded-md border-white"></div>
+            <div className="size-4 rounded-md border-2 border-white"></div>
           </div>
         </Button>
       </div>

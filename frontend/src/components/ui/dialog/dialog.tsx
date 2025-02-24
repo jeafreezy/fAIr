@@ -1,3 +1,5 @@
+import { SlRequestCloseEvent } from "node_modules/@shoelace-style/shoelace/dist/events/sl-request-close";
+
 import { SlDialog } from "@shoelace-style/shoelace/dist/react";
 
 import { SHOELACE_SIZES } from "@/enums";
@@ -22,7 +24,7 @@ const Dialog: React.FC<DialogProps> = ({
   labelColor = "default",
 }) => {
   // Prevent the dialog from closing when the user clicks on the overlay
-  function handleRequestClose(event: any) {
+  function handleRequestClose(event: SlRequestCloseEvent) {
     if (event.detail.source === "overlay") {
       event.preventDefault();
     }

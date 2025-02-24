@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useToastNotification } from "./use-toast-notification";
+import { showErrorToast, showSuccessToast } from "@/utils";
 
 /**
  * Custom hook to copy text to the clipboard and display a toast notification.
@@ -11,16 +11,17 @@ import { useToastNotification } from "./use-toast-notification";
  */
 const useCopyToClipboard = () => {
   const [isCopied, setIsCopied] = useState(false);
-  const toast = useToastNotification();
+
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
       setIsCopied(true);
-      toast("Copied to clipboard!", "success");
+      showSuccessToast("Copied to clipboard!");
+
       setTimeout(() => setIsCopied(false), 2000);
-    } catch (error) {
+    } catch {
       setIsCopied(false);
-      toast("Failed to copy!", "success");
+      showErrorToast("Failed to copy!");
     }
   };
 

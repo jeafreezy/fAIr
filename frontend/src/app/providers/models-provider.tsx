@@ -2,6 +2,7 @@ import { LngLatBoundsLike } from "maplibre-gl";
 
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -19,7 +20,12 @@ import {
   MODELS_ROUTES,
   TOAST_NOTIFICATIONS,
 } from "@/constants";
-import { BASE_MODELS, TrainingDatasetOption, TrainingType } from "@/enums";
+import {
+  BASE_MODELS,
+  MODEL_CREATION_FORM_NAME,
+  TrainingDatasetOption,
+  TrainingType,
+} from "@/enums";
 import {
   TCreateTrainingDatasetArgs,
   TCreateTrainingRequestArgs,
@@ -43,31 +49,6 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "@/utils";
-
-/**
- * The names here are the same with the `initialFormState` object keys.
- * They are also the same with the form validation configuration object keys.
- */
-export enum MODEL_CREATION_FORM_NAME {
-  MODEL_NAME = "modelName",
-  DATASET_NAME = "datasetName",
-  MODEL_DESCRIPTION = "modelDescription",
-  BASE_MODELS = "baseModel",
-  TRAINING_DATASET_OPTION = "trainingDatasetOption",
-  ZOOM_LEVELS = "zoomLevels",
-  TRAINING_TYPE = "trainingType",
-  EPOCH = "epoch",
-  CONTACT_SPACING = "contactSpacing",
-  BATCH_SIZE = "batchSize",
-  BOUNDARY_WIDTH = "boundaryWidth",
-  TMS_URL = "tmsURL",
-  TMS_URL_VALIDITY = "tmsURLValidation",
-  SELECTED_TRAINING_DATASET_ID = "selectedTrainingDatasetId",
-  OAM_TILE_NAME = "oamTileName",
-  OAM_BOUNDS = "oamBounds",
-  TRAINING_AREAS = "trainingAreas",
-  TRAINING_SETTINGS_IS_VALID = "trainingSettingsIsValid",
-}
 
 export const FORM_VALIDATION_CONFIG = {
   [MODEL_CREATION_FORM_NAME.MODEL_NAME]: {
@@ -275,25 +256,28 @@ export const ModelsProvider: React.FC<{
     storedFormData ? JSON.parse(storedFormData) : initialFormState
   );
 
-  const handleChange = (
-    field: string,
-    value:
-      | string
-      | boolean
-      | number
-      | number[]
-      | Record<string, string | number | boolean>
-      | LngLatBoundsLike
-  ) => {
-    setFormData((prev) => {
-      const updatedData = { ...prev, [field]: value };
-      setSessionValue(
-        HOT_FAIR_MODEL_CREATION_SESSION_STORAGE_KEY,
-        JSON.stringify(updatedData)
-      );
-      return updatedData;
-    });
-  };
+  const handleChange = useCallback(
+    (
+      field: string,
+      value:
+        | string
+        | boolean
+        | number
+        | number[]
+        | Record<string, string | number | boolean>
+        | LngLatBoundsLike
+    ) => {
+      setFormData((prev) => {
+        const updatedData = { ...prev, [field]: value };
+        setSessionValue(
+          HOT_FAIR_MODEL_CREATION_SESSION_STORAGE_KEY,
+          JSON.stringify(updatedData)
+        );
+        return updatedData;
+      });
+    },
+    [setSessionValue]
+  );
 
   const getFullPath = (path: string) =>
     `${isEditMode ? MODELS_BASE + "/" + modelId : MODELS_ROUTES.CREATE_MODEL_BASE}/${path}/`;
@@ -338,7 +322,7 @@ export const ModelsProvider: React.FC<{
       MODEL_CREATION_FORM_NAME.SELECTED_TRAINING_DATASET_ID,
       data.dataset
     );
-  }, [isEditMode, isError, isPending, data]);
+  }, [isEditMode, isError, isPending, data, navigate, handleChange]);
 
   // Fetch and prefill training dataset
   useEffect(() => {
@@ -357,17 +341,19 @@ export const ModelsProvider: React.FC<{
     trainingDatasetIsPending,
     trainingDataset,
     trainingDatasetIsError,
+    handleChange,
   ]);
 
   useEffect(() => {
     // Cleanup the timeout on component unmount
     return () => {
       removeSessionValue(HOT_FAIR_MODEL_CREATION_SESSION_STORAGE_KEY);
-      if (timeOutRef.current) {
-        clearTimeout(timeOutRef.current);
+      const timeoutId = timeOutRef.current;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
       }
     };
-  }, []);
+  }, [removeSessionValue]);
 
   const resetState = () => {
     removeSessionValue(HOT_FAIR_MODEL_CREATION_SESSION_STORAGE_KEY);
@@ -462,16 +448,16 @@ export const ModelsProvider: React.FC<{
       (aoi: TTrainingAreaFeature) => aoi.geometry === null
     ).length === 0;
 
-  const handleTrainingDatasetCreation = () => {
+  const handleTrainingDatasetCreation = useCallback(() => {
     createNewTrainingDatasetMutation.mutate({
       source_imagery: formData.tmsURL,
       name: formData.datasetName,
     });
-  };
+  }, [createNewTrainingDatasetMutation, formData.datasetName, formData.tmsURL]);
   const trainingDatasetCreationInProgress =
     createNewTrainingDatasetMutation.isPending;
 
-  const handleModelCreationAndUpdate = () => {
+  const handleModelCreationAndUpdate = useCallback(() => {
     if (isEditMode) {
       modelUpdateMutation.mutate({
         dataset: formData.selectedTrainingDatasetId,
@@ -488,7 +474,7 @@ export const ModelsProvider: React.FC<{
         base_model: formData.baseModel,
       });
     }
-  };
+  }, [modelCreateMutation, modelId, formData, modelUpdateMutation, isEditMode]);
 
   const memoizedValues = useMemo(
     () => ({
@@ -534,4 +520,5 @@ export const ModelsProvider: React.FC<{
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useModelsContext = () => useContext(ModelsContext);

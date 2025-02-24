@@ -54,8 +54,8 @@ const PropertyDisplay: React.FC<PropertyDisplayProps> = ({
 }) => {
   const { copyToClipboard } = useCopyToClipboard();
   return (
-    <div className="row-span-1 col-span-1 flex flex-col gap-y-5">
-      <span className="text-gray text-body-2base md:text-body-2 flex items-center gap-x-4 text-nowrap ">
+    <div className="col-span-1 row-span-1 flex flex-col gap-y-5">
+      <span className="flex items-center gap-x-4 text-nowrap text-body-2base text-gray md:text-body-2 ">
         {label}
         {tooltip && <ToolTip content={tooltip} />}
       </span>
@@ -69,14 +69,14 @@ const PropertyDisplay: React.FC<PropertyDisplayProps> = ({
           className="flex items-center gap-x-3"
           title={label}
         >
-          <span className="text-dark font-semibold text-body-2 md:text-body-1">
+          <span className="text-body-2 font-semibold text-dark md:text-body-1">
             {value}
           </span>
           <ExternalLinkIcon className="icon" />
         </Link>
       ) : isCopy ? (
         <div className="flex items-center gap-x-3">
-          <span className="text-dark font-semibold text-body-2 md:text-body-1">
+          <span className="text-body-2 font-semibold text-dark md:text-body-1">
             URL
           </span>
           <button onClick={() => copyToClipboard(value as string)}>
@@ -166,7 +166,7 @@ const ModelProperties: React.FC<ModelPropertiesProps> = ({
             `grid ${isTrainingDetailsDialog ? "grid-cols-2" : "grid-cols-1 lg:grid-cols-5"} gap-14 items-center `
           )}
         >
-          <div className="col-span-3 grid grid-cols-1 sm:grid-cols-2 grid-rows-4 gap-y-4 md:gap-y-8">
+          <div className="col-span-3 grid grid-cols-1 grid-rows-4 gap-y-4 sm:grid-cols-2 md:gap-y-8">
             <PropertyDisplay
               label={
                 MODELS_CONTENT.models.modelsDetailsCard.properties.zoomLevels
@@ -346,14 +346,14 @@ const FailedTrainingTraceBack = ({ taskId }: { taskId: string }) => {
 
   if (isPending) {
     return (
-      <div className="h-40 col-span-5 w-full animate-pulse bg-light-gray"></div>
+      <div className="col-span-5 h-40 w-full animate-pulse bg-light-gray"></div>
     );
   }
   return (
-    <div className="col-span-3 flex flex-col gap-y-2 w-full">
+    <div className="col-span-3 flex w-full flex-col gap-y-2">
       <button
         onClick={() => setShowLogs(!showLogs)}
-        className="flex items-center gap-x-2 text-gray text-body-2"
+        className="flex items-center gap-x-2 text-body-2 text-gray"
       >
         <p>{MODELS_CONTENT.models.modelsDetailsCard.trainingInfoDialog.logs}</p>
         <ChevronDownIcon className={`icon ${showLogs && "rotate-180"}`} />

@@ -1,5 +1,5 @@
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { Button } from "@/components/ui/button";
+import { MODEL_LIST_FILTER_QUERY_PARAMS } from "@/constants";
 import { TQueryParams } from "@/types";
 
 const ClearFilters = ({
@@ -12,10 +12,10 @@ const ClearFilters = ({
   isMobile?: boolean;
 }) => {
   const canClearAllFilters = Boolean(
-    query[SEARCH_PARAMS.searchQuery] ||
-      query[SEARCH_PARAMS.startDate] ||
-      query[SEARCH_PARAMS.endDate] ||
-      query[SEARCH_PARAMS.id]
+    query[MODEL_LIST_FILTER_QUERY_PARAMS.searchQuery] ||
+      query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate] ||
+      query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate] ||
+      query[MODEL_LIST_FILTER_QUERY_PARAMS.id]
   );
 
   return (

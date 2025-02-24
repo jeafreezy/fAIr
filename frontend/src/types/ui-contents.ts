@@ -102,8 +102,7 @@ export type TModelsContent = {
       fileUploadDialog: {
         title: string;
         mainInstruction: string;
-        fleSizeInstruction: string;
-        aoiAreaInstruction: string;
+        fileSizeInstruction: string;
       };
       pageDescription: string;
     };

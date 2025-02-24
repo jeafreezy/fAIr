@@ -3,6 +3,7 @@ import { LngLatBoundsLike, Map } from "maplibre-gl";
 
 import area from "@turf/area";
 import bboxPolygon from "@turf/bbox";
+import { booleanContains } from "@turf/boolean-contains";
 import { booleanIntersects } from "@turf/boolean-intersects";
 
 import { TModelPredictions, TModelPredictionsConfig } from "@/types";
@@ -315,29 +316,56 @@ export const snapGeoJSONPolygonToClosestTile = (geometry: Polygon) => {
   return geometry;
 };
 
-/*
-  Logic.
-  | 1 - Purple: Will be replaced with new feature if it intersects with new features, otherwise, it'll be appended.
-  | 2 - Red: No touch                        
-  | 3 - Green: No touch                         
-*/
+/**
+ * Conflates new features with existing predictions.
+ *
+ * Existing Predictions:
+ * accepted: [A1, A2, A3]
+ * rejected: [R1, R2]
+ * all: [E1, E2, E3, E4]
+ *
+ * New Features:
+ * newFeatures: [N1, N2, N3]
+ *
+ * Logic:
+ * 1. If N1 intersects with any feature in 'all', replace the intersecting feature in 'all' with N1.
+ * 2. If N2 does not intersect with any feature in 'accepted' or 'rejected', append N2 to 'all'.
+ * 3. If N3 intersects with any feature in 'accepted' or 'rejected', do not add N3 to 'all'.
+ *
+ * Example:
+ * - N1 intersects with E2 -> Replace E2 with N1 in 'all'.
+ * - N2 does not intersect with any in 'accepted' or 'rejected' -> Append N2 to 'all'.
+ * - N3 intersects with A2 -> Do not add N3 to 'all'.
+ *
+ * Result:
+ * all: [E1, N1, E3, E4, N2]
+ * accepted: [A1, A2, A3]
+ * rejected: [R1, R2]
+ */
+
 export const handleConflation = (
   existingPredictions: TModelPredictions,
   newFeatures: Feature[],
   predictionConfig: TModelPredictionsConfig
 ): TModelPredictions => {
-  let updatedAll = [...existingPredictions.all];
+  const updatedAll = [...existingPredictions.all];
 
   newFeatures.forEach((newFeature) => {
     const intersectsWithAccepted = existingPredictions.accepted.some(
-      (acceptedFeature) => booleanIntersects(newFeature, acceptedFeature)
+      (acceptedFeature) =>
+        booleanIntersects(newFeature, acceptedFeature) ||
+        booleanContains(newFeature, acceptedFeature)
     );
     const intersectsWithRejected = existingPredictions.rejected.some(
-      (rejectedFeature) => booleanIntersects(newFeature, rejectedFeature)
+      (rejectedFeature) =>
+        booleanIntersects(newFeature, rejectedFeature) ||
+        booleanContains(newFeature, rejectedFeature)
     );
 
-    const intersectingIndex = updatedAll.findIndex((existingFeature) =>
-      booleanIntersects(newFeature, existingFeature)
+    const intersectingIndex = updatedAll.findIndex(
+      (existingFeature) =>
+        booleanIntersects(newFeature, existingFeature) ||
+        booleanContains(newFeature, existingFeature)
     );
 
     if (intersectingIndex !== -1) {

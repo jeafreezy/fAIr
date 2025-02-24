@@ -18,6 +18,7 @@ import {
 } from "@/config";
 import {
   APPLICATION_ROUTES,
+  MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS,
   START_MAPPING_PAGE_CONTENT,
   TOAST_NOTIFICATIONS,
 } from "@/constants";
@@ -56,13 +57,6 @@ export type TDownloadOptions = {
   onClick: () => void;
   showOnMobile: boolean;
 }[];
-
-export const SEARCH_PARAMS = {
-  useJOSMQ: "useJOSMQ",
-  confidenceLevel: "confidenceLevel",
-  tolerance: "tolerance",
-  area: "area",
-};
 
 export type TQueryParams = { [x: string]: string | number | boolean };
 
@@ -111,13 +105,18 @@ export const StartMappingPage = () => {
 
   const [query, setQuery] = useState<TQueryParams>(() => {
     return {
-      [SEARCH_PARAMS.useJOSMQ]:
-        searchParams.get(SEARCH_PARAMS.useJOSMQ) || true,
-      [SEARCH_PARAMS.confidenceLevel]:
-        searchParams.get(SEARCH_PARAMS.confidenceLevel) || 90,
-      [SEARCH_PARAMS.tolerance]:
-        searchParams.get(SEARCH_PARAMS.tolerance) || 1.0,
-      [SEARCH_PARAMS.area]: searchParams.get(SEARCH_PARAMS.area) || 4,
+      [MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.useJOSMQ]:
+        searchParams.get(MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.useJOSMQ) ||
+        true,
+      [MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.confidenceLevel]:
+        searchParams.get(
+          MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.confidenceLevel
+        ) || 90,
+      [MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.tolerance]:
+        searchParams.get(MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.tolerance) ||
+        1.0,
+      [MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.area]:
+        searchParams.get(MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.area) || 4,
     };
   });
 
@@ -152,10 +151,18 @@ export const StartMappingPage = () => {
   );
 
   const trainingConfig: TModelPredictionsConfig = {
-    tolerance: query[SEARCH_PARAMS.tolerance] as number,
-    area_threshold: query[SEARCH_PARAMS.area] as number,
-    use_josm_q: query[SEARCH_PARAMS.useJOSMQ] as boolean,
-    confidence: query[SEARCH_PARAMS.confidenceLevel] as number,
+    tolerance: query[
+      MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.tolerance
+    ] as number,
+    area_threshold: query[
+      MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.area
+    ] as number,
+    use_josm_q: query[
+      MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.useJOSMQ
+    ] as boolean,
+    confidence: query[
+      MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.confidenceLevel
+    ] as number,
     checkpoint: `/mnt/efsmount/data/trainings/dataset_${data?.dataset}/output/training_${data?.published_training}/checkpoint${PREDICTION_API_FILE_EXTENSIONS[data?.base_model as BASE_MODELS]}`,
     max_angle_change: 15,
     model_id: modelId as string,
@@ -230,7 +237,7 @@ export const StartMappingPage = () => {
       `all_predictions_${data.dataset}`
     );
     showSuccessToast(TOAST_NOTIFICATIONS.startMapping.fileDownloadSuccess);
-  }, [modelPredictions]);
+  }, [modelPredictions, data]);
 
   const handleAcceptedFeaturesDownload = useCallback(async () => {
     geoJSONDowloader(
@@ -238,7 +245,7 @@ export const StartMappingPage = () => {
       `accepted_predictions_${data.dataset}`
     );
     showSuccessToast(TOAST_NOTIFICATIONS.startMapping.fileDownloadSuccess);
-  }, [modelPredictions]);
+  }, [modelPredictions, data]);
 
   const handleFeaturesDownloadToJOSM = useCallback(
     (features: Feature[]) => {
@@ -320,7 +327,7 @@ export const StartMappingPage = () => {
     <>
       <Head title={START_MAPPING_PAGE_CONTENT.pageTitle(data?.name)} />
       {/* Mobile dialog */}
-      <div className="h-screen flex flex-col fullscreen">
+      <div className="fullscreen flex h-screen flex-col">
         <StartMappingMobileDrawer
           isOpen={isSmallViewport}
           disablePrediction={disablePrediction}
@@ -335,7 +342,7 @@ export const StartMappingPage = () => {
           modelDetailsPopupIsActive={showModelDetailsPopup}
           clearPredictions={clearPredictions}
         />
-        <div className="sticky top-0 bg-white z-10 px-4 xl:px-large py-1 hidden md:block">
+        <div className="sticky top-0 z-10 hidden bg-white px-4 py-1 md:block xl:px-large">
           {/* Model Details Popup */}
           {data && (
             <ModelDetailsPopUp
@@ -369,20 +376,20 @@ export const StartMappingPage = () => {
             clearPredictions={clearPredictions}
           />
         </div>
-        <div className="col-span-12 h-[70vh] md:h-full md:border-8 md:border-off-white flex-grow relative map-elements-z-index">
+        <div className="map-elements-z-index relative col-span-12 h-[70vh] grow md:h-full md:border-8 md:border-off-white">
           {/* Mobile Header and Map Controls */}
           <div className="md:hidden">
-            <div className="absolute top-4 right-4  z-[10]">
+            <div className="absolute right-4 top-4  z-10">
               <UserProfile hideFullName />
             </div>
-            <div className="absolute top-1 left-4  z-[10]">
+            <div className="absolute left-4 top-1  z-10">
               <BrandLogoWithDropDown
                 onClose={onDropdownHide}
                 onShow={onDropdownShow}
                 isOpened={dropdownIsOpened}
               />
             </div>
-            <div className="absolute top-[10vh] right-4 z-[2] flex flex-col gap-y-4 items-end">
+            <div className="absolute right-4 top-[10vh] z-[2] flex flex-col items-end gap-y-4">
               <ZoomLevel currentZoom={currentZoom} />
               <LayerControl
                 layers={mapLayers}
@@ -391,7 +398,7 @@ export const StartMappingPage = () => {
                 basemaps
               />
             </div>
-            <div className="absolute bottom-[30vh] flex flex-col gap-y-4 right-4 z-[1] items-end">
+            <div className="absolute bottom-[30vh] right-4 z-[1] flex flex-col items-end gap-y-4">
               <FitToBounds bounds={oamTileJSON?.bounds} map={map} />
               <div>{map && modelPredictionsExist && <Legend map={map} />}</div>
             </div>

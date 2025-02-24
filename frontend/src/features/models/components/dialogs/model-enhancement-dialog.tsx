@@ -65,19 +65,19 @@ const ModelEnhancementDialog: React.FC<ModelEnhancementDialogProps> = ({
           closeDialog={handleClose}
           modelId={modelId}
         />
-        <ul className="flex flex-col gap-y-4 w-full">
+        <ul className="flex w-full flex-col gap-y-4">
           {options.map((option, id) => (
             <li
               key={`mode-enhancement-option-${id}`}
-              className="border border-gray-border rounded-lg px-2 hover:border-primary flex items-center justify-between"
+              className="flex items-center justify-between rounded-lg border border-gray-border px-2 hover:border-primary"
             >
               <button
-                className="text-start transition-colors p-6"
+                className="p-6 text-start transition-colors"
                 onClick={option.onClick}
               >
                 <span className="flex flex-col gap-y-2">
-                  <p className="text-dark text-body-1">{option.name}</p>
-                  <p className="text-gray text-body-3">{option.description}</p>
+                  <p className="text-body-1 text-dark">{option.name}</p>
+                  <p className="text-body-3 text-gray">{option.description}</p>
                 </span>
               </button>
               <ChevronDownIcon className="icon -rotate-90" />

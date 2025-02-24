@@ -1,10 +1,13 @@
-import { SEARCH_PARAMS, TQueryParams } from "@/app/routes/start-mapping";
+import { TQueryParams } from "@/app/routes/start-mapping";
 import { DropDown } from "@/components/ui/dropdown";
 import { FormLabel, Input, Select, Switch } from "@/components/ui/form";
 import { SettingsIcon } from "@/components/ui/icons";
 import { ToolTip } from "@/components/ui/tooltip";
 import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
-import { START_MAPPING_PAGE_CONTENT } from "@/constants";
+import {
+  MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS,
+  START_MAPPING_PAGE_CONTENT,
+} from "@/constants";
 import {
   DropdownPlacement,
   INPUT_TYPES,
@@ -57,8 +60,8 @@ export const ModelSettings = ({
   };
 
   const modelSettings = (
-    <div className="flex flex-col bg-white p-3 justify-between rounded-xl flex-wrap gap-y-4">
-      <div className="flex gap-x-2 justify-between">
+    <div className="flex flex-col flex-wrap justify-between gap-y-4 rounded-xl bg-white p-3">
+      <div className="flex justify-between gap-x-2">
         <FormLabel
           label={START_MAPPING_PAGE_CONTENT.settings.useJOSMQ.label}
           withTooltip
@@ -66,13 +69,18 @@ export const ModelSettings = ({
           position="left"
         />
         <Switch
-          checked={query[SEARCH_PARAMS.useJOSMQ] as boolean}
+          checked={
+            query[MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.useJOSMQ] as boolean
+          }
           handleSwitchChange={(event) => {
-            handleQueryUpdate(SEARCH_PARAMS.useJOSMQ, event.target.checked);
+            handleQueryUpdate(
+              MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.useJOSMQ,
+              event.target.checked
+            );
           }}
         />
       </div>
-      <div className="flex justify-between items-center gap-x-4">
+      <div className="flex items-center justify-between gap-x-4">
         <FormLabel
           label={START_MAPPING_PAGE_CONTENT.settings.confidence.label}
           withTooltip
@@ -85,13 +93,20 @@ export const ModelSettings = ({
           className="w-[80px]"
           size={SHOELACE_SELECT_SIZES.SMALL}
           options={confidenceLevels}
-          defaultValue={query[SEARCH_PARAMS.confidenceLevel] as number}
+          defaultValue={
+            query[
+              MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.confidenceLevel
+            ] as number
+          }
           handleChange={(value) => {
-            handleQueryUpdate(SEARCH_PARAMS.confidenceLevel, Number(value));
+            handleQueryUpdate(
+              MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.confidenceLevel,
+              Number(value)
+            );
           }}
         />
       </div>
-      <div className="flex justify-between items-center gap-x-2">
+      <div className="flex items-center justify-between gap-x-2">
         <FormLabel
           label={START_MAPPING_PAGE_CONTENT.settings.tolerance.label}
           withTooltip
@@ -101,13 +116,15 @@ export const ModelSettings = ({
         <Input
           className="w-16"
           size={SHOELACE_SIZES.SMALL}
-          value={query[SEARCH_PARAMS.tolerance] as number}
+          value={
+            query[MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.tolerance] as number
+          }
           labelWithTooltip
           type={INPUT_TYPES.NUMBER}
           showBorder
           handleInput={(event) =>
             handleQueryUpdate(
-              SEARCH_PARAMS.tolerance,
+              MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.tolerance,
               Number(event.target.value)
             )
           }
@@ -115,7 +132,7 @@ export const ModelSettings = ({
           step={0.1}
         />
       </div>
-      <div className="flex justify-between  items-center gap-x-2">
+      <div className="flex items-center  justify-between gap-x-2">
         <FormLabel
           label={START_MAPPING_PAGE_CONTENT.settings.area.label}
           withTooltip
@@ -125,12 +142,15 @@ export const ModelSettings = ({
         <Input
           className="w-16"
           size={SHOELACE_SIZES.SMALL}
-          value={query[SEARCH_PARAMS.area] as number}
+          value={query[MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.area] as number}
           labelWithTooltip
           type={INPUT_TYPES.NUMBER}
           showBorder
           handleInput={(event) =>
-            handleQueryUpdate(SEARCH_PARAMS.area, Number(event.target.value))
+            handleQueryUpdate(
+              MODEL_PREDICTIONS_SETTINGS_QUERY_PARAMS.area,
+              Number(event.target.value)
+            )
           }
           min={0}
         />
@@ -150,7 +170,7 @@ export const ModelSettings = ({
         triggerComponent={
           <ToolTip content={START_MAPPING_PAGE_CONTENT.settings.tooltip}>
             <button
-              className={`p-1.5 flex items-center hover:icon-interaction ${dropdownIsOpened && "icon-interaction"}`}
+              className={`hover:icon-interaction flex items-center p-1.5 ${dropdownIsOpened && "icon-interaction"}`}
               onClick={toggleDropDown}
             >
               <SettingsIcon className="icon md:icon-lg text-dark" />

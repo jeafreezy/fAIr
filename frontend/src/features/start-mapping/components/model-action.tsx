@@ -41,10 +41,10 @@ const ModelAction = ({
   const handlePrediction = useCallback(async () => {
     if (!map) return;
     await modelPredictionMutation.mutateAsync(trainingConfig);
-  }, [trainingConfig]);
+  }, [trainingConfig, modelPredictionMutation, map]);
 
   return (
-    <div className="flex gap-y-3 flex-col-reverse flex-wrap  md:items-center md:flex-row md:justify-between md:gap-x-2 md:flex-nowrap">
+    <div className="flex flex-col-reverse flex-wrap gap-y-3  md:flex-row md:flex-nowrap md:items-center md:justify-between md:gap-x-2">
       <ToolTip
         content={
           disablePrediction ? START_MAPPING_PAGE_CONTENT.buttons.tooltip : null
@@ -53,9 +53,9 @@ const ModelAction = ({
         <button
           disabled={disablePrediction || modelPredictionMutation.isPending}
           onClick={handlePrediction}
-          className={`w-full text-nowrap bg-primary px-3 py-3 md:py-1.5 rounded-md text-white ${disablePrediction || modelPredictionMutation.isPending ? "opacity-50" : ""}`}
+          className={`w-full text-nowrap rounded-md bg-primary p-3 text-white md:py-1.5 ${disablePrediction || modelPredictionMutation.isPending ? "opacity-50" : ""}`}
         >
-          <span className="capitalize text-sm">
+          <span className="text-sm capitalize">
             {" "}
             {modelPredictionMutation.isPending
               ? START_MAPPING_PAGE_CONTENT.buttons.predictionInProgress

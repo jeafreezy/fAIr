@@ -47,12 +47,12 @@ export const StartMappingMobileDrawer = ({
   return (
     <MobileDrawer open={isOpen} dialogTitle="Start Mapping Mobile Dialog">
       {disablePrediction && (
-        <p className="text-center italic text-body-4 text-primary w-full">
+        <p className="w-full text-center text-body-4 italic text-primary">
           {MINIMUM_ZOOM_LEVEL_INSTRUCTION_FOR_PREDICTION}
         </p>
       )}
       <div className="app-padding flex flex-col gap-y-6 ">
-        <div className="flex items-center justify-between my-4 gap-x-2">
+        <div className="my-4 flex items-center justify-between gap-x-2">
           <div className="w-full basis-5/6">
             <ModelAction
               trainingConfig={trainingConfig}
@@ -62,14 +62,14 @@ export const StartMappingMobileDrawer = ({
               modelPredictions={modelPredictions}
             />
           </div>
-          <div className="p-2 icon-interaction" id="anchor1">
+          <div className="icon-interaction p-2" id="anchor1">
             <ModelDetailsButton
               onClick={handleModelDetailsPopup}
               modelDetailsPopupIsActive={modelDetailsPopupIsActive}
             />
           </div>
         </div>
-        <div className="text-body-3 font-normal flex items-center gap-x-2">
+        <div className="flex items-center gap-x-2 text-body-3 font-normal">
           {START_MAPPING_PAGE_CONTENT.mapData.title} -{" "}
           <ModelPredictionsTracker
             modelPredictions={modelPredictions}
@@ -78,7 +78,7 @@ export const StartMappingMobileDrawer = ({
         </div>
         <div className="flex flex-col gap-y-4">
           <p className="text-body-3 font-semibold">Settings</p>
-          <div className="border rounded-lg border-gray-border p-2">
+          <div className="rounded-lg border border-gray-border p-2">
             <ModelSettings query={query} updateQuery={updateQuery} isMobile />
           </div>
         </div>
@@ -115,7 +115,7 @@ export const StartMappingMobileDrawer = ({
                       className="flex items-center gap-x-4"
                       onClick={option.onClick}
                     >
-                      {option.name} <CloudDownloadIcon className="w-5 h-5" />
+                      {option.name} <CloudDownloadIcon className="size-5" />
                     </button>
                   </li>
                 ))}

@@ -23,7 +23,7 @@ export const GeolocationControl = ({ map }: { map: Map | null }) => {
           });
         },
         (error) => {
-          showErrorToast(error, `Error getting location: ${error.message}.`);
+          showErrorToast(`Error getting location: ${error.message}.`);
         }
       );
     } else {
@@ -36,7 +36,7 @@ export const GeolocationControl = ({ map }: { map: Map | null }) => {
   return (
     <ToolTip content="Geolocate" placement={ToolTipPlacement.RIGHT}>
       <button
-        className="p-2 bg-white flex items-center justify-center"
+        className="flex items-center justify-center bg-white p-2"
         onClick={handleGeolocationClick}
       >
         <GeolocationIcon className="map-icon p-0" />

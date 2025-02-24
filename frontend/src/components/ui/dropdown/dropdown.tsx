@@ -1,3 +1,5 @@
+import { SlSelectEvent } from "node_modules/@shoelace-style/shoelace/dist/events/sl-select";
+
 import { useEffect, useState } from "react";
 
 import { SlCheckbox } from "@shoelace-style/shoelace/dist/react";
@@ -28,7 +30,7 @@ type DropDownProps = {
   menuItems?: DropdownMenuItem[];
   dropdownIsOpened: boolean;
   className?: string;
-  handleMenuSelection?: (selectedItems?: string[] | any) => void;
+  handleMenuSelection?: (selectedItems?: string[] | unknown) => void;
   disabled?: boolean;
   withCheckbox?: boolean;
   defaultSelectedItems?: string[];
@@ -70,9 +72,15 @@ const DropDown: React.FC<DropDownProps> = ({
     if (defaultSelectedItems.length) {
       setSelectedItems(defaultSelectedItems);
     }
-  }, [defaultSelectedItems, defaultSelectedItem, multiSelect]);
+  }, [
+    defaultSelectedItems,
+    defaultSelectedItem,
+    multiSelect,
+    setSelectedItem,
+    setSelectedItems,
+  ]);
 
-  const handleSelect = (event: any) => {
+  const handleSelect = (event: SlSelectEvent) => {
     if (withCheckbox) {
       const value = event.detail.item.value;
       if (multiSelect) {
@@ -114,7 +122,7 @@ const DropDown: React.FC<DropDownProps> = ({
     >
       <div
         slot="trigger"
-        className="inline-flex items-center w-full cursor-pointer"
+        className="inline-flex w-full cursor-pointer items-center"
       >
         {triggerComponent}
         {!disableCheveronIcon && (

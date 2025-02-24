@@ -40,7 +40,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <div
       ref={containerRef}
-      className="flex items-center justify-between w-full gap-x-4 overflow-x-auto p-1"
+      className="flex w-full items-center justify-between gap-x-4 overflow-x-auto p-1"
     >
       {pages.map((step, index) => {
         const activeStep = currentPath.includes(step.path);
@@ -49,13 +49,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           <button
             key={`current-form-progress-${step.id}`}
             ref={activeStep ? activeStepRef : null}
-            className="flex items-center gap-x-3 cursor-pointer"
+            className="flex cursor-pointer items-center gap-x-3"
             disabled={isLastPage}
             onClick={() => !isLastPage && navigate(getFullPath(step.path))}
           >
             {step.id < currentPageIndex + 1 ? (
-              <span className="rounded-full bg-primary flex items-center justify-center w-9 h-9">
-                <CheckIcon className="icon-lg text-primary bg-white rounded-full p-1" />
+              <span className="flex size-9 items-center justify-center rounded-full bg-primary">
+                <CheckIcon className="icon-lg rounded-full bg-white p-1 text-primary" />
               </span>
             ) : (
               <span
@@ -71,7 +71,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
               </span>
             )}
 
-            <span className="text-gray whitespace-nowrap">{step.title}</span>
+            <span className="whitespace-nowrap text-gray">{step.title}</span>
           </button>
         );
       })}

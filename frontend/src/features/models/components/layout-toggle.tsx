@@ -1,5 +1,5 @@
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { CategoryIcon, ListIcon } from "@/components/ui/icons";
+import { MODEL_LIST_FILTER_QUERY_PARAMS } from "@/constants";
 import { LayoutView } from "@/enums";
 import { useScrollToTop } from "@/hooks/use-scroll-to-element";
 import { TQueryParams } from "@/types";
@@ -15,15 +15,15 @@ const LayoutToggle = ({
   isMobile?: boolean;
   disabled?: boolean;
 }) => {
-  const activeLayout = query[SEARCH_PARAMS.layout];
+  const activeLayout = query[MODEL_LIST_FILTER_QUERY_PARAMS.layout];
   const { scrollToTop } = useScrollToTop();
   return (
     <button
-      title={`Switch to ${query[SEARCH_PARAMS.layout] === LayoutView.GRID ? LayoutView.LIST : (LayoutView.GRID as string)} layout`}
-      className={`${isMobile ? "flex md:hidden" : "hidden md:flex"} border border-gray-border p-2 items-center justify-center text-dark cursor-pointer`}
+      title={`Switch to ${query[MODEL_LIST_FILTER_QUERY_PARAMS.layout] === LayoutView.GRID ? LayoutView.LIST : (LayoutView.GRID as string)} layout`}
+      className={`${isMobile ? "flex md:hidden" : "hidden md:flex"} cursor-pointer items-center justify-center border border-gray-border p-2 text-dark`}
       onClick={() => {
         updateQuery({
-          [SEARCH_PARAMS.layout]:
+          [MODEL_LIST_FILTER_QUERY_PARAMS.layout]:
             activeLayout === LayoutView.GRID
               ? LayoutView.LIST
               : LayoutView.GRID,

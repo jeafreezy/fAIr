@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import {
   FORM_VALIDATION_CONFIG,
-  MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
 import { ButtonWithIcon } from "@/components/ui/button";
@@ -14,7 +13,12 @@ import {
   IntermediateGuageIcon,
 } from "@/components/ui/icons";
 import { MODELS_CONTENT } from "@/constants";
-import { BASE_MODELS, INPUT_TYPES, TrainingType } from "@/enums";
+import {
+  BASE_MODELS,
+  INPUT_TYPES,
+  MODEL_CREATION_FORM_NAME,
+  TrainingType,
+} from "@/enums";
 
 const trainingTypes = [
   { label: TrainingType.BASIC, Icon: BasicGuageIcon },
@@ -103,7 +107,7 @@ const TrainingSettingsForm = () => {
   }, [formData.trainingType]);
 
   return (
-    <div className="flex flex-col gap-y-20 w-full">
+    <div className="flex w-full flex-col gap-y-20">
       <div className="flex flex-col gap-y-6">
         <FormLabel
           label={
@@ -118,7 +122,7 @@ const TrainingSettingsForm = () => {
         <CheckboxGroup
           variant="primary"
           multiple
-          className="flex-col md:flex-row gap-x-10 md:items-center flex-wrap"
+          className="flex-col flex-wrap gap-x-10 md:flex-row md:items-center"
           options={[
             { value: "Zoom 19", apiValue: "19" },
             { value: "Zoom 20", apiValue: "20" },
@@ -147,7 +151,7 @@ const TrainingSettingsForm = () => {
           }
           required
         />
-        <div className="flex flex-col md:flex-row md:items-center gap-4 w-full justify-between overflow-x-auto">
+        <div className="flex w-full flex-col justify-between gap-4 overflow-x-auto md:flex-row md:items-center">
           {trainingTypes.map((type, id) => (
             <ButtonWithIcon
               key={`training-type-${id}`}
@@ -166,7 +170,7 @@ const TrainingSettingsForm = () => {
       </div>
 
       <div className="flex flex-col gap-y-6">
-        <div className="flex items-center gap-x-4 w-full">
+        <div className="flex w-full items-center gap-x-4">
           <FormLabel
             label={
               MODELS_CONTENT.modelCreation.trainingSettings.form
@@ -189,7 +193,7 @@ const TrainingSettingsForm = () => {
         </div>
         {showAdvancedSettings && (
           <>
-            <div className="flex items-center justify-between gap-4 flex-wrap lg:flex-nowrap">
+            <div className="flex flex-wrap items-center justify-between gap-4 lg:flex-nowrap">
               {advancedSettings
                 .filter((setting) => setting.enabled)
                 .map((setting, id) => (

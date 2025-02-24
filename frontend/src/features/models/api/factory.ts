@@ -41,7 +41,7 @@ export const getModelsQueryOptions = ({
   return queryOptions({
     queryKey: [
       "models",
-      { status, searchQuery, offset, orderBy, dateFilters, id, userId },
+      { status, searchQuery, offset, orderBy, dateFilters, id, userId, limit },
     ],
     queryFn: () =>
       getModels(

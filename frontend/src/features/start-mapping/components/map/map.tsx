@@ -1,4 +1,11 @@
-import { GeoJSONSource, LngLatBoundsLike, Map } from "maplibre-gl";
+import { Feature } from "geojson";
+import {
+  GeoJSONSource,
+  LngLat,
+  LngLatBoundsLike,
+  Map,
+  MapMouseEvent,
+} from "maplibre-gl";
 
 import {
   Dispatch,
@@ -67,7 +74,7 @@ export const StartMappingMapComponent = ({
 
   oamTileJSONIsError: boolean;
   oamTileJSON: TileJSON;
-  oamTileJSONError: any;
+  oamTileJSONError: boolean;
   modelPredictionsExist: boolean;
   map: Map | null;
   currentZoom: number;
@@ -80,8 +87,8 @@ export const StartMappingMapComponent = ({
 }) => {
   const tileJSONURL = extractTileJSONURL(trainingDataset?.source_imagery ?? "");
   const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
-  const [selectedFeature, setSelectedFeature] = useState(null);
+  const [mousePosition, setMousePosition] = useState<LngLat | null>(null);
+  const [selectedFeature, setSelectedFeature] = useState<Feature | null>(null);
   const { isSmallViewport } = useScreenSize();
 
   const { tooltipPosition, tooltipVisible } = useToolTipVisibility(map, [
@@ -90,7 +97,7 @@ export const StartMappingMapComponent = ({
 
   useEffect(() => {
     if (!oamTileJSONIsError) return;
-    showErrorToast(undefined, TOAST_NOTIFICATIONS.trainingDataset.error);
+    showErrorToast(TOAST_NOTIFICATIONS.trainingDataset.error);
   }, [oamTileJSONIsError, oamTileJSONError]);
 
   useEffect(() => {
@@ -249,10 +256,10 @@ export const StartMappingMapComponent = ({
       map.getCanvas().style.cursor = "";
     };
 
-    const handleClick = (e: any) => {
+    const handleClick = (e: MapMouseEvent) => {
       setShowPopup(true);
-      setSelectedEvent(e);
-      setSelectedFeature(e.features && e.features[0]);
+      setMousePosition(e.lngLat);
+      setSelectedFeature(e.features ? e.features[0] : null);
     };
 
     layerIds.forEach((layerId) => {
@@ -290,7 +297,7 @@ export const StartMappingMapComponent = ({
     >
       {showPopup && (
         <PredictedFeatureActionPopup
-          event={selectedEvent}
+          mousePosition={mousePosition}
           selectedFeature={selectedFeature}
           setModelPredictions={setModelPredictions}
           modelPredictions={modelPredictions}

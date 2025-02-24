@@ -1,14 +1,14 @@
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { DropDown } from "@/components/ui/dropdown";
 import { DropdownMenuItem } from "@/components/ui/dropdown/dropdown";
 import { CheckboxGroup } from "@/components/ui/form";
+import { MODEL_LIST_FILTER_QUERY_PARAMS } from "@/constants";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 import { TQueryParams } from "@/types";
 
 type StatusFilterProps = {
   disabled: boolean;
   isMobileFilterModal?: boolean;
-  updateQuery: (param: any) => void;
+  updateQuery: (param: TQueryParams) => void;
   query: TQueryParams;
 };
 
@@ -24,7 +24,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       apiValue: undefined,
       onClick() {
         updateQuery({
-          [SEARCH_PARAMS.status]: undefined,
+          [MODEL_LIST_FILTER_QUERY_PARAMS.status]: undefined,
         });
       },
     },
@@ -33,7 +33,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       apiValue: 0,
       onClick() {
         updateQuery({
-          [SEARCH_PARAMS.status]: 0,
+          [MODEL_LIST_FILTER_QUERY_PARAMS.status]: 0,
         });
       },
     },
@@ -42,7 +42,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       apiValue: -1,
       onClick() {
         updateQuery({
-          [SEARCH_PARAMS.status]: -1,
+          [MODEL_LIST_FILTER_QUERY_PARAMS.status]: -1,
         });
       },
     },
@@ -51,13 +51,13 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       apiValue: 1,
       onClick() {
         updateQuery({
-          [SEARCH_PARAMS.status]: 1,
+          [MODEL_LIST_FILTER_QUERY_PARAMS.status]: 1,
         });
       },
     },
   ];
   const categoryLabel = statusCategories.filter(
-    (status) => status.apiValue === query[SEARCH_PARAMS.status]
+    (status) => status.apiValue === query[MODEL_LIST_FILTER_QUERY_PARAMS.status]
   );
 
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
@@ -65,7 +65,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
 
   if (!isMobileFilterModal) {
     return (
-      <div className="hidden md:block border border-gray-border py-2 px-4">
+      <div className="hidden border border-gray-border px-4 py-2 md:block">
         <DropDown
           menuItems={statusCategories}
           dropdownIsOpened={dropdownIsOpened}
@@ -76,7 +76,7 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
           defaultSelectedItem={categoryLabel[0]?.value}
           withCheckbox
           triggerComponent={
-            <p className="text-sm text-dark text-nowrap">
+            <p className="text-nowrap text-sm text-dark">
               {categoryLabel[0]?.value}
             </p>
           }
@@ -90,7 +90,8 @@ const StatusFilter: React.FC<StatusFilterProps> = ({
       disabled={disabled}
       onCheck={(status) => {
         updateQuery({
-          [SEARCH_PARAMS.status]: status[0] !== "All" ? status[0] : undefined,
+          [MODEL_LIST_FILTER_QUERY_PARAMS.status]:
+            status[0] !== "All" ? status[0] : undefined,
         });
       }}
       defaultSelectedOption={categoryLabel[0]?.apiValue as string}

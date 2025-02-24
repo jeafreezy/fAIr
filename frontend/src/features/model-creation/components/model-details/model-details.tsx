@@ -1,10 +1,7 @@
-import {
-  MODEL_CREATION_FORM_NAME,
-  useModelsContext,
-} from "@/app/providers/models-provider";
+import { useModelsContext } from "@/app/providers/models-provider";
 import { Select } from "@/components/ui/form";
 import { MODELS_CONTENT } from "@/constants";
-import { BASE_MODELS } from "@/enums";
+import { BASE_MODELS, MODEL_CREATION_FORM_NAME } from "@/enums";
 import { StepHeading } from "@/features/model-creation/components/";
 import ModelNameFormInput from "@/features/model-creation/components/model-details/model-name-input";
 

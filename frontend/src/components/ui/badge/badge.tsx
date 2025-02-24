@@ -30,7 +30,7 @@ const Badge: React.FC<BadgeProps> = ({
       )}
       onClick={onClick}
     >
-      <span className="font-medium capitalize text-body-3 flex items-center justify-center">
+      <span className="flex items-center justify-center text-body-3 font-medium capitalize">
         {children}
       </span>
     </button>

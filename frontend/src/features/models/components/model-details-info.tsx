@@ -46,18 +46,18 @@ const ModelDetailsInfo = ({
       <ModelDetailsSection title="">
         <div className="flex flex-col gap-y-8">
           <div className="inline-flex flex-col gap-y-4">
-            <p className="text-gray text-body-2">
+            <p className="text-body-2 text-gray">
               {MODELS_CONTENT.models.modelsDetailsCard.modelId} {data?.id}
             </p>
-            <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-y-8">
+            <div className="flex w-full flex-col gap-y-8 md:flex-row md:items-center md:justify-between">
               <div className="flex flex-col gap-y-4">
                 <h1
-                  className="font-semibold text-dark text-title-2 md:text-large-title text-wrap"
+                  className="text-wrap text-title-2 font-semibold text-dark md:text-large-title"
                   title={data?.name}
                 >
                   {truncateString(data?.name, 40)}
                 </h1>
-                <p className="text-body-3 text-gray md:text-body-2 text-wrap max-w-lg md:max-w-xl xl:max-w-4xl">
+                <p className="max-w-lg text-wrap text-body-3 text-gray md:max-w-xl md:text-body-2 xl:max-w-4xl">
                   {data?.description ??
                     MODELS_CONTENT.models.modelsDetailsCard
                       .modelDescriptionNotAvailable}
@@ -87,7 +87,7 @@ const ModelDetailsInfo = ({
       </ModelDetailsSection>
       <Divider />
       <ModelDetailsSection title="Details">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-9">
+        <div className="grid grid-cols-1 gap-y-9 sm:grid-cols-2 md:grid-cols-3">
           <div className="flex flex-col gap-y-4">
             <ModelDetailItem
               label={MODELS_CONTENT.models.modelsDetailsCard.createdBy}
@@ -102,13 +102,13 @@ const ModelDetailsInfo = ({
               value={formatDate(data?.last_modified)}
             />
           </div>
-          <div className="col-span-1 items-start justify-between flex flex-col gap-y-4">
-            <div className="text-dark text-body-2 flex w-full gap-x-1 text-nowrap flex-wrap">
+          <div className="col-span-1 flex flex-col items-start justify-between gap-y-4">
+            <div className="flex w-full flex-wrap gap-x-1 text-nowrap text-body-2 text-dark">
               <span className="text-gray">
                 {MODELS_CONTENT.models.modelsDetailsCard.datasetName}
               </span>
               {isPending ? (
-                <p className="h-6 ml-2 w-20 animate-pulse bg-light-gray"></p>
+                <p className="ml-2 h-6 w-20 animate-pulse bg-light-gray"></p>
               ) : isError ? (
                 <span>Error retrieving dataset info</span>
               ) : (
@@ -117,7 +117,7 @@ const ModelDetailsInfo = ({
                 </p>
               )}
             </div>
-            <div className="text-dark text-body-2 flex gap-x-1">
+            <div className="flex gap-x-1 text-body-2 text-dark">
               <span className="text-gray">
                 {MODELS_CONTENT.models.modelsDetailsCard.datasetId}
               </span>
@@ -129,7 +129,7 @@ const ModelDetailsInfo = ({
             />
           </div>
 
-          <div className="col-span-1 flex flex-col md:items-end md:justify-between gap-y-4">
+          <div className="col-span-1 flex flex-col gap-y-4 md:items-end md:justify-between">
             <div>
               {isAuthenticated && user.osm_id === data.user.osm_id && (
                 <button

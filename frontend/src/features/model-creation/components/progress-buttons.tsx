@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 import {
   FORM_VALIDATION_CONFIG,
-  MODEL_CREATION_FORM_NAME,
   useModelsContext,
 } from "@/app/providers/models-provider";
 import { ButtonWithIcon } from "@/components/ui/button";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { MODELS_BASE, MODELS_ROUTES } from "@/constants";
 import { MODELS_CONTENT } from "@/constants";
-import { TrainingDatasetOption } from "@/enums";
+import { MODEL_CREATION_FORM_NAME, TrainingDatasetOption } from "@/enums";
 
 type ProgressButtonsProps = {
   currentPath: string;
@@ -144,7 +143,7 @@ const ProgressButtons: React.FC<ProgressButtonsProps> = ({
   }, [formData, currentPath]);
 
   return (
-    <div className="col-span-12 md:col-start-4 md:col-span-6 w-full flex items-center justify-between">
+    <div className="col-span-12 flex w-full items-center justify-between md:col-span-6 md:col-start-4">
       <ButtonWithIcon
         variant="default"
         prefixIcon={ChevronDownIcon}

@@ -13,7 +13,9 @@ import {
   MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE,
   MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREAS,
   MAX_GEOJSON_FILE_UPLOAD_FOR_TRAINING_AREA_LABELS,
+  MAX_TRAINING_AREA_SIZE,
   MAX_TRAINING_AREA_UPLOAD_FILE_SIZE,
+  MIN_TRAINING_AREA_SIZE,
 } from "@/config";
 import { MODELS_CONTENT } from "@/constants";
 import { DialogProps, Feature, FeatureCollection } from "@/types";
@@ -65,15 +67,11 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
     (files: FileWithPath[]) => {
       const initialValidFiles = files.filter((file) => {
         if (!file.name.endsWith(".geojson") && !file.name.endsWith(".json")) {
-          showErrorToast(
-            undefined,
-            `File ${file.name} is not a supported format`
-          );
+          showErrorToast(`File ${file.name} is not a supported format`);
           return false;
         }
         if (file.size > MAX_TRAINING_AREA_UPLOAD_FILE_SIZE) {
           showErrorToast(
-            undefined,
             `File ${file.name} is too large (max ${formatAreaInAppropriateUnit(MAX_TRAINING_AREA_UPLOAD_FILE_SIZE)})`
           );
           return false;
@@ -96,7 +94,6 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                   MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE
                 ) {
                   showErrorToast(
-                    undefined,
                     `File ${file.name} exceeds limit of ${MAX_ACCEPTABLE_POLYGON_IN_TRAINING_AREA_GEOJSON_FILE} polygon features.`
                   );
                   continue;
@@ -107,15 +104,12 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
               !disableFileSizeValidation &&
               validateGeoJSONArea(geojson as Feature)
             ) {
-              showErrorToast(
-                undefined,
-                `File area for ${file.name} exceeds area limit.`
-              );
+              showErrorToast(`File area for ${file.name} exceeds area limit.`);
             } else {
               validFiles.push({ file, id: generateUniqueId() });
             }
-          } catch (error) {
-            showErrorToast(undefined, `Invalid JSON format in ${file.name}.`);
+          } catch {
+            showErrorToast(`Invalid JSON format in ${file.name}.`);
           }
         }
 
@@ -124,7 +118,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
 
       validateFiles();
     },
-    [disableFileSizeValidation]
+    [disableFileSizeValidation, isAOILabelsUpload]
   );
 
   const generateUniqueId = () => {
@@ -177,10 +171,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
               !disableFileSizeValidation &&
               validateGeoJSONArea(geojson as Feature)
             ) {
-              showErrorToast(
-                undefined,
-                `File area for ${file.name} exceeds area limit.`
-              );
+              showErrorToast(`File area for ${file.name} exceeds area limit.`);
               continue;
             }
             if (geojson.type === "FeatureCollection") {
@@ -189,7 +180,6 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                 .filter(isPolygonGeometry);
               if (polygons.length === 0) {
                 showErrorToast(
-                  undefined,
                   `No valid Polygon features found in ${file.name}.`
                 );
                 continue;
@@ -200,7 +190,6 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                 allGeometries.push(geojson.geometry);
               } else {
                 showErrorToast(
-                  undefined,
                   `Feature geometry in ${file.name} is not a Polygon.`
                 );
                 continue;
@@ -209,13 +198,13 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
               throw new Error("Invalid GeoJSON format");
             }
           }
-        } catch (error: any) {
-          showErrorToast(undefined, `Error processing file: ${file.name}`);
+        } catch {
+          showErrorToast(`Error processing file: ${file.name}`);
         }
       }
 
       if (!isAOILabelsUpload && allGeometries.length === 0) {
-        showErrorToast(undefined, "No valid geometries found to upload.");
+        showErrorToast("No valid geometries found to upload.");
         setUploadInProgress(false);
         return;
       }
@@ -226,12 +215,12 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
       );
 
       await Promise.all([...rawUploadPromises, ...geometryUploadPromises]);
-
-      successToast && showSuccessToast(successToast);
+      if (successToast) {
+        showSuccessToast(successToast);
+      }
       resetState();
-    } catch (error: any) {
-      const errorMessage = error.message || "An error occurred during upload.";
-      showErrorToast(undefined, errorMessage);
+    } catch {
+      showErrorToast("An error occurred during upload.");
     } finally {
       setUploadInProgress(false);
     }
@@ -247,23 +236,23 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
     return (
       <li
         key={file.id}
-        className="border-2 border-gray-border rounded-lg px-3.5 py-1 text-gray w-full"
+        className="w-full rounded-lg border-2 border-gray-border px-3.5 py-1 text-gray"
       >
         <div className="flex flex-col">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-x-2">
-              <span className="border-2 border-gray-border p-1 flex items-center">
+              <span className="flex items-center border-2 border-gray-border p-1">
                 <FileIcon className="icon " />
               </span>
               <div>
-                <p className="text-dark text-body-3">
+                <p className="text-body-3 text-dark">
                   {truncateString(file.file.name)}
                 </p>
                 <SlFormatBytes value={file.file.size} className="text-sm" />
               </div>
             </div>
             <button
-              className="bg-secondary p-2 w-8 h-8 flex items-center justify-center rounded-lg"
+              className="flex size-8 items-center justify-center rounded-lg bg-secondary p-2"
               onClick={() => deleteFile(file.id)}
               disabled={disabled || uploadInProgress}
             >
@@ -284,42 +273,39 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
     >
       <div className="flex flex-col gap-y-4">
         <div
-          className="h-80 border-2 border-gray border-dashed w-full flex items-center justify-center flex-col gap-y-4 text-gray rounded-lg"
+          className="flex h-80 w-full flex-col items-center justify-center gap-y-4 rounded-lg border-2 border-dashed border-gray text-gray"
           {...getRootProps()}
         >
-          <UploadIcon className="icon-lg w-10 h-10 " />
+          <UploadIcon className="icon-lg size-10 " />
           <input {...getInputProps()} />
           {isDragActive ? (
-            <p className="text-body-4 md:text-body-3 text-center">
+            <p className="text-center text-body-4 md:text-body-3">
               Drop the files here ...
             </p>
           ) : (
             <>
-              <p className="text-body-4 md:text-body-3 text-center">
+              <p className="text-center text-body-4 md:text-body-3">
                 {
                   MODELS_CONTENT.modelCreation.trainingArea.fileUploadDialog
                     .mainInstruction
                 }
               </p>
-              <small className="text-body-4 md:text-body-3 text-center">
+              <small className="text-center text-body-4 md:text-body-3">
                 {
                   MODELS_CONTENT.modelCreation.trainingArea.fileUploadDialog
-                    .fleSizeInstruction
+                    .fileSizeInstruction
                 }
               </small>
               {!disableFileSizeValidation && (
-                <small className="text-body-4 md:text-body-3 text-center">
-                  {
-                    MODELS_CONTENT.modelCreation.trainingArea.fileUploadDialog
-                      .aoiAreaInstruction
-                  }
+                <small className="text-center text-body-4 md:text-body-3">
+                  {`Area should be > ${formatAreaInAppropriateUnit(MIN_TRAINING_AREA_SIZE)} and < ${formatAreaInAppropriateUnit(MAX_TRAINING_AREA_SIZE)}.`}
                 </small>
               )}
             </>
           )}
         </div>
         <small>{acceptedFiles.length} file(s) selected</small>
-        <ul className="flex flex-col gap-y-2 overflow-y-auto max-h-40">
+        <ul className="flex max-h-40 flex-col gap-y-2 overflow-y-auto">
           {files}
         </ul>
         <div className="self-end">

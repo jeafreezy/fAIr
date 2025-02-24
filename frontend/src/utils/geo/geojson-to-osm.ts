@@ -1,6 +1,8 @@
 import { FeatureCollection, Position } from "geojson";
 import { create } from "xmlbuilder2";
 
+import { FAIR_VERSION } from "@/config";
+
 class Node {
   lat: number;
   lon: number;
@@ -28,7 +30,7 @@ class Way {
 }
 
 export const geojsonToOsmPolygons = (geojson: FeatureCollection): string => {
-  if (!geojson || geojson.type !== "FeatureCollection") {
+  if (geojson.type !== "FeatureCollection") {
     throw new Error("Invalid GeoJSON FeatureCollection");
   }
 
@@ -40,7 +42,6 @@ export const geojsonToOsmPolygons = (geojson: FeatureCollection): string => {
     const { geometry, properties } = feature;
 
     if (geometry.type !== "Polygon") {
-      console.warn(`Skipping unsupported geometry type: ${geometry.type}`);
       return;
     }
 
@@ -56,7 +57,7 @@ export const geojsonToOsmPolygons = (geojson: FeatureCollection): string => {
   // Create XML document
   const doc = create({ version: "1.0", encoding: "UTF-8" }).ele("osm", {
     version: "0.6",
-    generator: "HOT-fAIr",
+    generator: `HOT-fAIr-(${FAIR_VERSION})`,
   });
 
   let lastNodeId = -1;
@@ -88,12 +89,12 @@ export const geojsonToOsmPolygons = (geojson: FeatureCollection): string => {
 // Helper Function to Process Polygons
 const processPolygon = (
   coordinates: Position[][],
-  properties: Record<string, any>,
+  properties: Record<string, string | number>,
   ways: Way[],
   nodes: Node[],
   nodesIndex: Record<string, Node>
 ): void => {
-  coordinates.forEach((ring, _) => {
+  coordinates.forEach((ring) => {
     const way = new Way({
       ...mapPropertiesToTags(properties),
     });
@@ -126,7 +127,7 @@ const processPolygon = (
 };
 
 const mapPropertiesToTags = (
-  properties: Record<string, any>
+  properties: Record<string, string | number>
 ): Record<string, string> => {
   const tags: Record<string, string> = {};
 

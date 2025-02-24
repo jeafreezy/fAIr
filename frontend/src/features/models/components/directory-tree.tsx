@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import {
   SlFormatBytes,
@@ -21,15 +21,20 @@ type DirectoryTreeProps = {
   isOpened: boolean;
 };
 
+type DirectoryTreeItems = {
+  dir: Record<string, DirectoryTreeItems & { size: number; length: number }>;
+  file: Record<string, { size: number; length: number }>;
+};
+
 const DirectoryLoadingSkeleton = () => (
-  <ul className="flex gap-y-4 flex-col">
+  <ul className="flex flex-col gap-y-4">
     {new Array(5).fill(null).map((_, id) => (
       <li
         key={`model-file-${id}`}
-        className="h-10 flex gap-x-4 w-full items-center"
+        className="flex h-10 w-full items-center gap-x-4"
       >
         <div className="h-10 w-[10%] animate-pulse bg-light-gray"></div>
-        <div className="h-6 w-[60%] animate-pulse bg-light-gray"></div>
+        <div className="h-6 w-3/5 animate-pulse bg-light-gray"></div>
       </li>
     ))}
   </ul>
@@ -47,12 +52,12 @@ const FileItem = ({
   isDownloading: boolean;
 }) => (
   <div className="flex items-center gap-x-2" onClick={onDownload}>
-    <FileIcon className="w-4 h-4" />
-    <div className="flex flex-col md:flex-row gap-x-2">
-      <span title={keyName} className="text-dark text-nowrap text-body-2base">
+    <FileIcon className="size-4" />
+    <div className="flex flex-col gap-x-2 md:flex-row">
+      <span title={keyName} className="text-nowrap text-body-2base text-dark">
         {truncateString(keyName)}
       </span>
-      <span className="text-gray text-body-3 text-nowrap flex items-center gap-x-2">
+      <span className="flex items-center gap-x-2 text-nowrap text-body-3 text-gray">
         <SlFormatBytes value={size} />
         {isDownloading && <Spinner />}
       </span>
@@ -73,16 +78,16 @@ const DirectoryItem = ({
 }) => (
   <>
     <div className="flex items-center gap-x-2">
-      <DirectoryIcon className="w-4 h-4" />
-      <div className="flex flex-col md:flex-row gap-x-2">
-        <span title={keyName} className="text-dark text-nowrap text-body-2base">
+      <DirectoryIcon className="size-4" />
+      <div className="flex flex-col gap-x-2 md:flex-row">
+        <span title={keyName} className="text-nowrap text-body-2base text-dark">
           {truncateString(keyName)}
         </span>
         <div className="flex gap-x-2">
-          <span className="text-gray text-body-3 text-nowrap">
+          <span className="text-nowrap text-body-3 text-gray">
             <SlFormatBytes value={size} />
           </span>
-          <span className="text-gray text-body-3 text-nowrap">
+          <span className="text-nowrap text-body-3 text-gray">
             {length} items
           </span>
         </div>
@@ -96,68 +101,74 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
   datasetId,
   trainingId,
 }) => {
-  const [directoryTree, setDirectoryTree] = useState<any>(null);
+  const [directoryTree, setDirectoryTree] = useState<unknown>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
   const queryClient = useQueryClient();
   const [downLoadingFilePath, setDownLoadingFilePath] = useState<string>("");
 
-  const fetchDirectoryData = async (path: string = "") => {
-    try {
-      if (trainingId !== null) {
-        return await queryClient.fetchQuery({
-          ...getTrainingWorkspaceQueryOptions(trainingId, path),
-        });
+  const fetchDirectoryData = useCallback(
+    async (path: string = "") => {
+      try {
+        if (trainingId !== null) {
+          return await queryClient.fetchQuery({
+            ...getTrainingWorkspaceQueryOptions(trainingId, path),
+          });
+        }
+      } catch {
+        setHasError(true);
+        return null;
       }
-    } catch {
-      setHasError(true);
-      return null;
-    }
-  };
+    },
+    [queryClient, trainingId]
+  );
 
-  const fetchDirectoryRecursive = async (
-    currentDirectory: string = "",
-    currentDepth: number = 0,
-    maxDepth: number = 2
-  ): Promise<any> => {
-    if (currentDepth >= maxDepth) {
-      return {};
-    }
+  const fetchDirectoryRecursive = useCallback(
+    async (
+      currentDirectory: string = "",
+      currentDepth: number = 0,
+      maxDepth: number = 2
+    ): Promise<unknown> => {
+      if (currentDepth >= maxDepth) {
+        return {};
+      }
 
-    const data = await fetchDirectoryData(currentDirectory);
-    if (!data) return {};
+      const data = await fetchDirectoryData(currentDirectory);
+      if (!data) return {};
 
-    const { dir, file } = data;
+      const { dir, file } = data;
 
-    const subdirectories =
-      dir && currentDepth < maxDepth
-        ? await Promise.all(
-            Object.keys(dir).map(async (key: string) => {
-              const fullPath = currentDirectory
-                ? `${currentDirectory}/${key}/`
-                : key;
-              const subDirData = await fetchDirectoryRecursive(
-                fullPath,
-                currentDepth + 1,
-                maxDepth
-              );
-              return {
-                [key]: {
-                  ...subDirData,
-                  size: dir[key]?.size || 0,
-                  length: dir[key]?.len || 0,
-                },
-              };
-            })
-          )
-        : [];
+      const subdirectories =
+        dir && currentDepth < maxDepth
+          ? await Promise.all(
+              Object.keys(dir).map(async (key: string) => {
+                const fullPath = currentDirectory
+                  ? `${currentDirectory}/${key}/`
+                  : key;
+                const subDirData = await fetchDirectoryRecursive(
+                  fullPath,
+                  currentDepth + 1,
+                  maxDepth
+                );
+                return {
+                  [key]: {
+                    ...(typeof subDirData === "object" ? subDirData : {}),
+                    size: dir[key]?.size || 0,
+                    length: dir[key]?.len || 0,
+                  },
+                };
+              })
+            )
+          : [];
 
-    return {
-      dir: Object.assign({}, ...subdirectories),
-      file: file || {},
-    };
-  };
+      return {
+        dir: Object.assign({}, ...subdirectories),
+        file: file || {},
+      };
+    },
+    [fetchDirectoryData]
+  );
 
   useEffect(() => {
     const fetchAllDirectories = async () => {
@@ -171,7 +182,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
     };
 
     fetchAllDirectories();
-  }, [datasetId, trainingId]);
+  }, [datasetId, trainingId, fetchDirectoryRecursive]);
 
   const handleFileDownload = async (validPath: string) => {
     try {
@@ -199,22 +210,26 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
       a.remove();
       window.URL.revokeObjectURL(url);
       showSuccessToast(TOAST_NOTIFICATIONS.fileDownloadSuccess);
-    } catch (error) {
-      showErrorToast(error);
+    } catch {
+      showErrorToast(TOAST_NOTIFICATIONS.fileDownloadFailed);
     } finally {
       setDownLoadingFilePath("");
     }
   };
 
-  const renderTreeItems = (items: any, parentKey: string = "") => {
+  const renderTreeItems = (
+    items: DirectoryTreeItems,
+    parentKey: string = ""
+  ) => {
     const combinedItems = {
       ...items.dir,
       ...items.file,
     };
 
-    return Object.entries(combinedItems).map(([key, value]: [string, any]) => {
+    return Object.entries(combinedItems).map(([key, value]) => {
       const isDirectory =
-        value.hasOwnProperty("dir") || value.hasOwnProperty("length");
+        Object.prototype.hasOwnProperty.call(value, "dir") ||
+        Object.prototype.hasOwnProperty.call(value, "length");
       const currentPath = parentKey ? `${parentKey}/${key}` : key;
       return (
         <SlTreeItem key={currentPath}>
@@ -250,7 +265,7 @@ const DirectoryTree: React.FC<DirectoryTreeProps> = ({
   return (
     <SlTree style={{ "--indent-guide-width": "1px" } as TCSSWithVars}>
       <SlTreeItem key="root">
-        <DirectoryIcon className="w-4 h-4 mr-2" />
+        <DirectoryIcon className="mr-2 size-4" />
         <span>
           {
             MODELS_CONTENT.models.modelsDetailsCard.modelFilesDialog

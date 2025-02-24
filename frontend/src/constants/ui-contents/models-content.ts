@@ -1,7 +1,5 @@
-import { MAX_TRAINING_AREA_SIZE, MIN_TRAINING_AREA_SIZE } from "@/config";
 import { BASE_MODELS } from "@/enums";
 import { TModelsContent } from "@/types";
-import { formatAreaInAppropriateUnit } from "@/utils";
 
 export const MODELS_CONTENT: TModelsContent = {
   trainingArea: {
@@ -128,9 +126,8 @@ export const MODELS_CONTENT: TModelsContent = {
         title: "Upload Training Area(s)",
         mainInstruction:
           "Drag 'n' drop some files here, or click to select files",
-        fleSizeInstruction:
+        fileSizeInstruction:
           "Supports only GeoJSON (.geojson) files. (5MB max.)",
-        aoiAreaInstruction: `Area should be > ${formatAreaInAppropriateUnit(MIN_TRAINING_AREA_SIZE)} and < ${formatAreaInAppropriateUnit(MAX_TRAINING_AREA_SIZE)}.`,
       },
       pageDescription:
         "Make sure you create at least one training area and data is accurate for each training area",
@@ -219,7 +216,7 @@ export const MODELS_CONTENT: TModelsContent = {
       ctaButton: "Create Model",
       filtersSection: {
         searchPlaceHolder: "Search",
-        mapViewToggleText: "Map View",
+        mapViewToggleText: "View Map",
       },
       sortingAndPaginationSection: {
         modelCountSuffix: "models",

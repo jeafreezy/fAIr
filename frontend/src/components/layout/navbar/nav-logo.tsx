@@ -13,7 +13,11 @@ export const NavLogo = ({
 }) => {
   const navigate = useNavigate();
   const handleClick = () => {
-    onClick ? onClick() : navigate(APPLICATION_ROUTES.HOMEPAGE);
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(APPLICATION_ROUTES.HOMEPAGE);
+    }
   };
 
   const width = smallerSize ? "50px" : "60px";
@@ -31,7 +35,7 @@ export const NavLogo = ({
         width={width}
         height={height}
       />
-      <p className="font-semibold text-body-2">fAIr</p>
+      <p className="text-body-2 font-semibold">fAIr</p>
     </button>
   );
 };

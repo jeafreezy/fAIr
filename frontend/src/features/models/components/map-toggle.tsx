@@ -1,6 +1,5 @@
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { Switch } from "@/components/ui/form";
-import { MODELS_CONTENT } from "@/constants";
+import { MODELS_CONTENT, MODEL_LIST_FILTER_QUERY_PARAMS } from "@/constants";
 import { LayoutView } from "@/enums";
 import { TQueryParams } from "@/types";
 
@@ -18,15 +17,18 @@ const ModelMapToggle = ({
       className={`${isMobile ? "inline-flex md:hidden" : "hidden md:inline-flex"} items-center gap-x-4`}
       role="button"
     >
-      <p className="text-body-2base text-nowrap">
+      <p className="text-nowrap text-body-2base">
         {MODELS_CONTENT.models.modelsList.filtersSection.mapViewToggleText}
       </p>
       <Switch
-        checked={query[SEARCH_PARAMS.mapIsActive] as boolean}
-        disabled={query[SEARCH_PARAMS.layout] == LayoutView.LIST}
+        checked={query[MODEL_LIST_FILTER_QUERY_PARAMS.mapIsActive] as boolean}
+        disabled={
+          query[MODEL_LIST_FILTER_QUERY_PARAMS.layout] == LayoutView.LIST
+        }
         handleSwitchChange={() => {
           updateQuery({
-            [SEARCH_PARAMS.mapIsActive]: !query[SEARCH_PARAMS.mapIsActive],
+            [MODEL_LIST_FILTER_QUERY_PARAMS.mapIsActive]:
+              !query[MODEL_LIST_FILTER_QUERY_PARAMS.mapIsActive],
           });
         }}
       />

@@ -14,12 +14,12 @@ export const RootLayout = () => {
   // Scroll to top on pages switch.
   useEffect(() => {
     scrollToTop();
-  }, [pathname]);
+  }, [pathname, scrollToTop]);
 
   return (
     <>
       <HotTracking />
-      <main className="min-h-screen relative  mx-auto flex flex-col justify-between">
+      <main className="relative mx-auto  flex min-h-screen flex-col justify-between">
         <Banner />
         {!pathname.includes(APPLICATION_ROUTES.START_MAPPING_BASE) && (
           <NavBar />

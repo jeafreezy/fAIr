@@ -23,7 +23,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   isMobileFilterModal,
 }) => {
   return (
-    <div className="flex flex-col gap-y-7 w-full">
+    <div className="flex w-full flex-col gap-y-7">
       {/* Native date pickers */}
       <div
         className={cn(

@@ -84,8 +84,8 @@ export const ModelFormsLayout = () => {
       />
       <Head title="Create New Model" />
       <BackButton />
-      <div className="min-h-screen grid grid-cols-12 grid-rows-[auto_1fr_auto] gap-y-8 w-full justify-center my-8">
-        <div className="col-span-12 lg:col-start-2 lg:col-span-10 w-full">
+      <div className="my-8 grid min-h-screen w-full grid-cols-12 grid-rows-[auto_1fr_auto] justify-center gap-y-8">
+        <div className="col-span-12 w-full lg:col-span-10 lg:col-start-2">
           <ProgressBar
             currentPath={pathname}
             currentPageIndex={currentPageIndex}
@@ -154,7 +154,16 @@ const ModelFormRouteValidator = ({
       )
         navigate(prevRoute);
     }
-  }, [pathname, formData, currentPageIndex, validateEditMode]);
+  }, [
+    pathname,
+    formData,
+    currentPageIndex,
+    validateEditMode,
+    getFullPath,
+    hasLabeledTrainingAreas,
+    isEditMode,
+    navigate,
+  ]);
 
   return null;
 };

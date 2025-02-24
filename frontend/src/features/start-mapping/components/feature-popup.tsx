@@ -1,4 +1,5 @@
-import maplibregl, { Map, Popup } from "maplibre-gl";
+import { Feature } from "geojson";
+import maplibregl, { LngLat, Map, Popup } from "maplibre-gl";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 
@@ -23,7 +24,7 @@ import {
 import { showErrorToast } from "@/utils";
 
 const PredictedFeatureActionPopup = ({
-  event,
+  mousePosition,
   selectedFeature,
   setModelPredictions,
   modelPredictions,
@@ -31,8 +32,8 @@ const PredictedFeatureActionPopup = ({
   source_imagery,
   map,
 }: {
-  event: any;
-  selectedFeature: any;
+  mousePosition: LngLat | null;
+  selectedFeature: Feature | null;
   modelPredictions: TModelPredictions;
   setModelPredictions: Dispatch<
     SetStateAction<{
@@ -45,7 +46,7 @@ const PredictedFeatureActionPopup = ({
   trainingId: number;
   map: Map | null;
 }) => {
-  const featureId = selectedFeature.properties.id;
+  const featureId = selectedFeature?.properties?.id;
   const { user } = useAuth();
 
   const popupRef = useRef(null);
@@ -93,18 +94,18 @@ const PredictedFeatureActionPopup = ({
   };
 
   useEffect(() => {
-    if (!map || !popupRef.current) return;
+    if (!map || !popupRef.current || !mousePosition) return;
     // reset if in comment mode
     setShowComment(false);
     const _popup = new maplibregl.Popup({ closeButton: false })
-      .setLngLat(event.lngLat)
+      .setLngLat(mousePosition)
       .setDOMContent(popupRef.current)
       .addTo(map);
     setPopup(_popup);
     return () => {
       _popup.remove();
     };
-  }, [event, map, selectedFeature, setShowComment]);
+  }, [mousePosition, map, selectedFeature, setShowComment]);
 
   const closePopup = () => {
     popup?.remove();
@@ -350,17 +351,17 @@ const PredictedFeatureActionPopup = ({
 
   return (
     <div
-      className="bg-white p-4 rounded-xl flex flex-col gap-y-4 w-fit md:w-[300px]"
+      className="flex w-fit flex-col gap-y-4 rounded-xl bg-white p-4 md:w-[300px]"
       ref={popupRef}
     >
       <div className="flex items-center justify-between">
-        <p className="font-semibold text-body-3 md:text-body-2base">
+        <p className="text-body-3 font-semibold md:text-body-2base">
           {showComment
             ? START_MAPPING_PAGE_CONTENT.map.popup.commentTitle
             : START_MAPPING_PAGE_CONTENT.map.popup.defaultTitle}
         </p>
         <button
-          className="text-dark text-sm md:text-lg self-end"
+          className="self-end text-sm text-dark md:text-lg"
           onClick={closePopup}
           title="Close"
         >
@@ -379,7 +380,7 @@ const PredictedFeatureActionPopup = ({
       )}
       {showComment && (
         <button
-          className={`w-fit bg-primary text-white rounded-lg px-6 py-2 text-body-4 md:text-body-3 text-nowrap`}
+          className={`w-fit text-nowrap rounded-lg bg-primary px-6 py-2 text-body-4 text-white md:text-body-3`}
           onClick={submitRejectionFeedback}
           disabled={createModelFeedbackMutation.isPending}
         >
@@ -394,16 +395,16 @@ const PredictedFeatureActionPopup = ({
         </p>
       )}
       {!showComment && (
-        <div className="flex justify-between items-center gap-x-6">
+        <div className="flex items-center justify-between gap-x-6">
           <button
-            className={`w-full ${primaryButton.className} text-white rounded-lg p-2 text-body-4 md:text-body-3 text-nowrap flex gap-x-3 justify-between items-center`}
+            className={`w-full ${primaryButton.className} flex items-center justify-between gap-x-3 text-nowrap rounded-lg p-2 text-body-4 text-white md:text-body-3`}
             onClick={primaryButton.action}
           >
             {primaryButton.label}
             <primaryButton.icon />
           </button>
           <button
-            className={`w-full ${secondaryButton.className} text-white rounded-lg p-2 text-body-4 md:text-body-3 text-nowrap flex justify-between items-center gap-x-3`}
+            className={`w-full ${secondaryButton.className} flex items-center justify-between gap-x-3 text-nowrap rounded-lg p-2 text-body-4 text-white md:text-body-3`}
             onClick={secondaryButton.action}
           >
             {secondaryButton.label}
@@ -419,7 +420,7 @@ export default PredictedFeatureActionPopup;
 
 const RejectIcon = () => {
   return (
-    <span className="w-4 h-4 p-1 text-xs border rounded-full flex items-center justify-center">
+    <span className="flex size-4 items-center justify-center rounded-full border p-1 text-xs">
       &#x2715;
     </span>
   );
@@ -427,15 +428,15 @@ const RejectIcon = () => {
 
 const AcceptIcon = () => {
   return (
-    <span className="w-4 h-4 border rounded-full flex items-center justify-center">
-      <CheckIcon className="w-2 h-2" />
+    <span className="flex size-4 items-center justify-center rounded-full border">
+      <CheckIcon className="size-2" />
     </span>
   );
 };
 
 const ResolveIcon = () => {
   return (
-    <span className="w-4 h-4 border rounded-full flex items-center justify-center">
+    <span className="flex size-4 items-center justify-center rounded-full border">
       -
     </span>
   );

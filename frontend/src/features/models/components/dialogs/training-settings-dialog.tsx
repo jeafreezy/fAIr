@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 
-import {
-  MODEL_CREATION_FORM_NAME,
-  useModelsContext,
-} from "@/app/providers/models-provider";
+import { useModelsContext } from "@/app/providers/models-provider";
 import { PAGE_LIMIT } from "@/components/shared";
 import { ButtonWithIcon } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { MODELS_CONTENT } from "@/constants";
+import { MODEL_CREATION_FORM_NAME } from "@/enums";
 import TrainingSettingsForm from "@/features/model-creation/components/training-settings/training-settings-form";
 import { useModelDetails } from "@/features/models/hooks/use-models";
 import { useTrainingHistory } from "@/features/models/hooks/use-training";
@@ -86,14 +84,14 @@ const ModelTrainingSettingsDialog: React.FC<ModelEnhancementDialogProps> = ({
       ) : isPending ? (
         <div className="h-40 w-full animate-pulse bg-light-gray"></div>
       ) : (
-        <div className="flex flex-col gap-y-6 w-full">
+        <div className="flex w-full flex-col gap-y-6">
           <p className="text-gray">
             {
               MODELS_CONTENT.models.modelsDetailsCard.trainingSettings
                 .description
             }
           </p>
-          <h1 className="text-title-3 lg:text-title-1 font-semibold">
+          <h1 className="text-title-3 font-semibold lg:text-title-1">
             {data.name}
           </h1>
           <TrainingSettingsForm />

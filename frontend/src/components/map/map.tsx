@@ -70,7 +70,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
   setDrawingMode,
 }) => {
   return (
-    <div className={`h-full relative w-full`} ref={mapContainerRef}>
+    <div className={`relative size-full`} ref={mapContainerRef}>
       {map ? (
         <>
           <div
@@ -78,7 +78,7 @@ export const MapComponent: React.FC<MapComponentProps> = ({
               controlsPosition === ControlsPosition.TOP_RIGHT
                 ? "right-3"
                 : "left-3"
-            } map-elements-z-index flex flex-col gap-y-[1px]`}
+            } map-elements-z-index flex flex-col gap-y-px`}
           >
             {currentZoom && zoomControls ? (
               <ZoomControls map={map} currentZoom={currentZoom} />
@@ -93,12 +93,12 @@ export const MapComponent: React.FC<MapComponentProps> = ({
             )}
           </div>
           {fitToBounds && (
-            <div className="absolute left-3 z-[1] top-28">
+            <div className="absolute left-3 top-28 z-[1]">
               <FitToBounds bounds={bounds} map={map} />
             </div>
           )}
           <div
-            className={`absolute top-5 right-3 map-elements-z-index items-center flex gap-x-4`}
+            className={`map-elements-z-index absolute right-3 top-5 flex items-center gap-x-4`}
           >
             {showCurrentZoom && currentZoom ? (
               <ZoomLevel currentZoom={currentZoom} />

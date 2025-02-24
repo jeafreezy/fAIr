@@ -1,4 +1,4 @@
-import { Map } from "maplibre-gl";
+import { LngLatBoundsLike, Map } from "maplibre-gl";
 
 import { useCallback } from "react";
 
@@ -12,7 +12,7 @@ export const FitToBounds = ({
   bounds,
 }: {
   map: Map | null;
-  bounds: any;
+  bounds: LngLatBoundsLike | undefined;
 }) => {
   const { isSmallViewport } = useScreenSize();
 
@@ -24,7 +24,7 @@ export const FitToBounds = ({
   return (
     <ToolTip content={MAP_CONTENT.controls.fitToBounds.tooltip}>
       <button
-        className={`bg-white  ${isSmallViewport ? "rounded-xl p-2.5 border border-gray-border md:border-0" : "p-1.5"}`}
+        className={`bg-white  ${isSmallViewport ? "rounded-xl border border-gray-border p-2.5 md:border-0" : "p-1.5"}`}
         onClick={fitToBounds}
       >
         <ArrowMoveIcon className="icon-lg" />

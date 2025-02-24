@@ -49,7 +49,7 @@ const ModelDetailsPopUp = ({
       showSkeleton={Boolean(modelId && isPending)}
       skeletonClassName="h-40"
     >
-      <div className="flex flex-col gap-y-3 text-dark font-normal text-body-3">
+      <div className="flex flex-col gap-y-3 text-body-3 font-normal text-dark">
         <p>
           {START_MAPPING_PAGE_CONTENT.modelDetails.popover.modelId}:{" "}
           <span className="font-medium">{model?.id ?? data?.id}</span>
@@ -78,14 +78,14 @@ const ModelDetailsPopUp = ({
           {START_MAPPING_PAGE_CONTENT.modelDetails.popover.datasetId}:{" "}
           <span className="font-medium">{model?.dataset ?? data?.dataset}</span>
         </p>
-        <p className="flex items-center gap-x-1 text-nowrap flex-wrap">
+        <p className="flex flex-wrap items-center gap-x-1 text-nowrap">
           {START_MAPPING_PAGE_CONTENT.modelDetails.popover.datasetName}:{" "}
           <SkeletonWrapper
             showSkeleton={trainingDatasetIsPending}
             skeletonClassName="w-20 h-4"
           >
             <span
-              className="text-dark font-medium text-wrap"
+              className="text-wrap font-medium text-dark"
               title={trainingDataset?.name}
             >
               {trainingDatasetIsError
@@ -95,13 +95,13 @@ const ModelDetailsPopUp = ({
           </SkeletonWrapper>
         </p>
 
-        <p className="flex items-center gap-x-1 text-nowrap flex-wrap">
+        <p className="flex flex-wrap items-center gap-x-1 text-nowrap">
           {START_MAPPING_PAGE_CONTENT.modelDetails.popover.zoomLevel}:{" "}
           <SkeletonWrapper
             showSkeleton={trainingDetailsIsPending}
             skeletonClassName="w-20 h-4"
           >
-            <span className="text-dark font-medium">
+            <span className="font-medium text-dark">
               {trainingDetailsError
                 ? "N/A"
                 : trainingDetails?.zoom_level?.reverse().join(", ")}{" "}
@@ -158,16 +158,16 @@ const ModelDetailsPopUp = ({
       distance={ELEMENT_DISTANCE_FROM_NAVBAR}
     >
       <div
-        className={`border bg-white border-gray-border shadown-sm rounded-xl w-[350px] scrollable p-5 max-h-[400px] overflow-y-auto flex flex-col`}
+        className={`shadown-sm scrollable flex max-h-[400px] w-[350px] flex-col overflow-y-auto rounded-xl border border-gray-border bg-white p-5`}
       >
         {!model && isError ? (
           <div>{START_MAPPING_PAGE_CONTENT.modelDetails.error}</div>
         ) : (
           <div className="flex flex-col gap-y-4 text-dark">
             <div>
-              <div className="flex justify-between flex-row-reverse items-center">
+              <div className="flex flex-row-reverse items-center justify-between">
                 <button
-                  className="text-dark text-lg self-end"
+                  className="self-end text-lg text-dark"
                   onClick={handlePopup}
                   title="Close"
                 >

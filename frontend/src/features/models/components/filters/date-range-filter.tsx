@@ -1,25 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 
 import { SlCheckbox } from "@shoelace-style/shoelace/dist/react";
 
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { DropDown } from "@/components/ui/dropdown";
 import { DateRangePicker } from "@/components/ui/form";
+import {
+  MODELS_LIST_DATE_FILTERS,
+  MODEL_LIST_FILTER_QUERY_PARAMS,
+} from "@/constants";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
-import { DateFilter, TQueryParams } from "@/types";
-
-export const dateFilters: DateFilter[] = [
-  {
-    label: "Date Created",
-    apiValue: "created_at",
-    searchParams: "dateCreated",
-  },
-  {
-    label: "Last Modified",
-    apiValue: "last_modified",
-    searchParams: "lastModified",
-  },
-];
+import { TQueryParams } from "@/types";
 
 type DateRangeFilterProps = {
   disabled: boolean;
@@ -38,17 +29,17 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     useDropdownMenu();
 
   const [startDate, setStartDate] = useState<string>(
-    query[SEARCH_PARAMS.startDate] as string
+    query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate] as string
   );
   const [endDate, setEndDate] = useState<string>(
-    query[SEARCH_PARAMS.endDate] as string
+    query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate] as string
   );
   const [triggerText, setTriggerText] = useState<string>("Date");
 
   const onApply = () => {
     updateQuery({
-      [SEARCH_PARAMS.startDate]: startDate,
-      [SEARCH_PARAMS.endDate]: endDate,
+      [MODEL_LIST_FILTER_QUERY_PARAMS.startDate]: startDate,
+      [MODEL_LIST_FILTER_QUERY_PARAMS.endDate]: endDate,
     });
     setTriggerText(
       startDate && endDate
@@ -63,49 +54,57 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   };
 
   useEffect(() => {
-    setStartDate((query[SEARCH_PARAMS.startDate] as string) || "");
-    setEndDate((query[SEARCH_PARAMS.endDate] as string) || "");
+    setStartDate(
+      (query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate] as string) || ""
+    );
+    setEndDate((query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate] as string) || "");
     setTriggerText(
-      query[SEARCH_PARAMS.startDate] || query[SEARCH_PARAMS.endDate]
-        ? `${query[SEARCH_PARAMS.startDate] || "Start"} - ${query[SEARCH_PARAMS.endDate] || "Today"}`
+      query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate] ||
+        query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate]
+        ? `${query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate] || "Start"} - ${query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate] || "Today"}`
         : "Date"
     );
-  }, [query[SEARCH_PARAMS.startDate], query[SEARCH_PARAMS.endDate]]);
+  }, [
+    query[MODEL_LIST_FILTER_QUERY_PARAMS.startDate],
+    query[MODEL_LIST_FILTER_QUERY_PARAMS.endDate],
+  ]);
 
   const onClear = () => {
     setStartDate("");
     setEndDate("");
     updateQuery({
-      [SEARCH_PARAMS.startDate]: "",
-      [SEARCH_PARAMS.endDate]: "",
+      [MODEL_LIST_FILTER_QUERY_PARAMS.startDate]: "",
+      [MODEL_LIST_FILTER_QUERY_PARAMS.endDate]: "",
     });
   };
 
   if (!isMobileFilterModal) {
     return (
-      <div className="border border-gray-border py-2 px-4 hidden md:block">
+      <div className="hidden border border-gray-border px-4 py-2 md:block">
         <DropDown
           dropdownIsOpened={dropdownIsOpened}
           onDropdownHide={onDropdownHide}
           onDropdownShow={onDropdownShow}
           disabled={disabled}
           triggerComponent={
-            <p className="text-sm text-dark text-nowrap">{triggerText}</p>
+            <p className="text-nowrap text-sm text-dark">{triggerText}</p>
           }
         >
-          <div className="flex flex-col gap-y-4 w-full p-4 bg-white">
+          <div className="flex w-full flex-col gap-y-4 bg-white p-4">
             {/* The user can only select one at a time*/}
-            <div className="flex items-center gap-x-6 justify-start w-full">
-              {dateFilters.map((datefilter, id) => (
+            <div className="flex w-full items-center justify-start gap-x-6">
+              {MODELS_LIST_DATE_FILTERS.map((datefilter, id) => (
                 <SlCheckbox
                   key={`date-filter-${id}`}
                   size="small"
                   checked={
-                    query[SEARCH_PARAMS.dateFilter] === datefilter.searchParams
+                    query[MODEL_LIST_FILTER_QUERY_PARAMS.dateFilter] ===
+                    datefilter.searchParams
                   }
                   onSlChange={() =>
                     updateQuery({
-                      [SEARCH_PARAMS.dateFilter]: datefilter.searchParams,
+                      [MODEL_LIST_FILTER_QUERY_PARAMS.dateFilter]:
+                        datefilter.searchParams,
                     })
                   }
                 >
@@ -129,18 +128,20 @@ const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
   }
 
   return (
-    <div className="flex flex-col gap-y-4 w-full bg-white">
-      <div className="flex items-center w-full gap-x-4">
-        {dateFilters.map((datefilter, id) => (
+    <div className="flex w-full flex-col gap-y-4 bg-white">
+      <div className="flex w-full items-center gap-x-4">
+        {MODELS_LIST_DATE_FILTERS.map((datefilter, id) => (
           <SlCheckbox
             key={`date-filter-${id}`}
             size="small"
             checked={
-              query[SEARCH_PARAMS.dateFilter] === datefilter.searchParams
+              query[MODEL_LIST_FILTER_QUERY_PARAMS.dateFilter] ===
+              datefilter.searchParams
             }
             onSlChange={() =>
               updateQuery({
-                [SEARCH_PARAMS.dateFilter]: datefilter.searchParams,
+                [MODEL_LIST_FILTER_QUERY_PARAMS.dateFilter]:
+                  datefilter.searchParams,
               })
             }
           >

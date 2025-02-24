@@ -1,10 +1,21 @@
 import { GeoJsonProperties, Geometry } from "geojson";
 
+import { AxiosError, AxiosResponse } from "axios";
+
 import { BBOX } from "./common";
 
 /**
  * This file contains the different types/schema for the API responses from the backend.
  */
+
+type ExtendedAxiosResponseData = {
+  message?: string;
+  detail?: string;
+};
+
+export type ExtendedAxiosError = AxiosError & {
+  response?: AxiosResponse<ExtendedAxiosResponseData>;
+};
 
 // Auth and User API response types
 
@@ -137,7 +148,7 @@ export type TTrainingDetails = {
 
 export type TTrainingStatus = {
   id: string;
-  result: any;
+  result: unknown;
   status: "PENDING";
   traceback: string;
 };

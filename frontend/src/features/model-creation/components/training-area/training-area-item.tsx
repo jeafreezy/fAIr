@@ -139,20 +139,20 @@ const DropdownMenu = ({
       onDropdownHide={onDropdownHide}
       onDropdownShow={onDropdownShow}
       triggerComponent={
-        <button className="bg-off-white p-2 rounded-full items-center flex justify-center">
+        <button className="flex items-center justify-center rounded-full bg-off-white p-2">
           <ElipsisIcon className="icon" />
         </button>
       }
       className="text-right"
       distance={10}
     >
-      <div className="flex gap-x-4 p-2 justify-between items-center bg-white">
+      <div className="flex items-center justify-between gap-x-4 bg-white p-2">
         {dropdownMenuItems.map((Item, idx) => (
           <ToolTip content={Item.tooltip} key={`menu-item-${idx}`}>
             <button
               onClick={Item.onClick}
               disabled={Item.disabled}
-              className={`${Item.isDelete ? "text-primary bg-secondary" : "bg-off-white"} w-8 h-8 p-1.5 items-center justify-center flex rounded-md`}
+              className={`${Item.isDelete ? "bg-secondary text-primary" : "bg-off-white"} flex size-8 items-center justify-center rounded-md p-1.5`}
             >
               {Item.isIcon ? (
                 Item.Icon && <Item.Icon className="icon md:icon-lg" />
@@ -216,7 +216,6 @@ export const TrainingAreaItem: React.FC<
 
     if (!labelState.errorToastShown) {
       showErrorToast(
-        undefined,
         `Could not fetch labels for AOI ${trainingArea.id}. Please retry.`
       );
       setLabelState((prev) => ({ ...prev, errorToastShown: true }));
@@ -319,7 +318,12 @@ export const TrainingAreaItem: React.FC<
 
       return () => clearInterval(pollInterval);
     }
-  }, [labelState.shouldPoll, handleLabelSuccess]);
+  }, [
+    labelState.shouldPoll,
+    handleLabelSuccess,
+    getTrainingArea,
+    handleLabelError,
+  ]);
 
   const deleteTrainingAreaMutation = useDeleteTrainingArea({
     datasetId,
@@ -453,7 +457,7 @@ export const TrainingAreaItem: React.FC<
         disableFileSizeValidation
         isAOILabelsUpload
       />
-      <div className="flex items-center justify-between w-full gap-x-4">
+      <div className="flex w-full items-center justify-between gap-x-4">
         <div className="flex flex-col gap-y-1">
           <p className="text-body-4 md:text-body-3">
             ID: <span className="font-semibold">{trainingArea.id}</span>
@@ -480,7 +484,7 @@ export const TrainingAreaItem: React.FC<
           >
             <button
               disabled={disableLabelsFetchOrUpload}
-              className="bg-green-secondary px-2 py-1 rounded-md text-nowrap text-[9px] flex items-center gap-x-2 font-light"
+              className="flex items-center gap-x-2 text-nowrap rounded-md bg-green-secondary px-2 py-1 text-[9px] font-light"
               onClick={handleFetchLabels}
             >
               <MapIcon className="icon md:icon-lg text-green-primary" />
@@ -492,7 +496,7 @@ export const TrainingAreaItem: React.FC<
             }
           >
             <button
-              className="bg-off-white px-2 py-1 rounded-md"
+              className="rounded-md bg-off-white px-2 py-1"
               onClick={handleFitToBounds}
             >
               <FullScreenIcon className="icon" />

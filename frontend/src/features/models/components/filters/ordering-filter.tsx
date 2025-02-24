@@ -1,29 +1,12 @@
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { DropDown } from "@/components/ui/dropdown";
-import { DropdownMenuItem } from "@/components/ui/dropdown/dropdown";
 import { CheckboxGroup } from "@/components/ui/form";
-import { MODELS_CONTENT } from "@/constants";
+import {
+  MODELS_CONTENT,
+  MODEL_LIST_FILTER_QUERY_PARAMS,
+  ORDERING_FIELDS,
+} from "@/constants";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 import { TQueryParams } from "@/types";
-
-export const ORDERING_FIELDS: DropdownMenuItem[] = [
-  {
-    value: "Oldest Created",
-    apiValue: "created_at", // The actual filter from the backend. This is what is used to update the search params.
-  },
-  {
-    value: "Newest Created",
-    apiValue: "-created_at",
-  },
-  {
-    value: "Oldest Updated",
-    apiValue: "last_modified",
-  },
-  {
-    value: "Newest Updated",
-    apiValue: "-last_modified",
-  },
-];
 
 type OrderingFilterProps = {
   updateQuery: (params: TQueryParams) => void;
@@ -40,7 +23,7 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
 }) => {
   const onSortSelect = (selectedItem: string) => {
     updateQuery({
-      [SEARCH_PARAMS.ordering]: ORDERING_FIELDS.find(
+      [MODEL_LIST_FILTER_QUERY_PARAMS.ordering]: ORDERING_FIELDS.find(
         (v) => v.value === selectedItem
       )?.apiValue as string,
     });
@@ -62,11 +45,12 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
           withCheckbox
           defaultSelectedItem={
             ORDERING_FIELDS.find(
-              (v) => v.apiValue === query[SEARCH_PARAMS.ordering]
+              (v) =>
+                v.apiValue === query[MODEL_LIST_FILTER_QUERY_PARAMS.ordering]
             )?.value
           }
           triggerComponent={
-            <p className="text-sm text-dark text-nowrap">
+            <p className="text-nowrap text-sm text-dark">
               {
                 MODELS_CONTENT.models.modelsList.sortingAndPaginationSection
                   .sortingTitle
@@ -86,7 +70,7 @@ const OrderingFilter: React.FC<OrderingFilterProps> = ({
       onCheck={onSortSelect}
       defaultSelectedOption={
         ORDERING_FIELDS.find(
-          (v) => v.apiValue === query[SEARCH_PARAMS.ordering]
+          (v) => v.apiValue === query[MODEL_LIST_FILTER_QUERY_PARAMS.ordering]
         )?.value
       }
     ></CheckboxGroup>

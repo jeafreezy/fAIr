@@ -2,7 +2,7 @@ import { Map } from "maplibre-gl";
 
 import { useEffect, useRef } from "react";
 
-import { TILE_BOUNDARY_LAYER_ID, TMS_LAYER_ID } from "@/config";
+import { TILE_BOUNDARY_LAYER_ID } from "@/config";
 
 type UseLayerReorderProps = {
   /** IDs of all feature layers. (We want them above TMS.) */
@@ -54,5 +54,5 @@ export const useLayerReorder = (
     return () => {
       map.off("styledata", handleStyleData);
     };
-  }, [map, featureLayerIds, TMS_LAYER_ID, TILE_BOUNDARY_LAYER_ID]);
+  }, [map, featureLayerIds]);
 };

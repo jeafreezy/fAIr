@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-import {
-  MODEL_CREATION_FORM_NAME,
-  useModelsContext,
-} from "@/app/providers/models-provider";
+import { useModelsContext } from "@/app/providers/models-provider";
 import { HelpText, Input } from "@/components/ui/form";
 import { CheckIcon } from "@/components/ui/icons";
 import { SearchIcon } from "@/components/ui/icons";
 import { SkeletonWrapper } from "@/components/ui/skeleton";
 import { MODELS_CONTENT } from "@/constants";
+import { MODEL_CREATION_FORM_NAME } from "@/enums";
 import { useGetTrainingDatasets } from "@/features/model-creation/hooks/use-training-datasets";
 import useDebounce from "@/hooks/use-debounce";
 
@@ -22,7 +20,7 @@ const SelectExistingTrainingDatasetForm = () => {
   return (
     <div className="flex flex-col gap-y-10">
       <div>
-        <p className="font-semibold text-body-2 md:text-body-1 mb-2">
+        <p className="mb-2 text-body-2 font-semibold md:text-body-1">
           {
             MODELS_CONTENT.modelCreation.trainingDataset.form
               .existingTrainingDatasetSectionHeading
@@ -36,7 +34,7 @@ const SelectExistingTrainingDatasetForm = () => {
         />
       </div>
       <div className={`flex  items-center border border-gray-border`}>
-        <SearchIcon className={`ml-2 icon-lg text-dark`} />
+        <SearchIcon className={`icon-lg ml-2 text-dark`} />
         <Input
           handleInput={(e) => {
             setSearchQuery(e.target.value);
@@ -52,13 +50,13 @@ const SelectExistingTrainingDatasetForm = () => {
       </div>
 
       <div
-        className={`border border-light-gray rounded-sm h-80 p-2  flex flex-col gap-y-4 overflow-scroll ${isError && "items-center justify-center"}`}
+        className={`flex h-80 flex-col gap-y-4 overflow-scroll  rounded-sm border border-light-gray p-2 ${isError && "items-center justify-center"}`}
       >
         {isError ? (
           <p className="text-center">Failed to retrieve training datasets.</p>
         ) : (
           <SkeletonWrapper showSkeleton={isPending} skeletonClassName="h-80">
-            <ul className="flex gap-y-2 flex-col">
+            <ul className="flex flex-col gap-y-2">
               {data &&
                 data
                   .filter((td) =>
@@ -67,7 +65,7 @@ const SelectExistingTrainingDatasetForm = () => {
                   .map((td, id) => (
                     <li
                       key={`training-dataset-${id}`}
-                      className={`cursor-pointer hover:bg-off-white p-2 flex items-center justify-between ${formData.selectedTrainingDatasetId === String(td.id) && "bg-off-white"}`}
+                      className={`flex cursor-pointer items-center justify-between p-2 hover:bg-off-white ${formData.selectedTrainingDatasetId === String(td.id) && "bg-off-white"}`}
                     >
                       <button
                         disabled={!td.source_imagery}
@@ -98,7 +96,7 @@ const SelectExistingTrainingDatasetForm = () => {
                         </p>
                       </button>
                       {formData.selectedTrainingDatasetId === String(td.id) && (
-                        <span className="icon rounded-full p-1 bg-green-primary flex items-center justify-center">
+                        <span className="icon flex items-center justify-center rounded-full bg-green-primary p-1">
                           <CheckIcon className=" text-white" />
                         </span>
                       )}

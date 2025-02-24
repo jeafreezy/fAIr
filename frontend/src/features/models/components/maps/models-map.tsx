@@ -1,10 +1,10 @@
-import { Map } from "maplibre-gl";
+import { Map, MapMouseEvent } from "maplibre-gl";
 
 import { useCallback, useEffect } from "react";
 
-import { SEARCH_PARAMS } from "@/app/routes/models/models-list";
 import { MapMarkerIcon } from "@/assets/images";
 import { MapComponent } from "@/components/map";
+import { MODEL_LIST_FILTER_QUERY_PARAMS } from "@/constants";
 import { useMapInstance } from "@/hooks/use-map-instance";
 import { FeatureCollection, TQueryParams } from "@/types";
 
@@ -12,12 +12,12 @@ const mapSourceName = "models";
 // Font from OpenFreeMap
 const licensedFonts = ["Noto Sans Regular"];
 
-let markerIcon = new Image(17, 20);
+const markerIcon = new Image(17, 20);
 markerIcon.src = MapMarkerIcon;
 
 const maplibreLayerDefn = (
   map: Map,
-  mapResults: any,
+  mapResults: FeatureCollection,
   handleClickOnModelID: (clickedId: string) => void,
   disablePoiClick = false
 ) => {
@@ -103,7 +103,7 @@ const maplibreLayerDefn = (
     map.getCanvas().style.cursor = "";
   });
 
-  map.on("click", "models-unclustered-points", (e: any) => {
+  map.on("click", "models-unclustered-points", (e: MapMouseEvent) => {
     const value =
       e.features && e.features[0].properties && e.features[0].properties.mid;
     handleClickOnModelID(value);
@@ -121,11 +121,14 @@ export const ModelsMap: React.FC<ModelsMapProps> = ({
 }) => {
   const { map, currentZoom, mapContainerRef } = useMapInstance();
 
-  const handleClickOnModelID = useCallback((clickedModel: string) => {
-    updateQuery({
-      [SEARCH_PARAMS.id]: clickedModel,
-    });
-  }, []);
+  const handleClickOnModelID = useCallback(
+    (clickedModel: string) => {
+      updateQuery({
+        [MODEL_LIST_FILTER_QUERY_PARAMS.id]: clickedModel,
+      });
+    },
+    [updateQuery]
+  );
 
   useEffect(() => {
     if (!map || !mapResults) return;
@@ -147,7 +150,7 @@ export const ModelsMap: React.FC<ModelsMapProps> = ({
   }, [map, mapResults, handleClickOnModelID]);
 
   return (
-    <div className="h-full w-full">
+    <div className="size-full">
       <MapComponent
         geolocationControl
         map={map}

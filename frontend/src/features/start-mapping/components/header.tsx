@@ -75,10 +75,10 @@ const StartMappingHeader = ({
             onShow={onFAIRLogoDropdownShow}
             isOpened={FAIRLogoDropdownIsOpened}
           />
-          <div className="flex flex-col md:flex-row md:items-center gap-x-4 z-10">
+          <div className="z-10 flex flex-col gap-x-4 md:flex-row md:items-center">
             <p
               title={data?.name}
-              className="text-dark text-body-2base text-nowrap truncate md:max-w-[20px] lg:max-w-[300px] xl:max-w-[400px]"
+              className="truncate text-nowrap text-body-2base text-dark md:max-w-[20px] lg:max-w-[300px] xl:max-w-[400px]"
             >
               {data?.name ?? "N/A"}
             </p>
@@ -91,7 +91,7 @@ const StartMappingHeader = ({
         </div>
         <div className="flex flex-row items-center gap-x-4">
           <ModelSettings updateQuery={updateQuery} query={query} />
-          <div className="flex flex-row items-center gap-y-3 gap-x-2">
+          <div className="flex flex-row items-center gap-x-2 gap-y-3">
             <ModelPredictionsTracker
               modelPredictions={modelPredictions}
               clearPredictions={clearPredictions}

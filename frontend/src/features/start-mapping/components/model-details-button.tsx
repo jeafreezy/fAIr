@@ -23,7 +23,7 @@ export const ModelDetailsButton = ({
     >
       <button
         id={popupAnchorId}
-        className={`text-gray text-body-2 flex items-center p-1.5 hover:icon-interaction ${modelDetailsPopupIsActive && "icon-interaction"}`}
+        className={`hover:icon-interaction flex items-center p-1.5 text-body-2 text-gray ${modelDetailsPopupIsActive && "icon-interaction"}`}
         onClick={onClick}
       >
         <TagsInfoIcon className="icon" />

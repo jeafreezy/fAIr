@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export const useToolTipVisibility = (
   map: Map | null,
-  dependencies: any[] = []
+  dependencies: unknown[] = []
 ) => {
   const [tooltipVisible, setTooltipVisible] = useState<boolean>(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -30,6 +30,7 @@ export const useToolTipVisibility = (
       map.off("mousemove", handleMouseMove);
       map.off("mouseout", handleMouseLeave);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, ...dependencies]);
 
   return { tooltipVisible, tooltipPosition, setTooltipVisible };

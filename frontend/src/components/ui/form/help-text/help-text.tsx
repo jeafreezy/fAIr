@@ -11,7 +11,7 @@ const HelpText: React.FC<HelptextProps> = ({
 }) => {
   return (
     <p
-      className={`mt-1 font-medium text-body-3 text-gray ${isValid !== undefined && currentLength && currentLength > 0 && !isValid && "text-primary"}`}
+      className={`mt-1 text-body-3 font-medium text-gray ${isValid !== undefined && currentLength && currentLength > 0 && !isValid && "text-primary"}`}
       slot="help-text"
     >
       {content}

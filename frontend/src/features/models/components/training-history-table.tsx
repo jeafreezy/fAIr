@@ -1,14 +1,12 @@
 import { useState } from "react";
 
-import { ColumnDef, SortingState } from "@tanstack/react-table";
+import { ColumnDef, Row, SortingState } from "@tanstack/react-table";
 
 import { useAuth } from "@/app/providers/auth-provider";
 import { PAGE_LIMIT, Pagination } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table";
-import { DropDown } from "@/components/ui/dropdown";
-import { CheckIcon } from "@/components/ui/icons";
-import { ElipsisIcon, InfoIcon } from "@/components/ui/icons";
+import { CheckIcon, InfoIcon } from "@/components/ui/icons";
 import { MODELS_CONTENT } from "@/constants";
 import { useUpdateTraining } from "@/features/models/api/update-trainings";
 import { TrainingDetailsDialog } from "@/features/models/components/dialogs";
@@ -16,16 +14,17 @@ import { TableSkeleton } from "@/features/models/components/skeletons";
 import { SortableHeader } from "@/features/models/components/table-header";
 import { useTrainingHistory } from "@/features/models/hooks/use-training";
 import { useDialog } from "@/hooks/use-dialog";
-import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
-import { useToastNotification } from "@/hooks/use-toast-notification";
 import { TBadgeVariants, TTrainingDetails } from "@/types";
 import {
   formatDate,
   formatDuration,
   roundNumber,
   showErrorToast,
+  showSuccessToast,
   truncateString,
 } from "@/utils";
+
+import { CellWithDropDown } from "./dropdown-cell";
 
 type TrainingHistoryTableProps = {
   modelId: string;
@@ -166,14 +165,14 @@ const columnDefinitions = (
             MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
               .info,
 
-          cell: ({ row }: { row: any }) => {
+          cell: ({ row }: { row: Row<TTrainingDetails> }) => {
             return (
               <Badge
                 variant="default"
                 className="rounded-lg px-2"
                 onClick={() => handleTrainingModal(Number(row.getValue("id")))}
               >
-                <InfoIcon className="icon text-dark font-bold" />
+                <InfoIcon className="icon font-bold text-dark" />
               </Badge>
             );
           },
@@ -187,47 +186,26 @@ const columnDefinitions = (
             MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
               .action,
 
-          cell: ({ row }: { row: any }) => {
-            const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
-              useDropdownMenu();
-            return (
-              <>
-                <DropDown
-                  disableCheveronIcon
-                  dropdownIsOpened={dropdownIsOpened}
-                  onDropdownHide={onDropdownHide}
-                  onDropdownShow={onDropdownShow}
-                  triggerComponent={
-                    <Badge
-                      variant="default"
-                      onClick={() => null}
-                      className="rounded-lg px-2 items-center flex"
-                    >
-                      <ElipsisIcon className="icon" />
-                    </Badge>
-                  }
-                  className="text-right"
-                  distance={10}
-                  menuItems={[
-                    {
-                      name: "Set as active training dataset",
-                      value: "Set as active training dataset",
-                      onClick: () => publishTraining(row.getValue("id")),
-                      disabled:
-                        row.getValue("status") === "FAILED" ||
-                        row.getValue("status") === "SUBMITTED",
-                    },
-                    {
-                      name: "View training details",
-                      value: "View training details",
-                      onClick: () =>
-                        handleTrainingModal(row.getValue("id") as number),
-                    },
-                  ]}
-                ></DropDown>
-              </>
-            );
-          },
+          cell: ({ row }: { row: Row<TTrainingDetails> }) => (
+            <CellWithDropDown
+              menuItems={[
+                {
+                  name: "Set as active training dataset",
+                  value: "Set as active training dataset",
+                  onClick: () => publishTraining(row.getValue("id")),
+                  disabled:
+                    row.getValue("status") === "FAILED" ||
+                    row.getValue("status") === "SUBMITTED",
+                },
+                {
+                  name: "View training details",
+                  value: "View training details",
+                  onClick: () =>
+                    handleTrainingModal(row.getValue("id") as number),
+                },
+              ]}
+            />
+          ),
         },
       ]
     : []),
@@ -251,11 +229,11 @@ const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
   const [sorting, setSorting] = useState<SortingState>([]);
   const { user, isAuthenticated } = useAuth();
   const { isOpened, openDialog, closeDialog } = useDialog();
-  const toast = useToastNotification();
+
   const { mutate } = useUpdateTraining({
     mutationConfig: {
       onSuccess: (res) => {
-        toast(res.data, "success");
+        showSuccessToast(res.data);
       },
       onError: (err) => {
         showErrorToast(err);
@@ -284,7 +262,7 @@ const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
         tmsUrl={tmsUrl}
       />
       <div className="h-full">
-        <div className="w-full items-center text-body-3 flex justify-between my-4">
+        <div className="my-4 flex w-full items-center justify-between text-body-3">
           <p className="text-nowrap">
             {" "}
             {data?.count}{" "}

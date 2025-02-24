@@ -18,7 +18,8 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json,css,scss,md,test.ts}": [
       "pnpm format",
-      "pnpm test"
+      "pnpm test",
+      "pnpm lint"
     ]
   },
   "dependencies": {
@@ -29,6 +30,7 @@
     "@terraformer/wkt": "^2.2.1",
     "@turf/area": "^7.1.0",
     "@turf/bbox": "^7.1.0",
+    "@turf/boolean-contains": "^7.2.0",
     "@turf/boolean-intersects": "^7.1.0",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
@@ -74,6 +76,7 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "globals": "^15.9.0",
     "husky": "^9.1.7",
+    "jsdom": "^26.0.0",
     "lint-staged": "^15.2.10",
     "postcss": "^8.4.47",
     "prettier": "3.3.3",

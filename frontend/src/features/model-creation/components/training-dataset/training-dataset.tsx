@@ -1,11 +1,8 @@
-import {
-  MODEL_CREATION_FORM_NAME,
-  useModelsContext,
-} from "@/app/providers/models-provider";
+import { useModelsContext } from "@/app/providers/models-provider";
 import { ButtonWithIcon } from "@/components/ui/button";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { MODELS_CONTENT } from "@/constants";
-import { TrainingDatasetOption } from "@/enums";
+import { MODEL_CREATION_FORM_NAME, TrainingDatasetOption } from "@/enums";
 import { StepHeading } from "@/features/model-creation/components/";
 import CreateNewTrainingDatasetForm from "@/features/model-creation/components/training-dataset/create-new";
 import SelectExistingTrainingDatasetForm from "@/features/model-creation/components/training-dataset/select-existing";
@@ -14,7 +11,7 @@ const TrainingDatasetForm = () => {
   const { handleChange, formData, isEditMode } = useModelsContext();
 
   return (
-    <div className="flex flex-col gap-y-6 w-full">
+    <div className="flex w-full flex-col gap-y-6">
       <StepHeading
         heading={MODELS_CONTENT.modelCreation.trainingDataset.pageTitle}
         description={
@@ -22,7 +19,7 @@ const TrainingDatasetForm = () => {
         }
       />
       {formData.trainingDatasetOption === TrainingDatasetOption.NONE ? (
-        <div className="flex flex-col gap-y-10 w-full">
+        <div className="flex w-full flex-col gap-y-10">
           <ButtonWithIcon
             label={
               MODELS_CONTENT.modelCreation.trainingDataset.buttons.createNew

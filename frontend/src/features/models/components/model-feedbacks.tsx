@@ -6,7 +6,7 @@ const ModelFeedbacks = ({ trainingId }: { trainingId: number }) => {
   const { data, isLoading } = useTrainingFeedbacks(trainingId);
 
   if (isLoading) {
-    return <div className="w-20 h-6 animate-pulse bg-light-gray"></div>;
+    return <div className="h-6 w-20 animate-pulse bg-light-gray"></div>;
   }
 
   return (

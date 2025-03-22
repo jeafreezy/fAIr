@@ -46,12 +46,14 @@ export const setupTerraDraw = (map: maplibregl.Map) => {
       //   },
       // }),
       new TerraDrawRectangleMode({
+        // @ts-expect-error bad type definition
         validation: (feature, { updateType }) => {
           if (updateType === "finish" || updateType === "commit") {
-            return ValidateNotSelfIntersecting(feature);
+            return ValidateNotSelfIntersecting(feature)
           }
           return {
-            valid: true
+            valid: true,
+
           };
         },
         styles: {

@@ -30,7 +30,6 @@ import {
 import { Link } from "@/components/ui/link";
 import { ModelTrainingStatus } from "@/enums";
 
-
 type TrainingHistoryTableProps = {
   modelId?: string;
   publishedTrainingId?: number;
@@ -50,44 +49,44 @@ const columnDefinitions = (
   showUserTrainingHistory?: boolean,
   modelOwner?: string,
 ): ColumnDef<TTrainingDetails>[] => [
-    {
-      accessorKey: "id",
-      header: ({ column }) => <SortableHeader title={"ID"} column={column} />,
+  {
+    accessorKey: "id",
+    header: ({ column }) => <SortableHeader title={"ID"} column={column} />,
+  },
+  {
+    header:
+      MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
+        .epochAndBatchSize,
+    accessorFn: (row) => `${row.epochs}/${row.batch_size}`,
+    cell: (row) => (
+      <span title={row.getValue() as string}>{row.getValue() as string}</span>
+    ),
+  },
+  {
+    accessorKey: "started_at",
+    accessorFn: (row) =>
+      row.started_at !== null ? formatDate(row.started_at) : "-",
+    header:
+      MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
+        .startedAt,
+    cell: (row) => {
+      return <span>{row.getValue() as string}</span>;
     },
-    {
-      header:
-        MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
-          .epochAndBatchSize,
-      accessorFn: (row) => `${row.epochs}/${row.batch_size}`,
-      cell: (row) => (
-        <span title={row.getValue() as string}>{row.getValue() as string}</span>
-      ),
-    },
-    {
-      accessorKey: "started_at",
-      accessorFn: (row) =>
-        row.started_at !== null ? formatDate(row.started_at) : "-",
-      header:
-        MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
-          .startedAt,
-      cell: (row) => {
-        return <span>{row.getValue() as string}</span>;
-      },
-    },
-    {
-      header:
-        MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
-          .duration,
-      accessorFn: (row) =>
-        row.finished_at && row.started_at
-          ? formatDuration(new Date(row.started_at), new Date(row.finished_at))
-          : "-",
-      cell: (row) => (
-        <span title={row.getValue() as string}>{row.getValue() as string}</span>
-      ),
-    },
-    ...(showUserTrainingHistory
-      ? [
+  },
+  {
+    header:
+      MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
+        .duration,
+    accessorFn: (row) =>
+      row.finished_at && row.started_at
+        ? formatDuration(new Date(row.started_at), new Date(row.finished_at))
+        : "-",
+    cell: (row) => (
+      <span title={row.getValue() as string}>{row.getValue() as string}</span>
+    ),
+  },
+  ...(showUserTrainingHistory
+    ? [
         {
           accessorKey: "model",
           header: ({ column }: { column: any }) => (
@@ -115,7 +114,7 @@ const columnDefinitions = (
           },
         },
       ]
-      : [
+    : [
         {
           accessorKey: "user.username",
           header:
@@ -127,62 +126,62 @@ const columnDefinitions = (
         },
       ]),
 
-    {
-      accessorKey: "chips_length",
-      header:
-        MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader.dsSize,
-      cell: ({ row }) => {
-        return <span>{row.getValue("chips_length") ?? 0}</span>;
-      },
+  {
+    accessorKey: "chips_length",
+    header:
+      MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader.dsSize,
+    cell: ({ row }) => {
+      return <span>{row.getValue("chips_length") ?? 0}</span>;
     },
-    {
-      accessorKey: "accuracy",
-      header: ({ column }) => (
-        <SortableHeader
-          title={
-            MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
-              .accuracy
-          }
-          column={column}
-        />
-      ),
-      cell: ({ row }) => {
-        return (
-          <span>
-            {Number(row.getValue("accuracy")) > 0
-              ? roundNumber(row.getValue("accuracy") ?? 0)
-              : "-"}
-          </span>
-        );
-      },
+  },
+  {
+    accessorKey: "accuracy",
+    header: ({ column }) => (
+      <SortableHeader
+        title={
+          MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
+            .accuracy
+        }
+        column={column}
+      />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>
+          {Number(row.getValue("accuracy")) > 0
+            ? roundNumber(row.getValue("accuracy") ?? 0)
+            : "-"}
+        </span>
+      );
     },
-    {
-      header:
-        MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader.status,
-      accessorKey: "status",
-      cell: (row) => {
-        const statusToVariant: Record<string, TBadgeVariants> = {
-          finished: "green",
-          failed: "red",
-          submitted: "blue",
-          running: "yellow",
-        };
+  },
+  {
+    header:
+      MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader.status,
+    accessorKey: "status",
+    cell: (row) => {
+      const statusToVariant: Record<string, TBadgeVariants> = {
+        finished: "green",
+        failed: "red",
+        submitted: "blue",
+        running: "yellow",
+      };
 
-        return (
-          <Badge
-            variant={
-              statusToVariant[
+      return (
+        <Badge
+          variant={
+            statusToVariant[
               String(row.getValue()).toLocaleLowerCase() as TBadgeVariants
-              ]
-            }
-          >
-            {String(row.getValue()).toLocaleLowerCase() as string}
-          </Badge>
-        );
-      },
+            ]
+          }
+        >
+          {String(row.getValue()).toLocaleLowerCase() as string}
+        </Badge>
+      );
     },
-    ...(publishedTrainingId
-      ? [
+  },
+  ...(publishedTrainingId
+    ? [
         {
           header:
             MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
@@ -201,9 +200,9 @@ const columnDefinitions = (
           },
         },
       ]
-      : []),
-    ...(modelOwner !== authUsername
-      ? [
+    : []),
+  ...(modelOwner !== authUsername
+    ? [
         {
           header:
             MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
@@ -226,9 +225,9 @@ const columnDefinitions = (
           },
         },
       ]
-      : []),
-    ...(modelOwner === authUsername && isAuthenticated
-      ? [
+    : []),
+  ...(modelOwner === authUsername && isAuthenticated
+    ? [
         {
           header:
             MODELS_CONTENT.models.modelsDetailsCard.trainingHistoryTableHeader
@@ -268,7 +267,8 @@ const columnDefinitions = (
                     },
                     disabled:
                       row.getValue("status") === ModelTrainingStatus.FAILED ||
-                      row.getValue("status") === ModelTrainingStatus.IN_PROGRESS ||
+                      row.getValue("status") ===
+                        ModelTrainingStatus.IN_PROGRESS ||
                       row.getValue("status") === ModelTrainingStatus.SUBMITTED,
                   },
                   {
@@ -298,8 +298,8 @@ const columnDefinitions = (
           },
         },
       ]
-      : []),
-  ];
+    : []),
+];
 
 const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
   publishedTrainingId,
@@ -343,7 +343,7 @@ const TrainingHistoryTable: React.FC<TrainingHistoryTableProps> = ({
     mutationConfig: {
       onSuccess: () => {
         showSuccessToast("Training has been cancelled successfully.");
-        refetch()
+        refetch();
       },
       onError: (err) => {
         showErrorToast(err);

@@ -34,7 +34,9 @@ const ModelAction = ({
   modelInfo: TModelDetails;
 }) => {
   const { modelId } = useParams();
-  const [predictionZoomLevel, setPredictionZoomLevel] = useState<number | null>(null);
+  const [predictionZoomLevel, setPredictionZoomLevel] = useState<number | null>(
+    null,
+  );
 
   const getTrainingConfig = useCallback((): TModelPredictionsConfig => {
     return {

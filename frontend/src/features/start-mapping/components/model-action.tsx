@@ -9,7 +9,7 @@ import {
   TQueryParams,
 } from "@/types";
 import { ToolTip } from "@/components/ui/tooltip";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useGetModelPredictions } from "@/features/start-mapping/hooks/use-model-predictions";
 import { SEARCH_PARAMS } from "@/app/routes/start-mapping";
 import { PREDICTION_API_FILE_EXTENSIONS } from "@/config";
@@ -34,6 +34,9 @@ const ModelAction = ({
   modelInfo: TModelDetails;
 }) => {
   const { modelId } = useParams();
+  const [predictionZoomLevel, setPredictionZoomLevel] = useState<number | null>(
+    null,
+  );
 
   const getTrainingConfig = useCallback((): TModelPredictionsConfig => {
     return {
@@ -46,7 +49,7 @@ const ModelAction = ({
       model_id: modelId as string,
       skew_tolerance: 15,
       source: modelInfo?.dataset?.source_imagery as string,
-      zoom_level: currentZoom,
+      zoom_level: predictionZoomLevel ?? currentZoom,
       bbox: [
         map?.getBounds().getWest(),
         map?.getBounds().getSouth(),
@@ -54,7 +57,7 @@ const ModelAction = ({
         map?.getBounds().getNorth(),
       ] as BBOX,
     };
-  }, [map, query, currentZoom, modelInfo]);
+  }, [map, query, currentZoom, modelInfo, predictionZoomLevel]);
 
   const modelPredictionMutation = useGetModelPredictions({
     mutationConfig: {
@@ -65,7 +68,10 @@ const ModelAction = ({
         const conflatedResults = handleConflation(
           modelPredictions,
           data.features,
-          getTrainingConfig(),
+          {
+            ...getTrainingConfig(),
+            zoom_level: predictionZoomLevel ?? currentZoom,
+          },
         );
         setModelPredictions(conflatedResults);
       },
@@ -75,8 +81,9 @@ const ModelAction = ({
 
   const handlePrediction = useCallback(async () => {
     if (!map) return;
+    setPredictionZoomLevel(currentZoom);
     await modelPredictionMutation.mutateAsync(getTrainingConfig());
-  }, [getTrainingConfig, modelPredictionMutation, map]);
+  }, [getTrainingConfig, modelPredictionMutation, map, currentZoom]);
 
   return (
     <div className="flex gap-y-3 flex-col-reverse flex-wrap  md:items-center md:flex-row md:justify-between md:gap-x-2 md:flex-nowrap">

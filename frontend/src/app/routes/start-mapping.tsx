@@ -173,42 +173,42 @@ export const StartMappingPage = () => {
     () => [
       ...(modelPredictions.accepted.length > 0
         ? [
-            {
-              value:
-                START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-                  .acceptedPredictions,
-              subLayers: [
-                ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-                ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-              ],
-            },
-          ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .acceptedPredictions,
+            subLayers: [
+              ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
         : []),
       ...(modelPredictions.rejected.length > 0
         ? [
-            {
-              value:
-                START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-                  .rejectedPredictions,
-              subLayers: [
-                REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-                REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-              ],
-            },
-          ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .rejectedPredictions,
+            subLayers: [
+              REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
         : []),
       ...(modelPredictions.all.length > 0
         ? [
-            {
-              value:
-                START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-                  .predictionResults,
-              subLayers: [
-                ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
-                ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-              ],
-            },
-          ]
+          {
+            value:
+              START_MAPPING_PAGE_CONTENT.map.controls.legendControl
+                .predictionResults,
+            subLayers: [
+              ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
+              ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+            ],
+          },
+        ]
         : []),
     ],
     [modelPredictions],
@@ -329,7 +329,7 @@ export const StartMappingPage = () => {
           modelInfo={modelInfo}
         />
         <div className="sticky top-0 bg-white z-10 px-4 xl:px-large py-1 hidden md:block">
-          {/* Model Details Popup */}
+          {/* Model Details Popover */}
           {showModelDetailsPopup && (
             <ModelDetailsPopUp
               showPopup={showModelDetailsPopup}
@@ -341,6 +341,7 @@ export const StartMappingPage = () => {
               modelInfoRequestIsError={isError}
             />
           )}
+
           {/* Web Header */}
           <StartMappingHeader
             modelInfo={modelInfo}

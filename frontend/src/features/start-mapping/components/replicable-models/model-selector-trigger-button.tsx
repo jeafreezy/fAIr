@@ -36,7 +36,6 @@ export const ModelSelectorTriggerButton = ({
 
   return (
     <div className="flex items-center gap-x-1 mr-1 lg:mr-0">
-      <p className="hidden lg:inline-block text-body-4 text-left">Model:</p>
       <DropDown
         placement={DropdownPlacement.BOTTOM_START}
         disableCheveronIcon

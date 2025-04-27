@@ -29,15 +29,6 @@ export const useMapLayers = (
 };
 /**
  * Custom hook to manage dynamic map layers.
- * @param map
- * @param sourceId
- * @param layerId
- * @param sourceSpec
- * @param layerSpec
- * @param dependencies
- * @param enabled
- * @param belowLayerIds
- * @returns
  */
 export const useDynamicMapLayer = (
   map: Map | null,

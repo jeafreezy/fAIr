@@ -140,7 +140,7 @@ export const StartMappingMapComponent = ({
       openAerialMap={!modelInfoRequestIsPending}
       oamTileJSONURL={tileJSONURL}
     >
-      {map && predictionImageryURL && (
+      {map && (
         <PredictionImageryLayer
           map={map}
           predictionImagerySource={predictionImagerySource}

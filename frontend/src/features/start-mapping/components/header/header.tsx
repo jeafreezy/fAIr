@@ -127,6 +127,7 @@ const StartMappingHeader = ({
               modelDefaultImageryURL={modelDefaultImageryURL}
               customTileServerURL={customTileServerURL}
               setCustomTileServerURL={setCustomTileServerURL}
+              modelPredictionsExist={modelPredictionsExist}
             />
           </div>
           <div className="flex flex-row items-center gap-x-2">

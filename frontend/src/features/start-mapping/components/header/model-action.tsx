@@ -37,9 +37,6 @@ const ModelAction = ({
   );
   const currentZoom = useMapStore((state) => state.zoom);
 
-  const disablePrediction =
-    currentZoom < MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION;
-
   const getTrainingConfig = useCallback((): TModelPredictionsConfig => {
     return {
       tolerance: query[SEARCH_PARAMS.tolerance] as number,
@@ -67,6 +64,7 @@ const ModelAction = ({
     modelInfo,
     predictionZoomLevel,
     predictionModelCheckpoint,
+    predictionImageryURL,
   ]);
 
   const modelPredictionMutation = useGetModelPredictions({
@@ -95,20 +93,25 @@ const ModelAction = ({
     await modelPredictionMutation.mutateAsync(getTrainingConfig());
   }, [getTrainingConfig, modelPredictionMutation, map, currentZoom]);
 
+  const disablePredictionButton =
+    currentZoom < MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION ||
+    modelPredictionMutation.isPending ||
+    predictionImageryURL?.length === 0;
   return (
     <div className="flex gap-y-3 flex-col-reverse flex-wrap  md:items-center md:flex-row md:justify-between md:gap-x-2 md:flex-nowrap">
       <ToolTip
         content={
-          disablePrediction ? START_MAPPING_PAGE_CONTENT.buttons.tooltip : null
+          disablePredictionButton
+            ? START_MAPPING_PAGE_CONTENT.buttons.tooltip
+            : null
         }
       >
         <button
-          disabled={disablePrediction || modelPredictionMutation.isPending}
+          disabled={disablePredictionButton}
           onClick={handlePrediction}
-          className={`w-full text-nowrap bg-primary px-3 py-3 md:py-1.5 rounded-md text-white ${disablePrediction || modelPredictionMutation.isPending ? "opacity-50" : ""}`}
+          className={`w-full text-nowrap bg-primary px-3 py-3 md:py-1.5 rounded-md text-white ${disablePredictionButton ? "opacity-50" : ""}`}
         >
           <span className="capitalize text-body-4">
-            {" "}
             {modelPredictionMutation.isPending
               ? START_MAPPING_PAGE_CONTENT.buttons.predictionInProgress
               : START_MAPPING_PAGE_CONTENT.buttons.runPrediction}

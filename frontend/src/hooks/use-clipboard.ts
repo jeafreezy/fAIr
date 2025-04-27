@@ -9,7 +9,7 @@ import { useToastNotification } from "./use-toast-notification";
  * - `copyToClipboard`: A function to copy a given text to the clipboard and display a toast message.
  */
 const useCopyToClipboard = () => {
-  const [isCopied, setIsCopied] = useState(false);
+  const [isCopied, setIsCopied] = useState<boolean>(false);
   const toast = useToastNotification();
   const copyToClipboard = async (text: string) => {
     try {

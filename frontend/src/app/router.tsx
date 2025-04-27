@@ -62,7 +62,6 @@ const router = createBrowserRouter([
           );
           return {
             Component: () => (
-
               <ModelsProvider>
                 <ModelDetailsPage />
               </ModelsProvider>

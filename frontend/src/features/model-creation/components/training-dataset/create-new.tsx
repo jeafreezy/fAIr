@@ -8,9 +8,12 @@ import {
 } from "@/app/providers/models-provider";
 import { MapIcon } from "@/components/ui/icons";
 import { useMapInstance } from "@/hooks/use-map-instance";
-import { extractTileJSONURL } from "@/utils";
+import {
+  extractTileJSONURL,
+  OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
+} from "@/utils";
 import { getTMSTileJSON } from "@/features/model-creation/api/get-tms-tilejson";
-import { MapComponent, OpenAerialMap } from "@/components/map";
+import { MapComponent } from "@/components/map";
 import { Spinner } from "@/components/ui/spinner";
 import { XYZTileServerInput } from "@/components/shared/form/xyz-tile-server-input";
 
@@ -22,13 +25,18 @@ const CreateNewTrainingDatasetForm = () => {
   const { mapContainerRef, map } = useMapInstance();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  const tileJSONURL = extractTileJSONURL(formData.tmsURL);
+  const isOpenAerialMap = OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(
+    formData.tmsURL,
+  );
+  let sourceURL = formData.tmsURL;
+  if (isOpenAerialMap) {
+    sourceURL = extractTileJSONURL(formData.tmsURL);
+  }
 
   useEffect(() => {
     if (!formData.tmsURLValidation.valid) return;
     if (!map) return;
-    if (!tileJSONURL) return;
+    if (!sourceURL) return;
 
     const addOrUpdateLayer = async () => {
       setLoading(true);
@@ -40,11 +48,19 @@ const CreateNewTrainingDatasetForm = () => {
           map.removeSource(PREVIEW_TMS_SOURCE_ID);
         }
 
-        map.addSource(PREVIEW_TMS_SOURCE_ID, {
-          type: "raster",
-          url: tileJSONURL,
-          tileSize: 256,
-        });
+        if (isOpenAerialMap) {
+          map.addSource(PREVIEW_TMS_SOURCE_ID, {
+            type: "raster",
+            url: sourceURL,
+            tileSize: 256,
+          });
+        } else {
+          map.addSource(PREVIEW_TMS_SOURCE_ID, {
+            type: "raster",
+            tiles: [sourceURL],
+            tileSize: 256,
+          });
+        }
 
         map.addLayer({
           id: PREVIEW_TMS_LAYER_ID,
@@ -52,9 +68,10 @@ const CreateNewTrainingDatasetForm = () => {
           source: PREVIEW_TMS_SOURCE_ID,
           layout: { visibility: "visible" },
         });
-
-        const tileJSON = await getTMSTileJSON(tileJSONURL);
-        map.fitBounds(tileJSON.bounds);
+        if (isOpenAerialMap) {
+          const tileJSON = await getTMSTileJSON(sourceURL);
+          map.fitBounds(tileJSON.bounds);
+        }
       } catch (e) {
         setError("Failed to load TMS imagery. Please check the URL.");
       } finally {
@@ -74,7 +91,7 @@ const CreateNewTrainingDatasetForm = () => {
         }
       }
     };
-  }, [tileJSONURL, formData.tmsURLValidation.valid, map]);
+  }, [sourceURL, formData.tmsURLValidation.valid, map, isOpenAerialMap]);
 
   useEffect(() => {
     if (formData.tmsURL.length > 0) return;
@@ -141,11 +158,7 @@ const CreateNewTrainingDatasetForm = () => {
         </div>
       </div>
       <div className="w-full md:w-1/2 border p-1 border-dashed relative h-80">
-        <MapComponent map={map} mapContainerRef={mapContainerRef}>
-          {formData.tmsURLValidation.valid && !loading && !error && (
-            <OpenAerialMap tileJSONURL={tileJSONURL} map={map} />
-          )}
-        </MapComponent>
+        <MapComponent map={map} mapContainerRef={mapContainerRef} />
         {loading && (
           <div className="absolute inset-0 bg-white flex items-center justify-center z-10">
             <Spinner />

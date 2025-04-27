@@ -1,4 +1,3 @@
-
 import { App } from "@/app";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";

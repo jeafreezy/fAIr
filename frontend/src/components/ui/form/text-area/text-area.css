@@ -5,6 +5,11 @@ sl-textarea::part(base) {
   border: 1px solid var(--hot-fair-color-gray-border);
 }
 
+sl-textarea:focus-within::part(base) {
+  box-shadow: 0 0 0 2px var(--hot-fair-color-gray);
+  outline: none;
+}
+
 sl-textarea::part(textarea)::placeholder {
   color: var(--hot-fair-color-gray);
   font-size: var(--hot-fair-font-size-body-text-3);

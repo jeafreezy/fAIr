@@ -134,7 +134,7 @@ export const LayerControl = ({
         disableCheveronIcon
         triggerComponent={
           <div
-            className={`bg-white p-2.5 border border-gray-border md:border-0 relative rounded-xl`}
+            className={`bg-white p-1.5 border border-gray-border md:border-0 relative`}
           >
             <LayerStackIcon className="icon-lg" />
           </div>

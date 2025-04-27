@@ -334,6 +334,16 @@ export const LEGEND_NAME_MAPPING: Record<string, string> = {
   [ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Accepted",
 };
 
+// Model Feedbacks
+export const MODEL_FEEDBACKS_OUTLINE_LAYER_ID: string = `${MAP_STYLES_PREFIX}-feedbacks-outline-layer`;
+export const MODEL_FEEDBACKS_SOURCE_ID: string = `${MAP_STYLES_PREFIX}-feedbacks-source`;
+export const MODEL_FEEDBACKS_FILL_LAYER_ID: string = `${MAP_STYLES_PREFIX}-feedbacks-fill-layer`;
+export const MODEL_FEEDBACKS_SYMBOL_LAYER_ID: string = `${MAP_STYLES_PREFIX}-feedbacks-symbol-layer`;
+export const MODEL_FEEDBACKS_FILL_COLOR: string = "#D73434";
+export const MODEL_FEEDBACKS_OUTLINE_COLOR: string = "#D73434";
+export const MODEL_FEEDBACKS_OUTLINE_WIDTH: number = 4;
+export const MODEL_FEEDBACKS_FILL_OPACITY: number = 0.4;
+
 // ==============================================================================================================================
 // Others
 // ==============================================================================================================================

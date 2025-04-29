@@ -1,10 +1,7 @@
-import { MODELS_CONTENT } from "@/constants";
-import { BackButton, ButtonWithIcon } from "@/components/ui/button";
+
+import { BackButton } from "@/components/ui/button";
 import { Head } from "@/components/seo";
-import { StarStackIcon } from "@/components/ui/icons";
-import { useAuth } from "@/app/providers/auth-provider";
 import { useModelsContext } from "@/app/providers/models-provider";
-import { ButtonVariant } from "@/enums";
 import { useTrainingFeedbacks } from "@/features/models/hooks/use-training";
 import { FeedbacksMap } from "@/features/models/components/maps/feedbacks-map";
 import { extractTileJSONURL } from "@/utils";
@@ -16,8 +13,6 @@ export const ModelFeedbacksPage = () => {
   const { data: feedbacksData, isLoading } = useTrainingFeedbacks(
     data?.published_training,
   );
-
-  const { isAuthenticated } = useAuth();
 
   if (isLoading || isPending || isError) {
     return (
@@ -59,17 +54,16 @@ export const ModelFeedbacksPage = () => {
                   </div>
                   <p className="text-body-3 text-grey md:text-body-2 text-wrap max-w-lg md:max-w-xl xl:max-w-4xl">
                     These are the rejected mapping results for this training by
-                    users. Some have comments attached to them. You can enhance
-                    this training by adding an AOI around the feedback cluster.
+                    users. Some have comments attached to them.
                   </p>
                 </div>
               </div>
             </div>
             <div className="flex w-fit flex-col gap-y-4 justify-between md:items-end ">
-              <p className="text-body-4 font-semibold">
+              <p className="text-body-4 font-semibold text-nowrap">
                 Total Feedbacks: {feedbacksData?.count}
               </p>
-              <ButtonWithIcon
+              {/* <ButtonWithIcon
                 label={MODELS_CONTENT.models.modelsDetailsCard.enhanceModel}
                 variant={ButtonVariant.DARK}
                 size="medium"
@@ -77,7 +71,7 @@ export const ModelFeedbacksPage = () => {
                 // Navigate to training area page for the model ?
                 // onClick={openModelEnhancementDialog}
                 disabled={!isAuthenticated}
-              />
+              /> */}
             </div>
           </div>
         </div>

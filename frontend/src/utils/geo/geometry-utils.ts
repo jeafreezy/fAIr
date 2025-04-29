@@ -313,30 +313,35 @@ export const snapGeoJSONPolygonToClosestTile = (geometry: Polygon) => {
 };
 
 /**
- * Conflates new features with existing predictions.
+ * Conflates new features with existing predictions, ensuring consistent visualization.
  *
  * Existing Predictions:
- * accepted: [A1, A2, A3]
- * rejected: [R1, R2]
- * all: [E1, E2, E3, E4]
+ * - accepted: [A1, A2, A3]
+ * - rejected: [R1, R2]
+ * - all: [E1, E2, E3, E4]
  *
  * New Features:
- * newFeatures: [N1, N2, N3]
+ * - newFeatures: [N1, N2, N3]
  *
- * Logic:
- * 1. If N1 intersects with any feature in 'all', replace the intersecting feature in 'all' with N1.
- * 2. If N2 does not intersect with any feature in 'accepted' or 'rejected', append N2 to 'all'.
- * 3. If N3 intersects with any feature in 'accepted' or 'rejected', do not add N3 to 'all'.
+ * Updated Logic:
+ * 1. If a new feature intersects with any feature in 'accepted' or 'rejected', discard it.
+ * 2. If a new feature intersects with any existing feature in 'all' (before new features), replace the existing feature with the new one.
+ * 3. Otherwise, always append the new feature, even if it intersects with other new incoming features.
+ *
+ * Important:
+ * - New features are allowed to intersect each other without being removed.
+ * - Only intersections with pre-existing 'accepted', 'rejected', or old 'all' entries matter for removal/replacement.
  *
  * Example:
  * - N1 intersects with E2 -> Replace E2 with N1 in 'all'.
  * - N2 does not intersect with any in 'accepted' or 'rejected' -> Append N2 to 'all'.
- * - N3 intersects with A2 -> Do not add N3 to 'all'.
+ * - N3 intersects with A2 -> Discard N3.
+ * - N4 intersects with previously added N2 -> Still append N4 (intersection between new features is allowed).
  *
  * Result:
- * all: [E1, N1, E3, E4, N2]
- * accepted: [A1, A2, A3]
- * rejected: [R1, R2]
+ * - all: [E1, N1, E3, E4, N2, N4]
+ * - accepted: [A1, A2, A3]
+ * - rejected: [R1, R2]
  */
 export const handleConflation = (
   existingPredictions: TModelPredictions,
@@ -349,7 +354,7 @@ export const handleConflation = (
     let intersectsAccepted = false;
     let intersectsRejected = false;
 
-    // Check for intersections in accepted features with early exit.
+    // Check for intersections in accepted features
     for (const acceptedFeature of existingPredictions.accepted) {
       if (booleanIntersects(newFeature, acceptedFeature)) {
         intersectsAccepted = true;
@@ -357,7 +362,7 @@ export const handleConflation = (
       }
     }
 
-    // Check for intersections in rejected features with early exit.
+    // Check for intersections in rejected features
     for (const rejectedFeature of existingPredictions.rejected) {
       if (booleanIntersects(newFeature, rejectedFeature)) {
         intersectsRejected = true;
@@ -365,13 +370,18 @@ export const handleConflation = (
       }
     }
 
-    // Check if the new feature intersects with any feature in updatedAll.
+    // Skip if intersects with accepted or rejected
+    if (intersectsAccepted || intersectsRejected) {
+      continue;
+    }
+
+    // Check if it intersects an existing feature in the original updatedAll (before new additions)
     const intersectingIndex = updatedAll.findIndex((existingFeature) =>
-      booleanIntersects(newFeature, existingFeature),
+      booleanIntersects(newFeature, existingFeature)
     );
 
     if (intersectingIndex !== -1) {
-      // Replace the intersecting feature in updatedAll.
+      // Replace the intersecting feature
       updatedAll[intersectingIndex] = {
         ...newFeature,
         properties: {
@@ -380,13 +390,8 @@ export const handleConflation = (
           config: predictionConfig,
         },
       };
-    } else if (
-      !intersectsAccepted &&
-      !intersectsRejected &&
-      !updatedAll.some((existingFeature) =>
-        booleanIntersects(newFeature, existingFeature),
-      )
-    ) {
+    } else {
+      // Always add the new feature, even if it intersects other new features
       updatedAll.push({
         ...newFeature,
         properties: {
@@ -404,6 +409,7 @@ export const handleConflation = (
     rejected: existingPredictions.rejected,
   };
 };
+
 
 /**
  * Checks if a GeoJSON feature is within the specified bounding box.

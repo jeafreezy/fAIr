@@ -20,7 +20,7 @@ export type TModelsContent = {
       form: {
         modelName: {
           label: string;
-          helpText: string;
+
           placeholder: string;
           toolTip: string;
         };
@@ -33,7 +33,7 @@ export type TModelsContent = {
         modelDescription: {
           label: string;
           toolTip: string;
-          helpText: string;
+
           placeholder: string;
         };
       };

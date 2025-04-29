@@ -81,3 +81,10 @@ export enum ModelTrainingStatus {
   FINISHED = "FINISHED",
   FAILED = "FAILED",
 }
+
+export enum TileServiceType {
+  XYZ = "XYZ",
+  TMS = "TMS",
+  TILEJSON = "TileJSON",
+  ESRI = "ESRI",
+}

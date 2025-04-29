@@ -16,7 +16,6 @@ export const ImagerySourceSelectorTriggerButton = ({
   customTileServerURL,
   setCustomTileServerURL,
   openMobileDialog,
-  modelPredictionsExist,
 }: {
   setPredictionImageryURL: React.Dispatch<
     React.SetStateAction<string | undefined>
@@ -29,13 +28,10 @@ export const ImagerySourceSelectorTriggerButton = ({
   customTileServerURL: string;
   setCustomTileServerURL: React.Dispatch<React.SetStateAction<string>>;
   openMobileDialog?: () => void;
-  modelPredictionsExist: boolean;
 }) => {
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
     useDropdownMenu();
   const { isSmallViewport } = useScreenSize();
-  console.log("modelPredictionsExist", modelPredictionsExist);
-  console.log(dropdownIsOpened);
 
   return (
     <div className="flex items-center gap-x-1 w-fit">

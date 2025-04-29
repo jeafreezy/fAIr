@@ -33,7 +33,7 @@ export const ModelSelectorTriggerButton = ({
   const { isSmallViewport } = useScreenSize();
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
     useDropdownMenu();
-  console.log(dropdownIsOpened, "model-selector");
+
   return (
     <div className="flex items-center gap-x-1 mr-1 lg:mr-0">
       <DropDown

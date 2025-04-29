@@ -127,7 +127,7 @@ const StartMappingHeader = ({
               modelDefaultImageryURL={modelDefaultImageryURL}
               customTileServerURL={customTileServerURL}
               setCustomTileServerURL={setCustomTileServerURL}
-              modelPredictionsExist={modelPredictionsExist}
+
             />
           </div>
           <div className="flex flex-row items-center gap-x-2">
@@ -147,8 +147,8 @@ const StartMappingHeader = ({
                     content={
                       !modelPredictionsExist
                         ? START_MAPPING_PAGE_CONTENT.actions.disabledModeTooltip(
-                            "see actions",
-                          )
+                          "see actions",
+                        )
                         : null
                     }
                   >

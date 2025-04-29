@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/form";
 import { MODELS_CONTENT } from "@/constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FORM_VALIDATION_CONFIG,
   MODEL_CREATION_FORM_NAME,
@@ -10,108 +10,205 @@ import { MapIcon } from "@/components/ui/icons";
 import { useMapInstance } from "@/hooks/use-map-instance";
 import {
   extractTileJSONURL,
+  getTileServerRegex,
   OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
 } from "@/utils";
 import { getTMSTileJSON } from "@/features/model-creation/api/get-tms-tilejson";
 import { MapComponent } from "@/components/map";
 import { Spinner } from "@/components/ui/spinner";
 import { XYZTileServerInput } from "@/components/shared/form/xyz-tile-server-input";
+import { Button } from "@/components/ui/button";
+import { ButtonVariant, TileServiceType } from "@/enums";
 
 const PREVIEW_TMS_SOURCE_ID = "preview-tms-source";
 const PREVIEW_TMS_LAYER_ID = "preview-tms-layer";
 
+const validateDatasetName = (name: string) => {
+  const min =
+    FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.DATASET_NAME].minLength;
+  const max =
+    FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.DATASET_NAME].maxLength;
+
+  if (name.length < min)
+    return { valid: false, message: `Must be at least ${min} characters.` };
+  if (name.length > max)
+    return { valid: false, message: `Must not exceed ${max} characters.` };
+
+  return { valid: true, message: "" };
+};
+
 const CreateNewTrainingDatasetForm = () => {
-  const { formData, handleChange } = useModelsContext();
+  const { formData, createNewTrainingDatasetMutation, handleChange } =
+    useModelsContext();
   const { mapContainerRef, map } = useMapInstance();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const isOpenAerialMap = OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(
-    formData.tmsURL,
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
+  const [tileServiceType, setTileServiceType] = useState<TileServiceType>(
+    formData.tileserviceType,
   );
-  let sourceURL = formData.tmsURL;
-  if (isOpenAerialMap) {
-    sourceURL = extractTileJSONURL(formData.tmsURL);
-  }
+  const [tileJSONMetadata, setTileJSONMetadata] = useState<any>(null);
+
+  const [tileserverURL, setTileserverURL] = useState<string>(formData.tmsURL);
+  const [trainingdatasetName, setTrainingDatasetName] = useState<string>(
+    formData.datasetName,
+  );
+  const [datasetNameValidity, setDatasetNameValidity] = useState({
+    valid: false,
+    message: "",
+  });
+  const [tileServiceTypeValidity, setTileServiceTypeValidity] = useState({
+    valid: false,
+    message: "",
+  });
+
+  const { sourceURL, isOpenAerialMap } = useMemo(() => {
+    const openAerial =
+      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileserverURL);
+    return {
+      isOpenAerialMap: openAerial,
+      sourceURL: openAerial ? extractTileJSONURL(tileserverURL) : tileserverURL,
+    };
+  }, [tileserverURL]);
 
   useEffect(() => {
-    if (!formData.tmsURLValidation.valid) return;
-    if (!map) return;
-    if (!sourceURL) return;
+    setTileJSONMetadata(null);
+  }, [tileserverURL, tileServiceType]);
 
-    const addOrUpdateLayer = async () => {
-      setLoading(true);
-      setError("");
-      try {
-        const source = map.getSource(PREVIEW_TMS_SOURCE_ID);
-        if (source) {
-          map.removeLayer(PREVIEW_TMS_LAYER_ID);
-          map.removeSource(PREVIEW_TMS_SOURCE_ID);
-        }
+  useEffect(() => {
+    if (!tileServiceTypeValidity.valid || !map || !sourceURL) return;
 
-        if (isOpenAerialMap) {
-          map.addSource(PREVIEW_TMS_SOURCE_ID, {
-            type: "raster",
-            url: sourceURL,
-            tileSize: 256,
-          });
-        } else {
-          map.addSource(PREVIEW_TMS_SOURCE_ID, {
-            type: "raster",
-            tiles: [sourceURL],
-            tileSize: 256,
-          });
-        }
+    const source = map.getSource(PREVIEW_TMS_SOURCE_ID);
+    if (source) {
+      map.removeLayer(PREVIEW_TMS_LAYER_ID);
+      map.removeSource(PREVIEW_TMS_SOURCE_ID);
+    }
 
-        map.addLayer({
-          id: PREVIEW_TMS_LAYER_ID,
+    setLoading(true);
+    setError("");
+
+    try {
+      if (isOpenAerialMap || tileServiceType === TileServiceType.TILEJSON) {
+        map.addSource(PREVIEW_TMS_SOURCE_ID, {
           type: "raster",
-          source: PREVIEW_TMS_SOURCE_ID,
-          layout: { visibility: "visible" },
+          url: sourceURL,
+          tileSize: 256,
         });
-        if (isOpenAerialMap) {
-          const tileJSON = await getTMSTileJSON(sourceURL);
+      } else {
+        map.addSource(PREVIEW_TMS_SOURCE_ID, {
+          type: "raster",
+          tiles: [sourceURL],
+          tileSize: 256,
+        });
+      }
+
+      map.addLayer({
+        id: PREVIEW_TMS_LAYER_ID,
+        type: "raster",
+        source: PREVIEW_TMS_SOURCE_ID,
+        layout: { visibility: "visible" },
+      });
+    } catch (e) {
+      setError(
+        "Unable to load the tile server. Please verify the URL and try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+
+    return () => {
+      if (!map || !map?.getStyle()) return;
+      if (map.getLayer(PREVIEW_TMS_LAYER_ID))
+        map.removeLayer(PREVIEW_TMS_LAYER_ID);
+      if (map.getSource(PREVIEW_TMS_SOURCE_ID))
+        map.removeSource(PREVIEW_TMS_SOURCE_ID);
+    };
+  }, [
+    map,
+    sourceURL,
+    tileServiceType,
+    tileServiceTypeValidity.valid,
+    isOpenAerialMap,
+  ]);
+
+  useEffect(() => {
+    const shouldFetchBounds =
+      (tileServiceType === TileServiceType.TILEJSON || isOpenAerialMap) &&
+      tileServiceTypeValidity.valid &&
+      map &&
+      sourceURL;
+
+    if (!shouldFetchBounds) return;
+
+    const fetchAndFitBounds = async () => {
+      try {
+        setLoading(true);
+        const tileJSON = await getTMSTileJSON(sourceURL);
+        if (tileJSON?.bounds) {
+          setTileJSONMetadata(tileJSON);
           map.fitBounds(tileJSON.bounds);
         }
       } catch (e) {
-        setError("Failed to load TMS imagery. Please check the URL.");
+        setError("Failed to fetch TileJSON bounds");
       } finally {
         setLoading(false);
       }
     };
 
-    addOrUpdateLayer();
+    fetchAndFitBounds();
+  }, [
+    tileServiceType,
+    tileServiceTypeValidity.valid,
+    map,
+    sourceURL,
+    isOpenAerialMap,
+  ]);
 
-    return () => {
-      if (map && map.getStyle()) {
-        if (map.getLayer(PREVIEW_TMS_LAYER_ID)) {
-          map.removeLayer(PREVIEW_TMS_LAYER_ID);
-        }
-        if (map.getSource(PREVIEW_TMS_SOURCE_ID)) {
-          map.removeSource(PREVIEW_TMS_SOURCE_ID);
-        }
-      }
-    };
-  }, [sourceURL, formData.tmsURLValidation.valid, map, isOpenAerialMap]);
+  const handleDatasetNameValidity = (e: { valid: any; message: any }) => {
+    setDatasetNameValidity({
+      valid: e.valid,
+      message: e.message,
+    });
+  };
 
+  const currentRegex = useMemo(
+    () => getTileServerRegex(tileServiceType),
+    [tileServiceType],
+  );
+  const isValidTileserverURL = useMemo(
+    () => currentRegex.test(tileserverURL),
+    [tileserverURL, currentRegex],
+  );
+
+  /**
+   * Set the validity of the tile service type and dataset name on component mount.
+   */
   useEffect(() => {
-    if (formData.tmsURL.length > 0) return;
+    setDatasetNameValidity(validateDatasetName(trainingdatasetName));
+    setTileServiceTypeValidity({
+      valid: isValidTileserverURL,
+      message: isValidTileserverURL
+        ? ""
+        : "Invalid tile server URL. Please provide a valid URL.",
+    });
+  }, [trainingdatasetName, tileserverURL, tileServiceType]);
 
-    if (formData.tmsURL.length === 0) {
-      handleChange(MODEL_CREATION_FORM_NAME.TMS_URL_VALIDITY, {
-        valid: false,
-        message: "",
-      });
-    }
-  }, [formData.tmsURL]);
+  const handleTrainingDatasetCreation = useCallback(() => {
+    handleChange(MODEL_CREATION_FORM_NAME.TILESERVICE_TYPE, tileServiceType);
+    createNewTrainingDatasetMutation.mutate({
+      source_imagery: tileserverURL,
+      name: trainingdatasetName,
+    });
+  }, [createNewTrainingDatasetMutation, tileserverURL, trainingdatasetName]);
+
+  const trainingDatasetCreationInProgress =
+    createNewTrainingDatasetMutation.isPending;
 
   return (
     <div className="flex flex-col md:flex-row justify-between gap-12">
       <div className="flex flex-col gap-y-10 max-w-3xl w-full md:w-1/2">
         <Input
-          handleInput={(e) =>
-            handleChange(MODEL_CREATION_FORM_NAME.DATASET_NAME, e.target.value)
-          }
-          value={formData.datasetName}
+          handleInput={(e) => setTrainingDatasetName(e.target.value)}
+          value={trainingdatasetName}
           toolTipContent={
             MODELS_CONTENT.modelCreation.trainingDataset.form.datasetName
               .toolTip
@@ -124,11 +221,10 @@ const CreateNewTrainingDatasetForm = () => {
             MODELS_CONTENT.modelCreation.trainingDataset.form.datasetName
               .placeholder
           }
+          isValid={datasetNameValidity.valid}
+          validationStateUpdateCallback={handleDatasetNameValidity}
           showBorder
-          helpText={
-            MODELS_CONTENT.modelCreation.trainingDataset.form.datasetName
-              .helpText
-          }
+          helpText={datasetNameValidity.message}
           maxLength={
             FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.DATASET_NAME]
               .maxLength
@@ -140,41 +236,66 @@ const CreateNewTrainingDatasetForm = () => {
         />
         <div>
           <XYZTileServerInput
-            isValid={formData.tmsURLValidation}
-            setTileServerURL={(e) =>
-              handleChange(MODEL_CREATION_FORM_NAME.TMS_URL, e)
-            }
-            tileServerURL={formData.tmsURL}
+            isValid={tileServiceTypeValidity}
+            setTileServerURL={(e) => setTileserverURL(e)}
+            tileServerURL={tileserverURL}
             validationStateUpdateCallback={(validationState) =>
-              handleChange(
-                MODEL_CREATION_FORM_NAME.TMS_URL_VALIDITY,
-                validationState,
-              )
+              setTileServiceTypeValidity(validationState)
             }
-            pattern={
-              FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.TMS_URL].pattern
-            }
+            tileServiceType={tileServiceType}
+            setTileServiceType={setTileServiceType}
           />
         </div>
+        {tileJSONMetadata !== null && tileserverURL.length > 0 && (
+          <div className="text-body-4 text-grey border border-gray-border p-2 rounded-lg max-h-60 overflow-y-auto">
+            <p className="font-semibold text-dark">TileJSON Metadata</p>
+            {Object.entries(tileJSONMetadata).map(([key, value]) => (
+              <p key={key}>
+                <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
+                {Array.isArray(value) ? value.join(", ") : value?.toString()}
+              </p>
+            ))}
+          </div>
+        )}
+        <Button
+          variant={ButtonVariant.DARK}
+          className="w-full md:w-1/2"
+          onClick={handleTrainingDatasetCreation}
+          disabled={
+            trainingDatasetCreationInProgress ||
+            !tileServiceTypeValidity.valid ||
+            !datasetNameValidity.valid
+          }
+        >
+          {trainingDatasetCreationInProgress ? <Spinner /> : "Create Dataset"}
+        </Button>
       </div>
-      <div className="w-full md:w-1/2 border p-1 border-dashed relative h-80">
-        <MapComponent map={map} mapContainerRef={mapContainerRef} />
-        {loading && (
-          <div className="absolute inset-0 bg-white flex items-center justify-center z-10">
-            <Spinner />
-          </div>
+      <div className="w-full md:w-1/2 ">
+        <div className="border border-gray-border relative h-80 rounded-lg overflow-clip">
+          <MapComponent map={map} mapContainerRef={mapContainerRef} />
+          {loading && (
+            <div className="absolute inset-0 bg-white flex items-center justify-center z-10">
+              <Spinner />
+            </div>
+          )}
+          {!tileServiceTypeValidity.valid && !loading && (
+            <div className="p-1 absolute z-[10] inset-0 bg-off-white flex flex-col gap-y-3 items-center justify-center w-full h-full text-body-4 md:text-base text-grey">
+              <MapIcon className="icon-lg" />
+              <p>Enter a valid tile service url to see a preview.</p>
+            </div>
+          )}
+          {error && tileserverURL.length > 0 && (
+            <div className="absolute inset-0 bg-white flex items-center justify-center z-10 text-primary text-center px-4">
+              {error}
+            </div>
+          )}{" "}
+        </div>
+        {tileServiceType !== TileServiceType.TILEJSON && (
+          <p className="text-body-4 text-grey mt-2">
+            Selected {tileServiceType} tile service. Consider using TileJSON or
+            OpenAerialMap TMS, for automatic bounds detection and metadata.
+          </p>
         )}
-        {!formData.tmsURLValidation.valid && !loading && (
-          <div className="p-1 absolute z-[10] inset-0 bg-off-white flex flex-col gap-y-3 items-center justify-center w-full h-full text-body-4 md:text-base text-grey">
-            <MapIcon className="icon-lg" />
-            <p>Enter a TMS URL to see a preview.</p>
-          </div>
-        )}
-        {error && formData.tmsURL.length > 0 && (
-          <div className="absolute inset-0 bg-white flex items-center justify-center z-10 text-primary">
-            {error}
-          </div>
-        )}{" "}
       </div>
     </div>
   );

@@ -12,10 +12,6 @@ export const TMS_TILESERVER_URL_REGEX_PATTERN =
 export const TILEJSON_TILESERVER_URL_REGEX_PATTERN =
   /^https?:\/\/[^\/]+(\/.*)?\.json(\?.*)?$/i;
 
-// Matches valid ESRI tile server URLs.
-export const ESRI_TILESERVER_URL_REGEX_PATTERN =
-  /^https?:\/\/[^\/]+\/arcgis\/rest\/services\/[^\/]+\/MapServer\/tile\/\{z\}\/\{y\}\/\{x\}(\?.*)?$/;
-
 // Allows letters, numbers, and spaces
 export const VALID_CHARACTER_PATTERN = /^[a-zA-Z0-9\s]*$/;
 

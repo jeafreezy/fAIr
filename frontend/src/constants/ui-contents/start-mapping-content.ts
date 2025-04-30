@@ -100,5 +100,6 @@ export const START_MAPPING_PAGE_CONTENT: TStartMappingPageContent = {
   replicableModel: {
     info: "⚠️ You are trying to run the model on an image different from the one it was trained with, the result might not be accurate.",
     apply: "Apply",
+    loading: "Loading...",
   },
 };

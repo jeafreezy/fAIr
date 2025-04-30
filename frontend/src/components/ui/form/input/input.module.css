@@ -14,7 +14,7 @@ sl-input.customInput:focus-within::part(base) {
 
 sl-input.showBorder::part(form-control-input) {
   border: 1px solid var(--hot-fair-color-gray-border);
-  border-radius: 0px;
+  border-radius: 5px;
 }
 
 sl-input.customInput::part(input)::placeholder {

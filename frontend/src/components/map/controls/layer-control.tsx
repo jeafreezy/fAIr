@@ -20,11 +20,13 @@ export const LayerControl = ({
   layers,
   basemaps = true,
   openAerialMap = false,
+  rounded = false,
 }: {
   map: Map | null;
   layers: TLayers;
   basemaps?: boolean;
   openAerialMap?: boolean;
+  rounded?: boolean;
 }) => {
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
     useDropdownMenu();
@@ -33,7 +35,7 @@ export const LayerControl = ({
     const layers_ = [
       ...layers,
       ...(openAerialMap
-        ? [{ value: "TMS Layer", subLayers: [TMS_LAYER_ID] }]
+        ? [{ value: "Source Imagery", subLayers: [TMS_LAYER_ID] }]
         : []),
     ];
     const baseLayers: TBasemaps = basemaps
@@ -134,7 +136,7 @@ export const LayerControl = ({
         disableCheveronIcon
         triggerComponent={
           <div
-            className={`bg-white p-1.5 border border-gray-border md:border-0 relative`}
+            className={`bg-white p-1.5 border border-gray-border md:border-0 relative ${rounded && "rounded-lg"}`}
           >
             <LayerStackIcon className="icon-lg" />
           </div>

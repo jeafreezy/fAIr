@@ -1,5 +1,5 @@
 import useScreenSize from "@/hooks/use-screen-size";
-import { ControlsPosition } from "@/enums";
+import { ControlsPosition, TileServiceType } from "@/enums";
 import { extractTileJSONURL, showErrorToast } from "@/utils";
 import { LngLatBoundsLike, Map } from "maplibre-gl";
 import {
@@ -14,6 +14,7 @@ import { TileJSON, TTrainingDataset } from "@/types";
 import {
   MIN_ZOOM_LEVEL_FOR_START_MAPPING_PREDICTION,
   MINIMUM_ZOOM_LEVEL_INSTRUCTION_FOR_PREDICTION,
+  PREDICTION_IMAGERY_LAYER_ID,
 } from "@/config";
 import bbox from "@turf/bbox";
 import {
@@ -38,6 +39,8 @@ export const StartMappingMapComponent = ({
   modelInfoRequestIsPending,
   predictionImagerySource,
   predictionImageryURL,
+  predictionImageryType,
+  tileJSONMetadata,
 }: {
   trainingId: number;
   trainingDataset?: TTrainingDataset;
@@ -53,6 +56,8 @@ export const StartMappingMapComponent = ({
   modelInfoRequestIsPending: boolean;
   predictionImagerySource: PredictionImagerySource;
   predictionImageryURL: string | undefined;
+  predictionImageryType: TileServiceType;
+  tileJSONMetadata: TileJSON | null;
 }) => {
   const tileJSONURL = extractTileJSONURL(trainingDataset?.source_imagery ?? "");
   const { isSmallViewport } = useScreenSize();
@@ -124,6 +129,10 @@ export const StartMappingMapComponent = ({
     );
   }, [map, currentZoom]);
 
+  const predictionImageryLayerId = useMemo(() => {
+    return `${PREDICTION_IMAGERY_LAYER_ID}-${predictionImagerySource}`;
+  }, [predictionImagerySource]);
+
   return (
     <MapComponent
       controlsPosition={ControlsPosition.TOP_LEFT}
@@ -134,7 +143,17 @@ export const StartMappingMapComponent = ({
       map={map}
       zoomControls={!isSmallViewport}
       layerControl={!isSmallViewport}
-      layerControlLayers={layers}
+      layerControlLayers={[
+        ...layers,
+        ...(predictionImagerySource !== PredictionImagerySource.ModelDefault
+          ? [
+              {
+                value: "Prediction Imagery",
+                subLayers: [predictionImageryLayerId],
+              },
+            ]
+          : []),
+      ]}
       basemaps
       showCurrentZoom={!isSmallViewport}
       openAerialMap={!modelInfoRequestIsPending}
@@ -144,7 +163,10 @@ export const StartMappingMapComponent = ({
         <PredictionImageryLayer
           map={map}
           predictionImagerySource={predictionImagerySource}
-          predictionImageryURL={predictionImageryURL}
+          predictionImageryURL={predictionImageryURL as string}
+          tileServiceType={predictionImageryType}
+          layerId={predictionImageryLayerId}
+          tileJSONMetadata={tileJSONMetadata}
         />
       )}
       {map && <PredictedFeatureActionPopup trainingId={trainingId} map={map} />}

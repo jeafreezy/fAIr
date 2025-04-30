@@ -2,7 +2,7 @@ import { DropDown } from "@/components/ui/dropdown";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { ToolTip } from "@/components/ui/tooltip";
 import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
-import { DropdownPlacement } from "@/enums";
+import { DropdownPlacement, TileServiceType } from "@/enums";
 import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 import { ImagerySourceSelector } from "@/features/start-mapping/components/replicable-models/imagery-source-selector";
 import { PredictionImagerySource } from "@/enums/start-mapping";
@@ -13,9 +13,14 @@ export const ImagerySourceSelectorTriggerButton = ({
   predictionImagerySource,
   setPredictionImagerySource,
   modelDefaultImageryURL,
-  customTileServerURL,
-  setCustomTileServerURL,
   openMobileDialog,
+  tileServerURL,
+  tileServiceType,
+  tileServiceTypeValidity,
+  setTileServiceTypeValidity,
+  setTileserverURL,
+  loading,
+  setTileServiceType,
 }: {
   setPredictionImageryURL: React.Dispatch<
     React.SetStateAction<string | undefined>
@@ -25,9 +30,22 @@ export const ImagerySourceSelectorTriggerButton = ({
     React.SetStateAction<PredictionImagerySource>
   >;
   modelDefaultImageryURL: string;
-  customTileServerURL: string;
-  setCustomTileServerURL: React.Dispatch<React.SetStateAction<string>>;
   openMobileDialog?: () => void;
+  tileServerURL: string;
+  tileServiceType: TileServiceType;
+  tileServiceTypeValidity: {
+    valid: boolean;
+    message: string;
+  };
+  setTileServiceTypeValidity: React.Dispatch<
+    React.SetStateAction<{
+      valid: boolean;
+      message: string;
+    }>
+  >;
+  setTileserverURL: React.Dispatch<React.SetStateAction<string>>;
+  loading: boolean;
+  setTileServiceType: React.Dispatch<React.SetStateAction<TileServiceType>>;
 }) => {
   const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
     useDropdownMenu();
@@ -73,8 +91,14 @@ export const ImagerySourceSelectorTriggerButton = ({
           predictionImagerySource={predictionImagerySource}
           setPredictionImagerySource={setPredictionImagerySource}
           modelDefaultImageryURL={modelDefaultImageryURL}
-          customTileServerURL={customTileServerURL}
-          setCustomTileServerURL={setCustomTileServerURL}
+          onDropdownHide={onDropdownHide}
+          tileServerURL={tileServerURL}
+          tileServiceType={tileServiceType}
+          tileServiceTypeValidity={tileServiceTypeValidity}
+          setTileServiceTypeValidity={setTileServiceTypeValidity}
+          setTileserverURL={setTileserverURL}
+          loading={loading}
+          setTileServiceType={setTileServiceType}
         />
       </DropDown>
     </div>

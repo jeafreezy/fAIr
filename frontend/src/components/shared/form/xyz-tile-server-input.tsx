@@ -23,11 +23,6 @@ const TILE_SERVICE_TYPES: {
     suffix: "Provides metadata including bounds and zoom levels.",
     value: TileServiceType.TILEJSON,
   },
-  {
-    name: "ESRI Tile Server",
-    suffix: "ESRI ArcGIS map tile server format.",
-    value: TileServiceType.ESRI,
-  },
 ];
 
 export const XYZTileServerInput = ({
@@ -65,6 +60,7 @@ export const XYZTileServerInput = ({
           setTileServiceType(newTileServiceType);
         }}
         defaultValue={tileServiceType}
+        size={size}
       />
       <Input
         label={`${tileServiceType} ${tileServiceType !== TileServiceType.TILEJSON ? "Tile Server" : ""} URL`}

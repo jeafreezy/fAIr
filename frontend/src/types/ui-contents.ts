@@ -563,6 +563,7 @@ export type TStartMappingPageContent = {
   replicableModel: {
     apply: string;
     info: string;
+    loading: string;
   };
 };
 

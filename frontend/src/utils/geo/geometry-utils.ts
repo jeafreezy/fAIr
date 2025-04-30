@@ -377,7 +377,7 @@ export const handleConflation = (
 
     // Check if it intersects an existing feature in the original updatedAll (before new additions)
     const intersectingIndex = updatedAll.findIndex((existingFeature) =>
-      booleanIntersects(newFeature, existingFeature)
+      booleanIntersects(newFeature, existingFeature),
     );
 
     if (intersectingIndex !== -1) {
@@ -409,7 +409,6 @@ export const handleConflation = (
     rejected: existingPredictions.rejected,
   };
 };
-
 
 /**
  * Checks if a GeoJSON feature is within the specified bounding box.

@@ -3,7 +3,12 @@ import { BrandLogoWithDropDown } from "@/features/start-mapping/components/heade
 import { ButtonWithIcon } from "@/components/ui/button";
 import { ChevronDownIcon } from "@/components/ui/icons";
 import { DropDown } from "@/components/ui/dropdown";
-import { ButtonVariant, DropdownPlacement, SHOELACE_SIZES } from "@/enums";
+import {
+  ButtonVariant,
+  DropdownPlacement,
+  SHOELACE_SIZES,
+  TileServiceType,
+} from "@/enums";
 import { ELEMENT_DISTANCE_FROM_NAVBAR } from "@/config";
 import { Map } from "maplibre-gl";
 import { ModelPredictionsTracker } from "@/features/start-mapping/components/header/model-predictions-tracker";
@@ -33,14 +38,19 @@ const StartMappingHeader = ({
   predictionImagerySource,
   setPredictionImagerySource,
   modelDefaultImageryURL,
-  customTileServerURL,
-  setCustomTileServerURL,
   predictionModel,
   setPredictionModel,
   predictionModelCheckpoint,
   setPredictionModelCheckpoint,
   customPredictionModelCheckpointPath,
   setCustomPredictionModelCheckpointPath,
+  tileServerURL,
+  tileServiceType,
+  tileServiceTypeValidity,
+  setTileServiceTypeValidity,
+  setTileserverURL,
+  loading,
+  setTileServiceType,
 }: {
   modelPredictionsExist: boolean;
   modelInfoRequestIsPending: boolean;
@@ -61,8 +71,6 @@ const StartMappingHeader = ({
     React.SetStateAction<PredictionImagerySource>
   >;
   modelDefaultImageryURL: string;
-  customTileServerURL: string;
-  setCustomTileServerURL: React.Dispatch<React.SetStateAction<string>>;
   predictionModel: string;
   setPredictionModel: React.Dispatch<React.SetStateAction<string>>;
   predictionModelCheckpoint: string;
@@ -71,6 +79,21 @@ const StartMappingHeader = ({
   setCustomPredictionModelCheckpointPath: React.Dispatch<
     React.SetStateAction<string>
   >;
+  tileServerURL: string;
+  tileServiceType: TileServiceType;
+  tileServiceTypeValidity: {
+    valid: boolean;
+    message: string;
+  };
+  setTileServiceTypeValidity: React.Dispatch<
+    React.SetStateAction<{
+      valid: boolean;
+      message: string;
+    }>
+  >;
+  setTileserverURL: React.Dispatch<React.SetStateAction<string>>;
+  loading: boolean;
+  setTileServiceType: React.Dispatch<React.SetStateAction<TileServiceType>>;
 }) => {
   const { onDropdownHide, onDropdownShow, dropdownIsOpened } =
     useDropdownMenu();
@@ -125,9 +148,13 @@ const StartMappingHeader = ({
               predictionImagerySource={predictionImagerySource}
               setPredictionImagerySource={setPredictionImagerySource}
               modelDefaultImageryURL={modelDefaultImageryURL}
-              customTileServerURL={customTileServerURL}
-              setCustomTileServerURL={setCustomTileServerURL}
-
+              setTileServiceType={setTileServiceType}
+              tileServerURL={tileServerURL}
+              tileServiceType={tileServiceType}
+              tileServiceTypeValidity={tileServiceTypeValidity}
+              setTileServiceTypeValidity={setTileServiceTypeValidity}
+              setTileserverURL={setTileserverURL}
+              loading={loading}
             />
           </div>
           <div className="flex flex-row items-center gap-x-2">
@@ -147,8 +174,8 @@ const StartMappingHeader = ({
                     content={
                       !modelPredictionsExist
                         ? START_MAPPING_PAGE_CONTENT.actions.disabledModeTooltip(
-                          "see actions",
-                        )
+                            "see actions",
+                          )
                         : null
                     }
                   >

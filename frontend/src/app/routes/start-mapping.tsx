@@ -44,6 +44,8 @@ import { ImagerySourceSelector } from "@/features/start-mapping/components/repli
 import { useDialog } from "@/hooks/use-dialog";
 import { useModelPredictionStore } from "@/store/model-prediction-store";
 import { ModelSelector } from "@/features/start-mapping/components/replicable-models/model-selector";
+import { TileServiceType } from "@/enums";
+import { useTileservice } from "@/hooks/use-tileservice";
 
 export type TDownloadOptions = {
   name: string;
@@ -78,13 +80,11 @@ export const StartMappingPage = () => {
   }, [isSmallViewport]);
 
   /**
-   * State to manage the tile server URL for the prediction imagery.
+   * State to manage the prediction imagery. This is the final URL that will be sent to the backend.
    */
   const [predictionImageryURL, setPredictionImageryURL] = useState<
     string | undefined
   >(undefined);
-
-  const [customTileServerURL, setCustomTileServerURL] = useState<string>("");
 
   const [
     customPredictionModelCheckpointPath,
@@ -130,6 +130,17 @@ export const StartMappingPage = () => {
     tileJSONURL as string,
     !!tileJSONURL,
   );
+
+  const {
+    tileServiceType,
+    setTileServiceType,
+    tileserverURL,
+    setTileserverURL,
+    tileServiceTypeValidity,
+    setTileServiceTypeValidity,
+    loading,
+    tileJSONMetadata,
+  } = useTileservice(TileServiceType.XYZ, "");
 
   /**
    * Set the prediction imagery to the model info's source imagery
@@ -404,9 +415,15 @@ export const StartMappingPage = () => {
             predictionImagerySource={predictionImagerySource}
             setPredictionImagerySource={setPredictionImagerySource}
             modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
-            customTileServerURL={customTileServerURL}
-            setCustomTileServerURL={setCustomTileServerURL}
             isMobile
+            onDropdownHide={handlePredictionImageryDialogClose}
+            setTileServiceType={setTileServiceType}
+            setTileserverURL={setTileserverURL}
+            tileServiceTypeValidity={tileServiceTypeValidity}
+            setTileServiceTypeValidity={setTileServiceTypeValidity}
+            loading={loading}
+            tileServerURL={tileserverURL}
+            tileServiceType={tileServiceType}
           />
         </Dialog>
         {/* Mobile bottom sheet */}
@@ -424,8 +441,6 @@ export const StartMappingPage = () => {
           predictionImagerySource={predictionImagerySource}
           setPredictionImagerySource={setPredictionImagerySource}
           modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
-          customTileServerURL={customTileServerURL}
-          setCustomTileServerURL={setCustomTileServerURL}
           openMobileDialog={handlePredictionImageryDialogOpen}
           predictionModel={predictionModel}
           setPredictionModel={setPredictionModel}
@@ -438,6 +453,13 @@ export const StartMappingPage = () => {
             setCustomPredictionModelCheckpointPath
           }
           openModelSelectionDialog={handlePredictionModelDialogOpen}
+          setTileServiceType={setTileServiceType}
+          setTileserverURL={setTileserverURL}
+          tileServiceTypeValidity={tileServiceTypeValidity}
+          setTileServiceTypeValidity={setTileServiceTypeValidity}
+          loading={loading}
+          tileServerURL={tileserverURL}
+          tileServiceType={tileServiceType}
         />
         <div className="sticky top-0 bg-white z-10 px-4 xl:px-large py-1 hidden md:block">
           {/* Web Header */}
@@ -455,8 +477,6 @@ export const StartMappingPage = () => {
             predictionImagerySource={predictionImagerySource}
             setPredictionImagerySource={setPredictionImagerySource}
             modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
-            customTileServerURL={customTileServerURL}
-            setCustomTileServerURL={setCustomTileServerURL}
             predictionModel={predictionModel}
             setPredictionModel={setPredictionModel}
             predictionModelCheckpoint={predictionModelCheckpoint}
@@ -467,6 +487,13 @@ export const StartMappingPage = () => {
             setCustomPredictionModelCheckpointPath={
               setCustomPredictionModelCheckpointPath
             }
+            setTileServiceType={setTileServiceType}
+            setTileserverURL={setTileserverURL}
+            tileServiceTypeValidity={tileServiceTypeValidity}
+            setTileServiceTypeValidity={setTileServiceTypeValidity}
+            loading={loading}
+            tileServerURL={tileserverURL}
+            tileServiceType={tileServiceType}
           />
         </div>
         <div className="col-span-12 h-[70vh] md:h-full md:border-8 md:border-off-white flex-grow relative map-elements-z-index">
@@ -489,6 +516,7 @@ export const StartMappingPage = () => {
                 map={map}
                 openAerialMap
                 basemaps
+                rounded
               />
             </div>
             <div className="absolute bottom-[30vh] flex flex-col gap-y-4 right-4 z-[1] items-end">
@@ -509,6 +537,8 @@ export const StartMappingPage = () => {
             modelInfoRequestIsPending={modelInfoRequestIspending}
             predictionImagerySource={predictionImagerySource}
             predictionImageryURL={predictionImageryURL}
+            predictionImageryType={tileServiceType}
+            tileJSONMetadata={tileJSONMetadata}
           />
         </div>
       </div>

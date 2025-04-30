@@ -98,13 +98,17 @@ const DropDown: React.FC<DropDownProps> = ({
   return (
     <SlDropdown
       placement={placement}
-      onSlAfterShow={() => {
-        // @ts-expect-error bad type definition
-        if (!disabled) onDropdownShow?.();
+      onSlAfterShow={(event: CustomEvent) => {
+        if (!disabled && event.target === event.currentTarget) {
+          // @ts-expect-error bad type definition
+          onDropdownShow?.();
+        }
       }}
-      onSlAfterHide={() => {
-        // @ts-expect-error bad type definition
-        if (!disabled) onDropdownHide?.();
+      onSlAfterHide={(event: CustomEvent) => {
+        if (!disabled && event.target === event.currentTarget) {
+          // @ts-expect-error bad type definition
+          onDropdownHide?.();
+        }
       }}
       className={className}
       disabled={disabled}

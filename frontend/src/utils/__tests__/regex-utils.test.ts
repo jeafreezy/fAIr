@@ -5,7 +5,6 @@ import {
   VALID_CHARACTER_PATTERN,
   VALID_MODEL_CHECKPOINT_PATH,
   OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
-  ESRI_TILESERVER_URL_REGEX_PATTERN,
 } from "@/utils/regex-utils";
 
 import { describe, it, expect } from "vitest";
@@ -94,28 +93,7 @@ describe("Regex Patterns", () => {
       ),
     ).toBe(false); // wrong protocol
   });
-  it("matches ArcGIS MapServer tile URLs", () => {
-    expect(
-      ESRI_TILESERVER_URL_REGEX_PATTERN.test(
-        "http://example.com/arcgis/rest/services/MyMap/MapServer/tile/{z}/{y}/{x}",
-      ),
-    ).toBe(true);
-    expect(
-      ESRI_TILESERVER_URL_REGEX_PATTERN.test(
-        "https://example.com/arcgis/rest/services/MyMap/MapServer/tile/{z}/{y}/{x}?token=abc",
-      ),
-    ).toBe(true);
-    expect(
-      ESRI_TILESERVER_URL_REGEX_PATTERN.test(
-        "http://example.com/arcgis/rest/services/MyMap/MapServer/tile/{z}/{x}/{y}",
-      ),
-    ).toBe(false); // wrong order
-    expect(
-      ESRI_TILESERVER_URL_REGEX_PATTERN.test(
-        "ftp://example.com/arcgis/rest/services/MyMap/MapServer/tile/{z}/{y}/{x}",
-      ),
-    ).toBe(false); // wrong protocol
-  });
+
   it("VALID_CHARACTER_PATTERN matches valid strings", () => {
     expect(VALID_CHARACTER_PATTERN.test("Hello123")).toBe(true);
     expect(VALID_CHARACTER_PATTERN.test("Hello World")).toBe(true);

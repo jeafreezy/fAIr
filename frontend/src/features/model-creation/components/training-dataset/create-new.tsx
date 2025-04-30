@@ -10,7 +10,6 @@ import { MapIcon } from "@/components/ui/icons";
 import { useMapInstance } from "@/hooks/use-map-instance";
 import {
   extractTileJSONURL,
-  getTileServerRegex,
   OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
 } from "@/utils";
 import { getTMSTileJSON } from "@/features/model-creation/api/get-tms-tilejson";
@@ -19,6 +18,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { XYZTileServerInput } from "@/components/shared/form/xyz-tile-server-input";
 import { Button } from "@/components/ui/button";
 import { ButtonVariant, TileServiceType } from "@/enums";
+import { useTileservice } from "@/hooks/use-tileservice";
 
 const PREVIEW_TMS_SOURCE_ID = "preview-tms-source";
 const PREVIEW_TMS_LAYER_ID = "preview-tms-layer";
@@ -41,14 +41,22 @@ const CreateNewTrainingDatasetForm = () => {
   const { formData, createNewTrainingDatasetMutation, handleChange } =
     useModelsContext();
   const { mapContainerRef, map } = useMapInstance();
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [tileServiceType, setTileServiceType] = useState<TileServiceType>(
-    formData.tileserviceType,
-  );
-  const [tileJSONMetadata, setTileJSONMetadata] = useState<any>(null);
 
-  const [tileserverURL, setTileserverURL] = useState<string>(formData.tmsURL);
+  const [error, setError] = useState<string>("");
+  const {
+    tileServiceType,
+    setTileServiceType,
+    tileserverURL,
+    setTileserverURL,
+    tileJSONMetadata,
+    tileServiceTypeValidity,
+    setTileServiceTypeValidity,
+    isOpenAerialMap,
+    sourceURL,
+    loading,
+    setLoading,
+  } = useTileservice(formData.tileserviceType, formData.tmsURL);
+
   const [trainingdatasetName, setTrainingDatasetName] = useState<string>(
     formData.datasetName,
   );
@@ -56,23 +64,6 @@ const CreateNewTrainingDatasetForm = () => {
     valid: false,
     message: "",
   });
-  const [tileServiceTypeValidity, setTileServiceTypeValidity] = useState({
-    valid: false,
-    message: "",
-  });
-
-  const { sourceURL, isOpenAerialMap } = useMemo(() => {
-    const openAerial =
-      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileserverURL);
-    return {
-      isOpenAerialMap: openAerial,
-      sourceURL: openAerial ? extractTileJSONURL(tileserverURL) : tileserverURL,
-    };
-  }, [tileserverURL]);
-
-  useEffect(() => {
-    setTileJSONMetadata(null);
-  }, [tileserverURL, tileServiceType]);
 
   useEffect(() => {
     if (!tileServiceTypeValidity.valid || !map || !sourceURL) return;
@@ -131,37 +122,9 @@ const CreateNewTrainingDatasetForm = () => {
   ]);
 
   useEffect(() => {
-    const shouldFetchBounds =
-      (tileServiceType === TileServiceType.TILEJSON || isOpenAerialMap) &&
-      tileServiceTypeValidity.valid &&
-      map &&
-      sourceURL;
-
-    if (!shouldFetchBounds) return;
-
-    const fetchAndFitBounds = async () => {
-      try {
-        setLoading(true);
-        const tileJSON = await getTMSTileJSON(sourceURL);
-        if (tileJSON?.bounds) {
-          setTileJSONMetadata(tileJSON);
-          map.fitBounds(tileJSON.bounds);
-        }
-      } catch (e) {
-        setError("Failed to fetch TileJSON bounds");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAndFitBounds();
-  }, [
-    tileServiceType,
-    tileServiceTypeValidity.valid,
-    map,
-    sourceURL,
-    isOpenAerialMap,
-  ]);
+    if (!tileJSONMetadata?.bounds || !map) return;
+    map.fitBounds(tileJSONMetadata.bounds);
+  }, [tileJSONMetadata]);
 
   const handleDatasetNameValidity = (e: { valid: any; message: any }) => {
     setDatasetNameValidity({
@@ -170,27 +133,12 @@ const CreateNewTrainingDatasetForm = () => {
     });
   };
 
-  const currentRegex = useMemo(
-    () => getTileServerRegex(tileServiceType),
-    [tileServiceType],
-  );
-  const isValidTileserverURL = useMemo(
-    () => currentRegex.test(tileserverURL),
-    [tileserverURL, currentRegex],
-  );
-
   /**
-   * Set the validity of the tile service type and dataset name on component mount.
+   * Set the validity of the dataset name on component mount.
    */
   useEffect(() => {
     setDatasetNameValidity(validateDatasetName(trainingdatasetName));
-    setTileServiceTypeValidity({
-      valid: isValidTileserverURL,
-      message: isValidTileserverURL
-        ? ""
-        : "Invalid tile server URL. Please provide a valid URL.",
-    });
-  }, [trainingdatasetName, tileserverURL, tileServiceType]);
+  }, [trainingdatasetName]);
 
   const handleTrainingDatasetCreation = useCallback(() => {
     handleChange(MODEL_CREATION_FORM_NAME.TILESERVICE_TYPE, tileServiceType);
@@ -264,7 +212,8 @@ const CreateNewTrainingDatasetForm = () => {
           disabled={
             trainingDatasetCreationInProgress ||
             !tileServiceTypeValidity.valid ||
-            !datasetNameValidity.valid
+            !datasetNameValidity.valid ||
+            loading
           }
         >
           {trainingDatasetCreationInProgress ? <Spinner /> : "Create Dataset"}

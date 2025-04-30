@@ -18,7 +18,7 @@ const ModelFeedbacks = ({ trainingId }: { trainingId: number }) => {
         <Button
           variant={ButtonVariant.DARK}
           size="medium"
-          disabled={trainingId === null}
+          disabled={trainingId === null || data?.count === 0}
           onClick={() => {
             navigate(
               `${currentPath}/${APPLICATION_ROUTES.MODEL_FEEDBACKS_BASE_ROUTE}`,

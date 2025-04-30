@@ -272,6 +272,7 @@ export const ModelsProvider: React.FC<{
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { modelId, id } = useParams();
+
   const { setValue, removeValue, getValue } = useLocalStorage();
   const storedFormData = getValue(HOT_FAIR_MODEL_CREATION_LOCAL_STORAGE_KEY);
   const [formData, setFormData] = useState<typeof initialFormState>(

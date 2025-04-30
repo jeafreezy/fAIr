@@ -1,6 +1,6 @@
 import useScreenSize from "@/hooks/use-screen-size";
 import { FormLabel, HelpText } from "@/components/ui/form";
-import { SHOELACE_SELECT_SIZES, SHOELACE_SIZES } from "@/enums";
+import { SHOELACE_SELECT_SIZES } from "@/enums";
 import { SlOption, SlSelect } from "@shoelace-style/shoelace/dist/react";
 import { TShoelaceSize } from "@/types";
 import "./select.css";
@@ -19,7 +19,7 @@ type SelectProps = {
   defaultValue: string | number;
   handleChange: (value: number | string) => void;
   required?: boolean;
-  size?: SHOELACE_SIZES;
+  size?: SHOELACE_SELECT_SIZES;
   className?: string;
 };
 
@@ -33,12 +33,12 @@ const Select: React.FC<SelectProps> = ({
   defaultValue,
   handleChange,
   required,
-  size = undefined,
+  size,
   className = "",
 }) => {
   const { isMobile } = useScreenSize();
 
-  const getSize = (): TShoelaceSize => {
+  const getSize = (): TShoelaceSize | string => {
     if (size) return size;
     return isMobile
       ? SHOELACE_SELECT_SIZES.MEDIUM
@@ -48,6 +48,7 @@ const Select: React.FC<SelectProps> = ({
   return (
     <SlSelect
       placeholder={placeholder}
+      // @ts-expect-error bad type definition.
       size={getSize()}
       value={String(defaultValue)}
       onSlChange={(e) => {

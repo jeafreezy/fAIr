@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/form";
 import { MODELS_CONTENT } from "@/constants";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   FORM_VALIDATION_CONFIG,
   MODEL_CREATION_FORM_NAME,
@@ -8,11 +8,6 @@ import {
 } from "@/app/providers/models-provider";
 import { MapIcon } from "@/components/ui/icons";
 import { useMapInstance } from "@/hooks/use-map-instance";
-import {
-  extractTileJSONURL,
-  OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
-} from "@/utils";
-import { getTMSTileJSON } from "@/features/model-creation/api/get-tms-tilejson";
 import { MapComponent } from "@/components/map";
 import { Spinner } from "@/components/ui/spinner";
 import { XYZTileServerInput } from "@/components/shared/form/xyz-tile-server-input";

@@ -18,7 +18,7 @@ type InputProps = {
   type?: INPUT_TYPES;
   showBorder?: boolean;
   label?: string;
-  size?: SHOELACE_SIZES | undefined;
+  size?: SHOELACE_SIZES;
   helpText?: string;
   labelWithTooltip?: boolean;
   toolTipContent?: string;

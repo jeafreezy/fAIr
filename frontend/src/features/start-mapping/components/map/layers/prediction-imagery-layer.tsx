@@ -11,6 +11,7 @@ import {
 import { TileServiceType } from "@/enums";
 import { PredictionImagerySource } from "@/enums/start-mapping";
 import { useDynamicMapLayer } from "@/hooks/use-map-layer";
+import { TileJSON } from "@/types";
 import {
   extractTileJSONURL,
   OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,

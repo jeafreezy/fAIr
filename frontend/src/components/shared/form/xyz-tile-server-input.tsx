@@ -1,6 +1,11 @@
 import { Alert } from "@/components/ui/alert";
 import { HelpText, Input, Select } from "@/components/ui/form";
-import { INPUT_TYPES, SHOELACE_SIZES, TileServiceType } from "@/enums";
+import {
+  INPUT_TYPES,
+  SHOELACE_SELECT_SIZES,
+  SHOELACE_SIZES,
+  TileServiceType,
+} from "@/enums";
 import { getTileServerRegex } from "@/utils";
 
 const TILE_SERVICE_TYPES: {
@@ -60,7 +65,7 @@ export const XYZTileServerInput = ({
           setTileServiceType(newTileServiceType);
         }}
         defaultValue={tileServiceType}
-        size={size}
+        size={size as unknown as SHOELACE_SELECT_SIZES}
       />
       <Input
         label={`${tileServiceType} ${tileServiceType !== TileServiceType.TILEJSON ? "Tile Server" : ""} URL`}

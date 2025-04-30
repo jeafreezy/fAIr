@@ -37,8 +37,6 @@ export const getTileServerRegex = (serviceType: TileServiceType) => {
       return XYZ_TILESERVER_URL_REGEX_PATTERN;
     case TileServiceType.TMS:
       return TMS_TILESERVER_URL_REGEX_PATTERN;
-    case TileServiceType.ESRI:
-      return ESRI_TILESERVER_URL_REGEX_PATTERN;
     default:
       return XYZ_TILESERVER_URL_REGEX_PATTERN;
   }

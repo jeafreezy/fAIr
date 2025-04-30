@@ -1,6 +1,6 @@
 import { ButtonWithIcon } from "@/components/ui/button";
 import { ChevronDownIcon } from "@/components/ui/icons";
-import { MODELS_BASE, MODELS_ROUTES } from "@/constants";
+import { MODELS_ROUTES } from "@/constants";
 import { MODELS_CONTENT } from "@/constants";
 import { ButtonVariant, TrainingDatasetOption } from "@/enums";
 import { useMemo } from "react";
@@ -51,13 +51,7 @@ const ProgressButtons: React.FC<ProgressButtonsProps> = ({
   };
 
   const prevPage = () => {
-    if (currentPageIndex > 0) {
-      if (currentPath.includes(MODELS_ROUTES.DETAILS)) {
-        navigate(MODELS_BASE);
-      } else {
-        navigate(-1);
-      }
-    }
+    navigate(-1);
   };
 
   const canProceedToNextPage = useMemo(() => {

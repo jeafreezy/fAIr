@@ -4,7 +4,7 @@ import {
   FORM_VALIDATION_CONFIG,
   MODEL_CREATION_FORM_NAME,
 } from "@/app/providers/models-provider";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const ModelDescriptionFormInput = ({
   handleChange,
@@ -14,34 +14,15 @@ const ModelDescriptionFormInput = ({
   handleChange: (value: string) => void;
 }) => {
   const [modelDescriptionIsValid, setmodelDescriptionIsValid] = useState({
-    valid: false,
+    valid:
+      value.length >=
+        FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
+          .minLength &&
+      value.length <=
+        FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
+          .maxLength,
     message: "",
   });
-
-  useEffect(() => {
-    const minLengthValidation =
-      value.length >=
-      FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
-        .minLength;
-    const maxLengthValidation =
-      value.length <=
-      FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
-        .maxLength;
-
-    const valid = minLengthValidation && maxLengthValidation;
-    const message = !minLengthValidation
-      ? `Name must be at least ${
-          FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
-            .minLength
-        } characters long.`
-      : !maxLengthValidation
-        ? `Name must be no more than ${
-            FORM_VALIDATION_CONFIG[MODEL_CREATION_FORM_NAME.MODEL_DESCRIPTION]
-              .maxLength
-          } characters long.`
-        : "";
-    setmodelDescriptionIsValid({ valid, message });
-  }, [value]);
 
   return (
     <TextArea

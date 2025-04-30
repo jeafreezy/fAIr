@@ -21,11 +21,11 @@ import {
   AcceptedPredictionsLayer,
   RejectedPredictionsLayer,
   AllPredictionsLayer,
-  PredictionImageryLayer,
 } from "@/features/start-mapping/components/map/layers";
 import { PredictionImagerySource } from "@/enums/start-mapping";
 import { useMapStore } from "@/store/map-store";
 import { useModelPredictionStore } from "@/store/model-prediction-store";
+import { PredictionRasterLayer } from "./layers/prediction-raster-layer";
 
 export const StartMappingMapComponent = ({
   trainingDataset,
@@ -160,7 +160,7 @@ export const StartMappingMapComponent = ({
       oamTileJSONURL={tileJSONURL}
     >
       {map && (
-        <PredictionImageryLayer
+        <PredictionRasterLayer
           map={map}
           predictionImagerySource={predictionImagerySource}
           predictionImageryURL={predictionImageryURL as string}

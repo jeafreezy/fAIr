@@ -23,7 +23,7 @@ import {
 } from "maplibre-gl";
 import { useEffect, useMemo } from "react";
 
-export const PredictionImageryLayer = ({
+export const PredictionRasterLayer = ({
   map,
   predictionImageryURL,
   predictionImagerySource,
@@ -56,17 +56,9 @@ export const PredictionImageryLayer = ({
    * Fetch the tileJSON metadata and fit the map to the bounds of the tileJSON.
    */
   useEffect(() => {
-    if (!map || !tileJSONMetadata) return;
-    if (!isOpenAerialMap && tileServiceType !== TileServiceType.TILEJSON)
-      return;
+    if (!map || !tileJSONMetadata?.bounds) return;
     map.fitBounds(tileJSONMetadata.bounds);
-  }, [
-    map,
-    predictionImagerySource,
-    tileJSONMetadata,
-    isOpenAerialMap,
-    tileServiceType,
-  ]);
+  }, [map, tileJSONMetadata]);
 
   const sourceId = `${PREDICTION_IMAGERY_SOURCE}-${predictionImagerySource}`;
 
@@ -83,7 +75,7 @@ export const PredictionImageryLayer = ({
             tiles: [sourceURL],
             tileSize: 256,
           },
-    [sourceURL],
+    [sourceURL, tileServiceType, isOpenAerialMap],
   );
 
   const layerSpec: RasterLayerSpecification = useMemo(
@@ -110,7 +102,6 @@ export const PredictionImageryLayer = ({
     [
       predictionImageryURL,
       predictionImagerySource,
-      sourceURL,
       tileServiceType,
       isOpenAerialMap,
     ],

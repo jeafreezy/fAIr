@@ -22,7 +22,10 @@ import {
 } from "@/enums/start-mapping";
 import { useMapStore } from "@/store/map-store";
 import { PredictionRasterLayer } from "./layers/prediction-raster-layer";
-import { extractTileJSONURL, OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN } from "@/utils";
+import {
+  extractTileJSONURL,
+  OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
+} from "@/utils";
 
 export const StartMappingMapComponent = ({
   map,
@@ -127,8 +130,8 @@ export const StartMappingMapComponent = ({
   }, [predictionImagerySource]);
 
   /**
-     * Check if the tile server URL is an OpenAerialMap tile server URL.
-     */
+   * Check if the tile server URL is an OpenAerialMap tile server URL.
+   */
   const { sourceURL, isOpenAerialMap } = useMemo(() => {
     const openAerial =
       OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileServerURL);
@@ -152,11 +155,11 @@ export const StartMappingMapComponent = ({
         ...layers,
         ...(predictionImagerySource !== PredictionImagerySource.ModelDefault
           ? [
-            {
-              value: "Prediction Imagery",
-              subLayers: [predictionImageryLayerId],
-            },
-          ]
+              {
+                value: "Prediction Imagery",
+                subLayers: [predictionImageryLayerId],
+              },
+            ]
           : []),
       ]}
       basemaps

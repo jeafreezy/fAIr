@@ -18,7 +18,9 @@ export const PredictionRasterLayer = ({
   map,
   predictionImagerySource,
   tileServiceType,
-  layerId, sourceURL, isOpenAerialMap
+  layerId,
+  sourceURL,
+  isOpenAerialMap,
 }: {
   map: Map | null;
   predictionImagerySource: PredictionImagerySource;
@@ -27,22 +29,21 @@ export const PredictionRasterLayer = ({
   sourceURL: string;
   isOpenAerialMap: boolean;
 }) => {
-
   const sourceId = `${PREDICTION_IMAGERY_SOURCE}-${predictionImagerySource}`;
 
   const sourceSpec: RasterSourceSpecification = useMemo(
     () =>
       tileServiceType === TileServiceType.TILEJSON || isOpenAerialMap
         ? {
-          type: "raster",
-          url: sourceURL,
-          tileSize: 256,
-        }
+            type: "raster",
+            url: sourceURL,
+            tileSize: 256,
+          }
         : {
-          type: "raster",
-          tiles: [sourceURL],
-          tileSize: 256,
-        },
+            type: "raster",
+            tiles: [sourceURL],
+            tileSize: 256,
+          },
     [sourceURL, tileServiceType],
   );
 
@@ -67,7 +68,8 @@ export const PredictionRasterLayer = ({
     layerId,
     sourceSpec,
     layerSpec,
-    [predictionImagerySource, tileServiceType, isOpenAerialMap, sourceURL], true,
+    [predictionImagerySource, tileServiceType, isOpenAerialMap, sourceURL],
+    true,
     /**
      * Place the prediction imagery layer below the predictedfeatures layers and also tile boundary layer.
      * doesn't rerender after accepting or rejecting...

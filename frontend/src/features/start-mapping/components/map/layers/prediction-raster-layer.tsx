@@ -8,10 +8,6 @@ import { TileServiceType } from "@/enums";
 import { PredictionImagerySource } from "@/enums/start-mapping";
 import { useDynamicMapLayer } from "@/hooks/use-map-layer";
 import {
-  extractTileJSONURL,
-  OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
-} from "@/utils";
-import {
   Map,
   RasterLayerSpecification,
   RasterSourceSpecification,
@@ -20,28 +16,17 @@ import { useMemo } from "react";
 
 export const PredictionRasterLayer = ({
   map,
-  tileServerURL,
   predictionImagerySource,
   tileServiceType,
-  layerId,
+  layerId, sourceURL, isOpenAerialMap
 }: {
   map: Map | null;
-  tileServerURL: string;
   predictionImagerySource: PredictionImagerySource;
   tileServiceType: TileServiceType;
   layerId: string;
+  sourceURL: string;
+  isOpenAerialMap: boolean;
 }) => {
-  /**
-   * Check if the tile server URL is an OpenAerialMap tile server URL.
-   */
-  const { sourceURL, isOpenAerialMap } = useMemo(() => {
-    const openAerial =
-      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileServerURL);
-    return {
-      isOpenAerialMap: openAerial,
-      sourceURL: openAerial ? extractTileJSONURL(tileServerURL) : tileServerURL,
-    };
-  }, [tileServerURL]);
 
   const sourceId = `${PREDICTION_IMAGERY_SOURCE}-${predictionImagerySource}`;
 
@@ -49,15 +34,15 @@ export const PredictionRasterLayer = ({
     () =>
       tileServiceType === TileServiceType.TILEJSON || isOpenAerialMap
         ? {
-            type: "raster",
-            url: sourceURL,
-            tileSize: 256,
-          }
+          type: "raster",
+          url: sourceURL,
+          tileSize: 256,
+        }
         : {
-            type: "raster",
-            tiles: [tileServerURL],
-            tileSize: 256,
-          },
+          type: "raster",
+          tiles: [sourceURL],
+          tileSize: 256,
+        },
     [sourceURL, tileServiceType],
   );
 
@@ -82,10 +67,7 @@ export const PredictionRasterLayer = ({
     layerId,
     sourceSpec,
     layerSpec,
-    [predictionImagerySource, tileServiceType, isOpenAerialMap, sourceURL],
-    tileServerURL !== undefined &&
-      tileServerURL?.length > 0 &&
-      predictionImagerySource !== PredictionImagerySource.ModelDefault,
+    [predictionImagerySource, tileServiceType, isOpenAerialMap, sourceURL], true,
     /**
      * Place the prediction imagery layer below the predictedfeatures layers and also tile boundary layer.
      * doesn't rerender after accepting or rejecting...

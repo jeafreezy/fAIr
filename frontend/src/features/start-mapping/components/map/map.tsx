@@ -22,6 +22,7 @@ import {
 } from "@/enums/start-mapping";
 import { useMapStore } from "@/store/map-store";
 import { PredictionRasterLayer } from "./layers/prediction-raster-layer";
+import { extractTileJSONURL, OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN } from "@/utils";
 
 export const StartMappingMapComponent = ({
   map,
@@ -125,7 +126,17 @@ export const StartMappingMapComponent = ({
     return `${PREDICTION_IMAGERY_LAYER_ID}-${predictionImagerySource}`;
   }, [predictionImagerySource]);
 
-  console.log(tileJSONMetadata, predictionImageryLayerId);
+  /**
+     * Check if the tile server URL is an OpenAerialMap tile server URL.
+     */
+  const { sourceURL, isOpenAerialMap } = useMemo(() => {
+    const openAerial =
+      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileServerURL);
+    return {
+      isOpenAerialMap: openAerial,
+      sourceURL: openAerial ? extractTileJSONURL(tileServerURL) : tileServerURL,
+    };
+  }, [tileServerURL]);
 
   return (
     <MapComponent
@@ -141,11 +152,11 @@ export const StartMappingMapComponent = ({
         ...layers,
         ...(predictionImagerySource !== PredictionImagerySource.ModelDefault
           ? [
-              {
-                value: "Prediction Imagery",
-                subLayers: [predictionImageryLayerId],
-              },
-            ]
+            {
+              value: "Prediction Imagery",
+              subLayers: [predictionImageryLayerId],
+            },
+          ]
           : []),
       ]}
       basemaps
@@ -163,13 +174,14 @@ export const StartMappingMapComponent = ({
       {!modelInfoRequestIsPending && map && (
         <AllPredictionsLayer map={map} features={modelPredictions} />
       )}
-      {map && (
+      {map && sourceURL.length > 0 && (
         <PredictionRasterLayer
           map={map}
           predictionImagerySource={predictionImagerySource}
-          tileServerURL={tileServerURL as string}
           tileServiceType={predictionImageryType}
           layerId={predictionImageryLayerId}
+          sourceURL={sourceURL}
+          isOpenAerialMap={isOpenAerialMap}
         />
       )}
       {memoizedToolTip}

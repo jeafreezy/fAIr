@@ -100,6 +100,7 @@ export const FeedbacksLayer = ({
         source: MODEL_FEEDBACKS_SOURCE_ID,
         layout: {
           "icon-image": "commentIcon",
+          "icon-size": 1.5,
         },
       });
     }
@@ -115,6 +116,7 @@ export const FeedbacksLayer = ({
     map.on("click", MODEL_FEEDBACKS_FILL_LAYER_ID, (e: any) => {
       const properties = e.features && e.features[0].properties;
       if (properties) {
+        if (properties.comment_length === 0) return;
         setClickedFeatureProperties(properties);
         if (popupContainerRef.current) {
           popupInstanceRef.current?.remove();
@@ -162,16 +164,15 @@ export const FeedbacksLayer = ({
   return (
     <div
       ref={popupContainerRef}
-      className="w-60 h-60 bg-white rounded-md p-4 flex flex-col gap-y-2 overflow-auto"
+      className="w-60 h-40 bg-white rounded-md p-4 flex flex-col gap-y-2 overflow-auto"
     >
       <h1 className="text-body-2 font-semibold text-dark">Feedback</h1>
       <div className="flex flex-col gap-y-2">
         <ul>
           {Object.entries(clickedFeatureProperties)
-            .filter(([key]) => key !== "comment_length")
+            .filter(([key]) => key === "comments")
             .map(([key, value]) => (
               <li key={key} className="text-body-3 text-dark">
-                <span className="font-semibold">{key}: </span>
                 {value}
               </li>
             ))}

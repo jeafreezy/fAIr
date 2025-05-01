@@ -1,6 +1,7 @@
 import { BASE_MODELS } from "@/enums";
 import { ENVS } from "@/config/env";
 import { StyleSpecification } from "maplibre-gl";
+import { PredictedFeatureStatus } from "@/enums/start-mapping";
 
 // ==============================================================================================================================
 // Helper functions
@@ -272,20 +273,17 @@ export const GOOGLE_SATELLITE_BASEMAP_LAYER_ID: string = `${MAP_STYLES_PREFIX}-g
 export const GOOGLE_SATELLITE_BASEMAP_SOURCE_ID: string = `${MAP_STYLES_PREFIX}-google-satellite`;
 
 // Start Mapping
-export const ACCEPTED_MODEL_PREDICTIONS_SOURCE_ID: string =
-  "accepted-predictions-source";
-export const ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID: string = `${MAP_STYLES_PREFIX}-accepted-predictions-fill-layer`;
-export const ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID: string =
-  "accepted-predictions-outline-layer";
 export const ALL_MODEL_PREDICTIONS_SOURCE_ID: string = "all-predictions-source";
 export const ALL_MODEL_PREDICTIONS_FILL_LAYER_ID: string = `${MAP_STYLES_PREFIX}-all-predictions-fill-layer`;
 export const ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID: string =
   "all-predictions-outline-layer";
-export const REJECTED_MODEL_PREDICTIONS_SOURCE_ID: string =
-  "rejected-predictions-source";
-export const REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID: string = `${MAP_STYLES_PREFIX}-rejected-predictions-fill-layer`;
-export const REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID: string =
-  "rejected-predictions-outline-layer";
+
+// Layer status and corresponding colors
+export const PREDICTED_LAYER_STATUS_COLORS: Record<string, string> = {
+  [PredictedFeatureStatus.ACCEPTED]: "#23C16B",
+  [PredictedFeatureStatus.REJECTED]: "#D63F40",
+  [PredictedFeatureStatus.UNTOUCHED]: "#A243DC",
+};
 export const PREDICTION_IMAGERY_SOURCE: string = `${MAP_STYLES_PREFIX}-prediction-imagery-source`;
 export const PREDICTION_IMAGERY_LAYER_ID: string = `${MAP_STYLES_PREFIX}-prediction-imagery-layer`;
 // Training Areas
@@ -330,8 +328,8 @@ export const TRAINING_AREAS_MASK_FILL_COLOR: string = parseStringEnv(
 // Start Mapping Legend - only the fill layers are in the legend.
 export const LEGEND_NAME_MAPPING: Record<string, string> = {
   [ALL_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Default",
-  [REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Rejected",
-  [ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Accepted",
+  // [REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Rejected",
+  // [ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID]: "Accepted",
 };
 
 // Model Feedbacks

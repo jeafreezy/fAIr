@@ -482,8 +482,6 @@ export type TStartMappingPageContent = {
         predictionResults: string;
       };
       layerControl: {
-        acceptedPredictions: string;
-        rejectedPredictions: string;
         results: string;
       };
     };

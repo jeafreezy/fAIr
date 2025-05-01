@@ -4,7 +4,6 @@ import { DropDown } from "@/components/ui/dropdown";
 import { LayerStackIcon } from "@/components/ui/icons";
 import { Map } from "maplibre-gl";
 import { ToolTip } from "@/components/ui/tooltip";
-import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
 import { useEffect, useMemo, useState } from "react";
 import {
   GOOGLE_SATELLITE_BASEMAP_LAYER_ID,
@@ -28,9 +27,6 @@ export const LayerControl = ({
   openAerialMap?: boolean;
   rounded?: boolean;
 }) => {
-  const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
-    useDropdownMenu();
-
   const layerControlData = useMemo(() => {
     const layers_ = [
       ...layers,
@@ -130,9 +126,6 @@ export const LayerControl = ({
   return (
     <ToolTip content="Layer Control" placement={ToolTipPlacement.BOTTOM}>
       <DropDown
-        dropdownIsOpened={dropdownIsOpened}
-        onDropdownHide={onDropdownHide}
-        onDropdownShow={onDropdownShow}
         disableCheveronIcon
         triggerComponent={
           <div

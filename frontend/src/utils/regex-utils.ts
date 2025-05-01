@@ -2,15 +2,15 @@ import { TileServiceType } from "@/enums";
 
 // Matches valid XYZ tile server URLs.
 export const XYZ_TILESERVER_URL_REGEX_PATTERN =
-  /^https?:\/\/[^\/]+\/.*\/\{z\}\/\{x\}\/\{y\}(\?.*)?$/i;
+  /^https?:\/\/[^\/]+(?:\/[^\/]+)*\/\{z\}\/\{x\}\/\{y\}(?:@[0-9a-z]+)?(?:\.(jpg|png|jpeg|webp))?(?:\?.*)?$/i;
 
 // Matches valid TMS tile server URLs.
 export const TMS_TILESERVER_URL_REGEX_PATTERN =
-  /^https?:\/\/[^\/]+\/.*\/\{z\}\/\{x\}\/\{-y\}(\?.*)?$/i;
+  /^https?:\/\/[^\/]+(?:\/[^\/]+)*\/\{z\}\/\{x\}\/\{-y\}(?:@[0-9a-z]+)?(?:\.(jpg|png|jpeg|webp))?(?:\?.*)?$/i;
 
 // Matches valid TileJSON URLs.
 export const TILEJSON_TILESERVER_URL_REGEX_PATTERN =
-  /^https?:\/\/[^\/]+(\/.*)?\.json(\?.*)?$/i;
+  /^https?:\/\/[^\/]+(?:\/[^\/?#]+)*\/[^\/?#]+\.json(?:\?.*)?$/i;
 
 // Allows letters, numbers, and spaces
 export const VALID_CHARACTER_PATTERN = /^[a-zA-Z0-9\s]*$/;

@@ -18,9 +18,7 @@ export const START_MAPPING_PAGE_CONTENT: TStartMappingPageContent = {
         predictionResults: "Prediction Results",
       },
       layerControl: {
-        acceptedPredictions: "Rejected Predictions",
-        rejectedPredictions: "Accepted Predictions",
-        results: "Prediction Results",
+        results: "Model predictions",
       },
     },
     popup: {

@@ -33,7 +33,6 @@ const PredictionImagerySources: Array<{
 ];
 
 export const ImagerySourceSelector = ({
-  setPredictionImageryURL,
   setPredictionImagerySource,
   predictionImagerySource,
   modelDefaultImageryURL,
@@ -47,9 +46,6 @@ export const ImagerySourceSelector = ({
   setTileServiceTypeValidity,
   setTileServiceType,
 }: {
-  setPredictionImageryURL: React.Dispatch<
-    React.SetStateAction<string | undefined>
-  >;
   setPredictionImagerySource: React.Dispatch<
     React.SetStateAction<PredictionImagerySource>
   >;
@@ -98,16 +94,15 @@ export const ImagerySourceSelector = ({
 
   const handleApply = () => {
     setPredictionImagerySource(localPredictionImagerySource);
-    setPredictionImageryURL(
+    setTileServiceType(localTileServiceType);
+    setTileserverURL(
       (
         PredictionImagerySourceURLs as Record<
           PredictionImagerySource,
           string | undefined
         >
-      )[localPredictionImagerySource],
+      )[localPredictionImagerySource] || "",
     );
-    setTileServiceType(localTileServiceType);
-    setTileserverURL(localTileServerURL);
     setTileServiceTypeValidity(localTileServiceTypeValidity);
     if (!loading) onDropdownHide();
   };

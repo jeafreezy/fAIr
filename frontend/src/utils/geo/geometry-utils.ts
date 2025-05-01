@@ -5,9 +5,10 @@ import { createFeatureCollection } from "./geo-utils";
 import { Feature, FeatureCollection, Polygon, Position } from "geojson";
 import { LngLatBoundsLike, Map } from "maplibre-gl";
 import { roundNumber } from "../number-utils";
-import { TModelPredictions, TModelPredictionsConfig } from "@/types";
+import { TModelPredictionFeature, TModelPredictionsConfig } from "@/types";
 import { uuid4 } from "../general-utils";
 import { booleanWithin } from "@turf/boolean-within";
+import { PredictedFeatureStatus } from "@/enums/start-mapping";
 /**
  * Calculates the area of a GeoJSON Feature or FeatureCollection.
  *
@@ -343,71 +344,60 @@ export const snapGeoJSONPolygonToClosestTile = (geometry: Polygon) => {
  * - accepted: [A1, A2, A3]
  * - rejected: [R1, R2]
  */
+/**
+ * Conflates new features with existing predictions using a unified array with status.
+ */
 export const handleConflation = (
-  existingPredictions: TModelPredictions,
+  existingFeatures: TModelPredictionFeature[],
   newFeatures: Feature[],
   predictionConfig: TModelPredictionsConfig,
-): TModelPredictions => {
-  let updatedAll = [...existingPredictions.all];
+): TModelPredictionFeature[] => {
+  const updated = [...existingFeatures];
 
   for (const newFeature of newFeatures) {
-    let intersectsAccepted = false;
-    let intersectsRejected = false;
-
-    // Check for intersections in accepted features
-    for (const acceptedFeature of existingPredictions.accepted) {
-      if (booleanIntersects(newFeature, acceptedFeature)) {
-        intersectsAccepted = true;
-        break;
-      }
-    }
-
-    // Check for intersections in rejected features
-    for (const rejectedFeature of existingPredictions.rejected) {
-      if (booleanIntersects(newFeature, rejectedFeature)) {
-        intersectsRejected = true;
-        break;
-      }
-    }
-
-    // Skip if intersects with accepted or rejected
-    if (intersectsAccepted || intersectsRejected) {
-      continue;
-    }
-
-    // Check if it intersects an existing feature in the original updatedAll (before new additions)
-    const intersectingIndex = updatedAll.findIndex((existingFeature) =>
-      booleanIntersects(newFeature, existingFeature),
+    const intersectsAccepted = updated.some(
+      (f) =>
+        f.properties.status === PredictedFeatureStatus.ACCEPTED &&
+        booleanIntersects(f, newFeature),
     );
 
+    const intersectsRejected = updated.some(
+      (f) =>
+        f.properties.status === PredictedFeatureStatus.REJECTED &&
+        booleanIntersects(f, newFeature),
+    );
+
+    if (intersectsAccepted || intersectsRejected) {
+      continue; // Discard feature
+    }
+
+    const intersectingIndex = updated.findIndex(
+      (f) =>
+        f.properties.status === PredictedFeatureStatus.UNTOUCHED &&
+        booleanIntersects(f, newFeature),
+    );
+
+    const featureWithProps: TModelPredictionFeature = {
+      ...newFeature,
+      properties: {
+        ...newFeature.properties,
+        id:
+          intersectingIndex !== -1
+            ? updated[intersectingIndex].properties.id
+            : uuid4(),
+        config: predictionConfig,
+        status: PredictedFeatureStatus.UNTOUCHED,
+      },
+    };
+
     if (intersectingIndex !== -1) {
-      // Replace the intersecting feature
-      updatedAll[intersectingIndex] = {
-        ...newFeature,
-        properties: {
-          ...newFeature.properties,
-          id: updatedAll[intersectingIndex].properties?.id || uuid4(),
-          config: predictionConfig,
-        },
-      };
+      updated[intersectingIndex] = featureWithProps; // Replace
     } else {
-      // Always add the new feature, even if it intersects other new features
-      updatedAll.push({
-        ...newFeature,
-        properties: {
-          ...newFeature.properties,
-          id: uuid4(),
-          config: predictionConfig,
-        },
-      });
+      updated.push(featureWithProps); // Add
     }
   }
 
-  return {
-    all: updatedAll,
-    accepted: existingPredictions.accepted,
-    rejected: existingPredictions.rejected,
-  };
+  return updated;
 };
 
 /**

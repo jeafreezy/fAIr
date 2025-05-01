@@ -1,17 +1,12 @@
 import {
-  ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
   ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   PREDICTION_IMAGERY_SOURCE,
-  REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
   TILE_BOUNDARY_LAYER_ID,
 } from "@/config";
 import { TileServiceType } from "@/enums";
 import { PredictionImagerySource } from "@/enums/start-mapping";
 import { useDynamicMapLayer } from "@/hooks/use-map-layer";
-import { TileJSON } from "@/types";
 import {
   extractTileJSONURL,
   OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN,
@@ -21,50 +16,38 @@ import {
   RasterLayerSpecification,
   RasterSourceSpecification,
 } from "maplibre-gl";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 export const PredictionRasterLayer = ({
   map,
-  predictionImageryURL,
+  tileServerURL,
   predictionImagerySource,
   tileServiceType,
   layerId,
-  tileJSONMetadata,
 }: {
   map: Map | null;
-  predictionImageryURL: string;
+  tileServerURL: string;
   predictionImagerySource: PredictionImagerySource;
   tileServiceType: TileServiceType;
   layerId: string;
-  tileJSONMetadata: TileJSON | null;
 }) => {
   /**
    * Check if the tile server URL is an OpenAerialMap tile server URL.
    */
   const { sourceURL, isOpenAerialMap } = useMemo(() => {
     const openAerial =
-      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(predictionImageryURL);
+      OPENAERIALMAP_TILESERVER_URL_REGEX_PATTERN.test(tileServerURL);
     return {
       isOpenAerialMap: openAerial,
-      sourceURL: openAerial
-        ? extractTileJSONURL(predictionImageryURL)
-        : predictionImageryURL,
+      sourceURL: openAerial ? extractTileJSONURL(tileServerURL) : tileServerURL,
     };
-  }, [predictionImageryURL]);
-
-  /**
-   * Fetch the tileJSON metadata and fit the map to the bounds of the tileJSON.
-   */
-  useEffect(() => {
-    if (!map || !tileJSONMetadata?.bounds) return;
-    map.fitBounds(tileJSONMetadata.bounds);
-  }, [map, tileJSONMetadata]);
+  }, [tileServerURL]);
 
   const sourceId = `${PREDICTION_IMAGERY_SOURCE}-${predictionImagerySource}`;
 
   const sourceSpec: RasterSourceSpecification = useMemo(
     () =>
-      isOpenAerialMap || tileServiceType === TileServiceType.TILEJSON
+      tileServiceType === TileServiceType.TILEJSON || isOpenAerialMap
         ? {
             type: "raster",
             url: sourceURL,
@@ -72,10 +55,10 @@ export const PredictionRasterLayer = ({
           }
         : {
             type: "raster",
-            tiles: [sourceURL],
+            tiles: [tileServerURL],
             tileSize: 256,
           },
-    [sourceURL, tileServiceType, isOpenAerialMap],
+    [sourceURL, tileServiceType],
   );
 
   const layerSpec: RasterLayerSpecification = useMemo(
@@ -99,25 +82,17 @@ export const PredictionRasterLayer = ({
     layerId,
     sourceSpec,
     layerSpec,
-    [
-      predictionImageryURL,
-      predictionImagerySource,
-      tileServiceType,
-      isOpenAerialMap,
-    ],
-    predictionImageryURL !== undefined &&
-      predictionImageryURL?.length > 0 &&
+    [predictionImagerySource, tileServiceType, isOpenAerialMap, sourceURL],
+    tileServerURL !== undefined &&
+      tileServerURL?.length > 0 &&
       predictionImagerySource !== PredictionImagerySource.ModelDefault,
     /**
-     * Place the prediction imagery layer below the prediction layers and also tile boundary layer.
+     * Place the prediction imagery layer below the predictedfeatures layers and also tile boundary layer.
+     * doesn't rerender after accepting or rejecting...
      */
     [
       ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
       ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-      REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-      REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-      ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-      ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
       TILE_BOUNDARY_LAYER_ID,
     ],
   );

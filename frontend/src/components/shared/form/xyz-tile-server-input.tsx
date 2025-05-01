@@ -80,7 +80,7 @@ export const XYZTileServerInput = ({
           tileServiceType === TileServiceType.TILEJSON
             ? "e.g. https://example.com/tiles.json"
             : tileServiceType === TileServiceType.XYZ
-              ? "e.g. https://tiles.example.com/{x}/{y}/{z}.png"
+              ? "e.g. https://tiles.example.com/{z}/{x}/{y}.png"
               : "e.g. https://tiles.example.com/{z}/{x}/{-y}.png"
         }
         showBorder={showBorder}

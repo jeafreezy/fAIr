@@ -6,15 +6,12 @@ import {
 } from "@/constants";
 import { FitToBounds, LayerControl, ZoomLevel } from "@/components/map";
 import { Head } from "@/components/seo";
-import { LngLatBoundsLike } from "maplibre-gl";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDropdownMenu } from "@/hooks/use-dropdown-menu";
-import { useGetTMSTileJSON } from "@/features/model-creation/hooks/use-tms-tilejson";
 import { useMapInstance } from "@/hooks/use-map-instance";
 import { useModelDetails } from "@/features/models/hooks/use-models";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { UserProfile } from "@/components/layouts";
-import { Feature, TileJSON } from "@/types";
+import { Feature } from "@/types";
 import {
   BrandLogoWithDropDown,
   Legend,
@@ -24,21 +21,15 @@ import {
 } from "@/features/start-mapping/components";
 import {
   constructModelCheckpointPath,
-  extractTileJSONURL,
   geoJSONDowloader,
   openInJOSM,
   showSuccessToast,
 } from "@/utils";
-import {
-  REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-  ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-  ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
-  ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-} from "@/config";
 
-import { PredictionImagerySource } from "@/enums/start-mapping";
+import {
+  PredictedFeatureStatus,
+  PredictionImagerySource,
+} from "@/enums/start-mapping";
 import { Dialog } from "@/components/ui/dialog";
 import { ImagerySourceSelector } from "@/features/start-mapping/components/replicable-models/imagery-source-selector";
 import { useDialog } from "@/hooks/use-dialog";
@@ -46,6 +37,10 @@ import { useModelPredictionStore } from "@/store/model-prediction-store";
 import { ModelSelector } from "@/features/start-mapping/components/replicable-models/model-selector";
 import { TileServiceType } from "@/enums";
 import { useTileservice } from "@/hooks/use-tileservice";
+import {
+  ALL_MODEL_PREDICTIONS_FILL_LAYER_ID,
+  ALL_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
+} from "@/config";
 
 export type TDownloadOptions = {
   name: string;
@@ -69,7 +64,15 @@ export const StartMappingPage = () => {
   const { map, mapContainerRef } = useMapInstance();
   const { isSmallViewport } = useScreenSize();
 
-  const { modelPredictions } = useModelPredictionStore();
+  const {
+    features: modelPredictions,
+    setFeatures: setModelPredictions,
+    updateFeatureStatus,
+  } = useModelPredictionStore();
+
+  const acceptedFeatures = modelPredictions.filter(
+    (f) => f.properties.status === PredictedFeatureStatus.ACCEPTED,
+  );
 
   const navigate = useNavigate();
   const [openMobileDrawer, setOpenMobileDrawer] =
@@ -79,13 +82,6 @@ export const StartMappingPage = () => {
     setOpenMobileDrawer(isSmallViewport);
   }, [isSmallViewport]);
 
-  /**
-   * State to manage the prediction imagery. This is the final URL that will be sent to the backend.
-   */
-  const [predictionImageryURL, setPredictionImageryURL] = useState<
-    string | undefined
-  >(undefined);
-
   const [
     customPredictionModelCheckpointPath,
     setCustomPredictionModelCheckpointPath,
@@ -94,8 +90,6 @@ export const StartMappingPage = () => {
   const [predictionImagerySource, setPredictionImagerySource] =
     useState<PredictionImagerySource>(PredictionImagerySource.ModelDefault);
 
-  const { dropdownIsOpened, onDropdownHide, onDropdownShow } =
-    useDropdownMenu();
   const { openDialog, isOpened, closeDialog } = useDialog();
   const {
     openDialog: openModelSelectionDialog,
@@ -117,19 +111,6 @@ export const StartMappingPage = () => {
     useState<string>("");
 
   const [predictionModel, setPredictionModel] = useState<string>("Default");
-
-  const tileJSONURL = useMemo(
-    () =>
-      modelInfo?.dataset?.source_imagery
-        ? extractTileJSONURL(modelInfo?.dataset?.source_imagery)
-        : undefined,
-    [modelInfo?.dataset?.source_imagery],
-  );
-
-  const { data: oamTileJSON, isError: oamTileJSONIsError } = useGetTMSTileJSON(
-    tileJSONURL as string,
-    !!tileJSONURL,
-  );
 
   const {
     tileServiceType,
@@ -160,7 +141,7 @@ export const StartMappingPage = () => {
    */
   useEffect(() => {
     if (modelInfo?.dataset?.source_imagery) {
-      setPredictionImageryURL(modelInfo.dataset.source_imagery);
+      setTileserverURL(modelInfo.dataset.source_imagery);
     }
   }, [modelInfo?.dataset?.source_imagery]);
 
@@ -193,11 +174,8 @@ export const StartMappingPage = () => {
   });
 
   const modelPredictionsExist = useMemo(() => {
-    return (
-      modelPredictions.accepted.length > 0 ||
-      modelPredictions.rejected.length > 0 ||
-      modelPredictions.all.length > 0
-    );
+    if (!modelPredictions) return false;
+    return modelPredictions.length > 0;
   }, [modelPredictions]);
 
   const updateQuery = useCallback(
@@ -221,33 +199,7 @@ export const StartMappingPage = () => {
 
   const mapLayers = useMemo(
     () => [
-      ...(modelPredictions.accepted.length > 0
-        ? [
-            {
-              value:
-                START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-                  .acceptedPredictions,
-              subLayers: [
-                ACCEPTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-                ACCEPTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-              ],
-            },
-          ]
-        : []),
-      ...(modelPredictions.rejected.length > 0
-        ? [
-            {
-              value:
-                START_MAPPING_PAGE_CONTENT.map.controls.legendControl
-                  .rejectedPredictions,
-              subLayers: [
-                REJECTED_MODEL_PREDICTIONS_FILL_LAYER_ID,
-                REJECTED_MODEL_PREDICTIONS_OUTLINE_LAYER_ID,
-              ],
-            },
-          ]
-        : []),
-      ...(modelPredictions.all.length > 0
+      ...(modelPredictions.length > 0
         ? [
             {
               value:
@@ -268,11 +220,7 @@ export const StartMappingPage = () => {
     geoJSONDowloader(
       {
         type: "FeatureCollection",
-        features: [
-          ...modelPredictions.accepted,
-          ...modelPredictions.rejected,
-          ...modelPredictions.all,
-        ],
+        features: modelPredictions,
       },
       `all_predictions_${modelInfo.dataset.id}`,
     );
@@ -281,11 +229,11 @@ export const StartMappingPage = () => {
 
   const handleAcceptedFeaturesDownload = useCallback(async () => {
     geoJSONDowloader(
-      { type: "FeatureCollection", features: modelPredictions.accepted },
+      { type: "FeatureCollection", features: acceptedFeatures },
       `accepted_predictions_${modelInfo.dataset.id}`,
     );
     showSuccessToast(TOAST_NOTIFICATIONS.startMapping.fileDownloadSuccess);
-  }, [modelPredictions, modelInfo]);
+  }, [acceptedFeatures, modelInfo]);
 
   const handleFeaturesDownloadToJOSM = useCallback(
     (features: Feature[]) => {
@@ -301,12 +249,12 @@ export const StartMappingPage = () => {
   );
 
   const handleAllFeaturesDownloadToJOSM = useCallback(() => {
-    handleFeaturesDownloadToJOSM(modelPredictions.all);
-  }, [handleFeaturesDownloadToJOSM, modelPredictions.all]);
+    handleFeaturesDownloadToJOSM(modelPredictions);
+  }, [handleFeaturesDownloadToJOSM, modelPredictions]);
 
   const handleAcceptedFeaturesDownloadToJOSM = useCallback(() => {
-    handleFeaturesDownloadToJOSM(modelPredictions.accepted);
-  }, [handleFeaturesDownloadToJOSM, modelPredictions.accepted]);
+    handleFeaturesDownloadToJOSM(acceptedFeatures);
+  }, [handleFeaturesDownloadToJOSM, acceptedFeatures]);
 
   const downloadOptions: TDownloadOptions = [
     {
@@ -411,7 +359,6 @@ export const StartMappingPage = () => {
           closeDialog={handlePredictionImageryDialogClose}
         >
           <ImagerySourceSelector
-            setPredictionImageryURL={setPredictionImageryURL}
             predictionImagerySource={predictionImagerySource}
             setPredictionImagerySource={setPredictionImagerySource}
             modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
@@ -426,41 +373,45 @@ export const StartMappingPage = () => {
             tileServiceType={tileServiceType}
           />
         </Dialog>
+        {openMobileDrawer && (
+          <StartMappingMobileDrawer
+            isOpen={openMobileDrawer}
+            map={map}
+            downloadOptions={downloadOptions}
+            query={query}
+            updateQuery={updateQuery}
+            modelInfo={modelInfo}
+            modelInfoRequestIsPending={modelInfoRequestIspending}
+            modelInfoRequestIsError={isError}
+            predictionImagerySource={predictionImagerySource}
+            setPredictionImagerySource={setPredictionImagerySource}
+            modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
+            openMobileDialog={handlePredictionImageryDialogOpen}
+            predictionModel={predictionModel}
+            setPredictionModel={setPredictionModel}
+            predictionModelCheckpoint={predictionModelCheckpoint}
+            setPredictionModelCheckpoint={setPredictionModelCheckpoint}
+            customPredictionModelCheckpointPath={
+              customPredictionModelCheckpointPath
+            }
+            setCustomPredictionModelCheckpointPath={
+              setCustomPredictionModelCheckpointPath
+            }
+            openModelSelectionDialog={handlePredictionModelDialogOpen}
+            setTileServiceType={setTileServiceType}
+            setTileserverURL={setTileserverURL}
+            tileServiceTypeValidity={tileServiceTypeValidity}
+            setTileServiceTypeValidity={setTileServiceTypeValidity}
+            loading={loading}
+            tileServerURL={tileserverURL}
+            tileServiceType={tileServiceType}
+            modelPredictions={modelPredictions}
+            setModelPredictions={setModelPredictions}
+            isSmallViewport={isSmallViewport}
+          />
+        )}
         {/* Mobile bottom sheet */}
-        <StartMappingMobileDrawer
-          isOpen={openMobileDrawer}
-          map={map}
-          downloadOptions={downloadOptions}
-          query={query}
-          updateQuery={updateQuery}
-          modelInfo={modelInfo}
-          predictionImageryURL={predictionImageryURL}
-          modelInfoRequestIsPending={modelInfoRequestIspending}
-          modelInfoRequestIsError={isError}
-          setPredictionImageryURL={setPredictionImageryURL}
-          predictionImagerySource={predictionImagerySource}
-          setPredictionImagerySource={setPredictionImagerySource}
-          modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
-          openMobileDialog={handlePredictionImageryDialogOpen}
-          predictionModel={predictionModel}
-          setPredictionModel={setPredictionModel}
-          predictionModelCheckpoint={predictionModelCheckpoint}
-          setPredictionModelCheckpoint={setPredictionModelCheckpoint}
-          customPredictionModelCheckpointPath={
-            customPredictionModelCheckpointPath
-          }
-          setCustomPredictionModelCheckpointPath={
-            setCustomPredictionModelCheckpointPath
-          }
-          openModelSelectionDialog={handlePredictionModelDialogOpen}
-          setTileServiceType={setTileServiceType}
-          setTileserverURL={setTileserverURL}
-          tileServiceTypeValidity={tileServiceTypeValidity}
-          setTileServiceTypeValidity={setTileServiceTypeValidity}
-          loading={loading}
-          tileServerURL={tileserverURL}
-          tileServiceType={tileServiceType}
-        />
+
         <div className="sticky top-0 bg-white z-10 px-4 xl:px-large py-1 hidden md:block">
           {/* Web Header */}
           <StartMappingHeader
@@ -472,8 +423,6 @@ export const StartMappingPage = () => {
             updateQuery={updateQuery}
             map={map}
             downloadOptions={downloadOptions}
-            predictionImageryURL={predictionImageryURL}
-            setPredictionImageryURL={setPredictionImageryURL}
             predictionImagerySource={predictionImagerySource}
             setPredictionImagerySource={setPredictionImagerySource}
             modelDefaultImageryURL={modelInfo?.dataset?.source_imagery}
@@ -494,6 +443,9 @@ export const StartMappingPage = () => {
             loading={loading}
             tileServerURL={tileserverURL}
             tileServiceType={tileServiceType}
+            modelPredictions={modelPredictions}
+            setModelPredictions={setModelPredictions}
+            isSmallViewport={isSmallViewport}
           />
         </div>
         <div className="col-span-12 h-[70vh] md:h-full md:border-8 md:border-off-white flex-grow relative map-elements-z-index">
@@ -503,11 +455,7 @@ export const StartMappingPage = () => {
               <UserProfile hideFullName />
             </div>
             <div className="absolute top-4 left-4  z-[10]">
-              <BrandLogoWithDropDown
-                onClose={onDropdownHide}
-                onShow={onDropdownShow}
-                isOpened={dropdownIsOpened}
-              />
+              <BrandLogoWithDropDown />
             </div>
             <div className="absolute top-[10vh] right-4 z-[2] flex flex-col gap-y-4 items-end">
               <ZoomLevel />
@@ -520,25 +468,24 @@ export const StartMappingPage = () => {
               />
             </div>
             <div className="absolute bottom-[30vh] flex flex-col gap-y-4 right-4 z-[1] items-end">
-              <FitToBounds bounds={oamTileJSON?.bounds} map={map} />
-              <div>{map && modelPredictionsExist && <Legend map={map} />}</div>
+              <FitToBounds bounds={tileJSONMetadata?.bounds} map={map} />
+              <div>{modelPredictionsExist && <Legend />}</div>
             </div>
           </div>
           {/* Map Component */}
           <StartMappingMapComponent
-            trainingDataset={modelInfo?.dataset}
-            oamTileJSONIsError={oamTileJSONIsError}
-            oamTileJSON={oamTileJSON as TileJSON}
             mapContainerRef={mapContainerRef}
             map={map}
             layers={mapLayers}
-            tmsBounds={oamTileJSON?.bounds as LngLatBoundsLike}
             trainingId={modelInfo?.published_training}
             modelInfoRequestIsPending={modelInfoRequestIspending}
             predictionImagerySource={predictionImagerySource}
-            predictionImageryURL={predictionImageryURL}
             predictionImageryType={tileServiceType}
             tileJSONMetadata={tileJSONMetadata}
+            modelPredictionsExist={modelPredictionsExist}
+            modelPredictions={modelPredictions}
+            updateFeatureStatus={updateFeatureStatus}
+            tileServerURL={tileserverURL as string}
           />
         </div>
       </div>

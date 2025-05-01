@@ -16,28 +16,37 @@ describe("Regex Patterns", () => {
         "http://example.com/tiles/{z}/{x}/{y}?format=png",
       ),
     ).toBe(true);
+
     expect(
       XYZ_TILESERVER_URL_REGEX_PATTERN.test(
         "https://example.com/tiles/{z}/{x}/{y}?format=jpg",
       ),
     ).toBe(true);
+
     expect(
       XYZ_TILESERVER_URL_REGEX_PATTERN.test(
         "https://example.com/tiles/path/{z}/{x}/{y}",
       ),
     ).toBe(true);
+
     expect(
       XYZ_TILESERVER_URL_REGEX_PATTERN.test(
         "http://example.com/tiles/{z}/{x}/{-y}?format=png",
       ),
-    ).toBe(false); // -y is TMS
+    ).toBe(false); // -y is TMS, not XYZ
+
     expect(
       XYZ_TILESERVER_URL_REGEX_PATTERN.test(
         "http://example.com/tiles/{z}/{x}/{y}?format=gif",
       ),
-    ).toBe(true); // still match format
-  });
+    ).toBe(true);
 
+    expect(
+      XYZ_TILESERVER_URL_REGEX_PATTERN.test(
+        "https://c.tiles.mapbox.com/v4/mapbox.satellite/{z}/{x}/{y}@2x.jpg?access_token=pk.abc123",
+      ),
+    ).toBe(true); // supports @2x suffix after {y}
+  });
   it("TMS_TILESERVER_URL_REGEX_PATTERN matches valid TMS URLs", () => {
     expect(
       TMS_TILESERVER_URL_REGEX_PATTERN.test(
@@ -76,7 +85,7 @@ describe("Regex Patterns", () => {
       TILEJSON_TILESERVER_URL_REGEX_PATTERN.test(
         "https://clarity.maptiles.arcgis.tiles.json",
       ),
-    ).toBe(true); // IMPORTANT: should match domains ending with .json
+    ).toBe(false);
     expect(
       TILEJSON_TILESERVER_URL_REGEX_PATTERN.test(
         "https://example.com/tiles.json?token=abc",

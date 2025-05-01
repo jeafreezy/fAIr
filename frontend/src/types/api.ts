@@ -1,6 +1,7 @@
 import { BASE_MODELS } from "@/enums";
 import { BBOX } from "./common";
 import { GeoJsonProperties, Geometry } from "geojson";
+import { PredictedFeatureStatus } from "@/enums/start-mapping";
 
 /**
  * This file contains the different types/schema for the API responses from the backend.
@@ -231,6 +232,7 @@ export type TModelPredictionFeature = {
     id?: number | string;
     _id?: number | string;
     config: TModelPredictionsConfig;
+    status: PredictedFeatureStatus;
   };
   id?: string | number;
 };

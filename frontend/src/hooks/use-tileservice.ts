@@ -76,7 +76,9 @@ export const useTileservice = (
     const fetchTileJSONMetadata = async () => {
       try {
         setLoading(true);
-        const tileJSON = await getTMSTileJSON(sourceURL);
+        const tileJSON = await getTMSTileJSON(
+          isOpenAerialMap ? extractTileJSONURL(tileserverURL) : tileserverURL,
+        );
         if (tileJSON?.bounds) {
           setTileJSONMetadata(tileJSON);
         }

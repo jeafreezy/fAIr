@@ -5,7 +5,7 @@ import { DialogProps, Feature, FeatureCollection } from "@/types";
 import { FileWithPath, useDropzone } from "react-dropzone";
 import { Geometry, MultiPolygon, Polygon } from "geojson";
 import { MODELS_CONTENT } from "@/constants";
-import { FormatBytes as SlFormatBytes } from "@hotosm/ui/components/react/index";
+import { SlFormatBytes } from "@shoelace-style/shoelace/dist/react";
 import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useState } from "react";
 import {
@@ -259,10 +259,7 @@ const FileUploadDialog: React.FC<FileUploadDialogProps> = ({
                 <p className="text-dark text-body-3">
                   {truncateString(file.file.name)}
                 </p>
-                <SlFormatBytes
-                  value={file.file.size}
-                  className="text-sm"
-                />
+                <SlFormatBytes value={file.file.size} className="text-sm" />
               </div>
             </div>
             <button

@@ -1,8 +1,8 @@
 import { InfoIcon } from "@/components/ui/icons";
 import { ToolTipPlacement } from "@/enums";
-import  {
-  Tooltip as SlTooltip,
-} from "@hotosm/ui/components/react/index";
+import SlTooltip, {
+  SlHideEvent,
+} from "@shoelace-style/shoelace/dist/react/tooltip/index.js";
 
 type ToolTipProps = {
   content?: string | React.ReactElement | null;
@@ -19,7 +19,7 @@ const ToolTip: React.FC<ToolTipProps> = ({
   placement = ToolTipPlacement.TOP,
   open,
 }) => {
-  const stopPropagations = (e: CustomEvent<Record<PropertyKey, never>>) => {
+  const stopPropagations = (e: SlHideEvent) => {
     e.stopImmediatePropagation();
     e.stopPropagation();
   };

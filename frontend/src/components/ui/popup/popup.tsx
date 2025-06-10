@@ -1,5 +1,5 @@
 import React from "react";
-import { Popup as SlPopup } from "@hotosm/ui/components/react/index";
+import SlPopup from "@shoelace-style/shoelace/dist/react/popup/index.js";
 
 type PopupProps = {
   placement?: "top" | "bottom" | "bottom-start" | "bottom-end";

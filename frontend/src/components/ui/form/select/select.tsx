@@ -1,10 +1,7 @@
 import useScreenSize from "@/hooks/use-screen-size";
 import { FormLabel, HelpText } from "@/components/ui/form";
 import { SHOELACE_SELECT_SIZES } from "@/enums";
-import {
-  Option as SlOption,
-  Select as SlSelect,
-} from "@hotosm/ui/components/react/index";
+import { SlOption, SlSelect } from "@shoelace-style/shoelace/dist/react";
 import { TShoelaceSize } from "@/types";
 import "./select.css";
 

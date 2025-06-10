@@ -1,4 +1,4 @@
-import { Spinner as SlSpinner } from "@hotosm/ui/components/react/index";
+import { SlSpinner } from "@shoelace-style/shoelace/dist/react";
 
 type SpinnerProps = {
   style?: Record<string, string>;

@@ -1,7 +1,7 @@
 import useScreenSize from "@/hooks/use-screen-size";
 import { ButtonSize } from "@/types";
 import { cn } from "@/utils";
-import { Button as SlButton } from "@hotosm/ui/components/react/index";
+import { SlButton } from "@shoelace-style/shoelace/dist/react";
 import { Spinner } from "@/components/ui/spinner";
 import "./button.css";
 import { ButtonVariant } from "@/enums";
